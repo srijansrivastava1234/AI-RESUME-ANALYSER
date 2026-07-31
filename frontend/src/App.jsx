@@ -526,6 +526,12 @@ function App() {
                   >
                     Section Auditing
                   </button>
+                  <button 
+                    className={`tab-btn ${activeTab === 'templates' ? 'active' : ''}`}
+                    onClick={() => setActiveTab('templates')}
+                  >
+                    ATS Templates & Guide
+                  </button>
                 </div>
 
                 {/* Tab: Overview */}
@@ -647,6 +653,54 @@ function App() {
                         </div>
                       );
                     })}
+                  </div>
+                )}
+
+                {/* Tab: Templates */}
+                {activeTab === 'templates' && (
+                  <div className="templates-layout" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>ATS-Compliant Resume Guidelines</h4>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                      To bypass automatic filters, your resume layout should remain clean and use strong action verbs. Use the templates and resources below:
+                    </p>
+                    
+                    <div className="glass-panel" style={{ padding: '1.25rem', background: 'rgba(0,0,0,0.1)' }}>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--primary)', display: 'block', marginBottom: '0.5rem' }}>Standard Chronological Template</span>
+                      <pre style={{ background: 'rgba(0,0,0,0.2)', padding: '0.75rem', borderRadius: '8px', fontSize: '0.75rem', color: 'var(--text-secondary)', overflowX: 'auto', fontFamily: 'monospace' }}>
+{`# [YOUR NAME]
+[Phone] | [Email] | [LinkedIn] | [GitHub]
+
+## PROFESSIONAL SUMMARY
+[2-3 sentences summarizing your experience, key skills, and impact.]
+
+## TECHNICAL SKILLS
+- Languages: [Python, JavaScript, SQL...]
+- Frameworks & Libraries: [React, FastAPI, Docker...]
+
+## WORK EXPERIENCE
+**[Company Name]** - [Job Title] | [Start Date] – [End Date]
+- [Action Verb] + [Project description] + resulting in [Quantified metric (e.g. +20% efficiency)].
+- [Action Verb] + [Feature implemented] + using [Technologies] for [User base].
+
+## PROJECTS
+**[Project Title]** | [Technologies Used]
+- Designed and built [system] which [impact/metric].`}
+                      </pre>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent)' }}>High-Impact Action Verbs</span>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Optimized</span>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Streamlined</span>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Engineered</span>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Spearheaded</span>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Architected</span>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Implemented</span>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Accelerated</span>
+                        <span className="tag detected" style={{ fontSize: '0.8rem' }}>Automated</span>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

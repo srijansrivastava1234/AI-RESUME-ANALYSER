@@ -733,3 +733,34 @@ h1, h2, h3, h4 {
   background: var(--danger-bg);
   color: var(--danger);
 }
+
+/* Print/Export PDF Button Hover */
+.btn-print:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Custom Print Rules for PDF Export */
+@media print {
+  body {
+    background: #090d16 !important;
+    background-image: none !important;
+    color: white !important;
+  }
+  .app-header,
+  .input-sidebar,
+  .no-print,
+  .dashboard-tabs {
+    display: none !important;
+  }
+  .grid-container {
+    grid-template-columns: 1fr !important;
+  }
+  .glass-panel {
+    background: rgba(17, 24, 39, 0.9) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}

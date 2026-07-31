@@ -11,7 +11,8 @@ import {
   HelpCircle,
   Briefcase,
   Layers,
-  Code
+  Code,
+  Printer
 } from 'lucide-react';
 
 const BACKEND_URL = 'http://127.0.0.1:8000';
@@ -243,6 +244,30 @@ function App() {
 
           {!loading && report && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }} className="no-print">
+                <button 
+                  onClick={() => window.print()} 
+                  className="btn-print"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.5rem', 
+                    padding: '0.5rem 1rem', 
+                    background: 'rgba(255,255,255,0.05)', 
+                    border: '1px solid var(--border-color)', 
+                    borderRadius: '8px', 
+                    color: 'white', 
+                    cursor: 'pointer', 
+                    fontFamily: 'var(--font-header)', 
+                    fontWeight: 600, 
+                    fontSize: '0.85rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                >
+                  <Printer style={{ width: '16px', height: '16px' }} />
+                  <span>Export Report / Print PDF</span>
+                </button>
+              </div>
               {/* Job description score header */}
               {report.job_compatibility && (
                 <div className="compatibility-box">

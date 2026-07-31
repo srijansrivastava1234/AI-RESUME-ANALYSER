@@ -1,0 +1,31 @@
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node modules & build files
+frontend/node_modules/
+frontend/dist/
+frontend/.svelte-kit/
+frontend/.next/
+frontend/build/
+
+# Local configuration & environment files
+.env
+.env.local
+.env.*.local
+backend/.env
+
+# Temporary and local test files
+sample_resume.pdf
+.system_generated/
+.gemini/
+.agents/
+.DS_Store
+Thumbs.db

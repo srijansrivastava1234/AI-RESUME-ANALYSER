@@ -36,6 +36,52 @@ function App() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  const [history, setHistory] = useState([]);
+
+  // Load history on mount
+  useEffect(() => {
+    try {
+      const savedHistory = JSON.parse(localStorage.getItem('resume_history') || '[]');
+      setHistory(savedHistory);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const saveToHistory = (filename, score, reportData) => {
+    try {
+      const historyItem = {
+        id: Date.now().toString(),
+        filename,
+        score,
+        date: new Date().toLocaleDateString(undefined, { 
+          month: 'short', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        }),
+        report: reportData
+      };
+      
+      const currentHistory = JSON.parse(localStorage.getItem('resume_history') || '[]');
+      const updatedHistory = [historyItem, ...currentHistory].slice(0, 5);
+      localStorage.setItem('resume_history', JSON.stringify(updatedHistory));
+      setHistory(updatedHistory);
+    } catch (e) {
+      console.error("Error saving history:", e);
+    }
+  };
+
+  const loadHistoryItem = (item) => {
+    setReport(item.report);
+    setActiveTab('overview');
+  };
+
+  const clearHistory = () => {
+    localStorage.removeItem('resume_history');
+    setHistory([]);
+  };
+
   // Check API health status on mount
   useEffect(() => {
     fetch(`${BACKEND_URL}/`)
@@ -121,6 +167,7 @@ function App() {
       const data = await response.json();
       setReport(data.report);
       setActiveTab('overview');
+      saveToHistory(file.name, data.report.ats_score, data.report);
     } catch (err) {
       setError(err.message || 'An error occurred during analysis.');
       console.error(err);
@@ -253,6 +300,57 @@ function App() {
               )}
             </button>
           </div>
+
+          {history.length > 0 && (
+            <div className="glass-panel no-print" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h4 style={{ fontSize: '1rem', fontWeight: 600 }}>Recent Scans</h4>
+                <button 
+                  onClick={clearHistory} 
+                  style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}
+                >
+                  Clear All
+                </button>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {history.map((item) => (
+                  <div 
+                    key={item.id}
+                    onClick={() => loadHistoryItem(item)}
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justify-content: 'space-between', 
+                      padding: '0.75rem', 
+                      background: 'rgba(255,255,255,0.02)', 
+                      border: '1px solid var(--border-color)', 
+                      borderRadius: '8px', 
+                      cursor: 'pointer',
+                      transition: 'var(--transition-smooth)'
+                    }}
+                    className="history-item"
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', maxWidth: '180px', overflow: 'hidden' }}>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 600, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.filename}</span>
+                      <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{item.date}</span>
+                    </div>
+                    <span 
+                      style={{ 
+                        fontSize: '0.8rem', 
+                        fontWeight: 700, 
+                        color: getScoreColor(item.score),
+                        background: getScoreBg(item.score),
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '12px'
+                      }}
+                    >
+                      {item.score}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Dashboard Main */}

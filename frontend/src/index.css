@@ -764,3 +764,89 @@ h1, h2, h3, h4 {
     -webkit-backdrop-filter: none !important;
   }
 }
+
+/* Premium Light Theme */
+.light-theme {
+  --bg-main: #f8fafc;
+  --bg-surface: rgba(255, 255, 255, 0.75);
+  --bg-surface-hover: rgba(255, 255, 255, 0.85);
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-glow: rgba(99, 102, 241, 0.1);
+  
+  --primary: #4f46e5;
+  --primary-glow: rgba(99, 102, 241, 0.15);
+  --secondary: #9333ea;
+  --accent: #0891b2;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  --success: #059669;
+  --success-bg: rgba(5, 150, 105, 0.08);
+  --warning: #d97706;
+  --warning-bg: rgba(217, 119, 6, 0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220, 38, 38, 0.08);
+}
+
+.light-theme body {
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.06) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.04) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.03) 0px, transparent 50%);
+  color: var(--text-primary);
+}
+
+.light-theme .text-gradient {
+  background: linear-gradient(135deg, #0f172a 30%, #9333ea 70%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.light-theme input, .light-theme textarea {
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.light-theme input:focus, .light-theme textarea:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1) !important;
+}
+
+.light-theme .keyword-box h4 {
+  color: inherit !important;
+}
+
+.light-theme .section-review-title {
+  color: var(--text-primary) !important;
+}
+
+.light-theme .rec-title {
+  color: var(--text-primary) !important;
+}
+
+.light-theme .block-before, .light-theme .block-after {
+  background: rgba(0, 0, 0, 0.02) !important;
+}
+
+.light-theme .circle-bg {
+  stroke: rgba(0, 0, 0, 0.04) !important;
+}
+
+.light-theme .api-status {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.light-theme .tab-btn.active {
+  background: rgba(99, 102, 241, 0.08) !important;
+  color: var(--primary) !important;
+}
+
+.light-theme .compatibility-box {
+  background: rgba(99, 102, 241, 0.04) !important;
+  border-color: rgba(99, 102, 241, 0.15) !important;
+}
+

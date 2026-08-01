@@ -49,11 +49,11 @@ AI-RESUME-ANALYSER/
    ```
    Edit `.env` and fill in your `GEMINI_API_KEY`. Get a key from [Google AI Studio](https://aistudio.google.com/).
 
-5. Run the FastAPI development server:
+5. Run the FastAPI development server, exposing it to the network:
    ```bash
-   uvicorn app.main:app --reload
+   uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
    ```
-   The backend API will run on `http://127.0.0.1:8000`.
+   The backend API is now accessible locally and on your local network (e.g. `http://<YOUR_LOCAL_IP>:8000`).
 
 ### 3. Run Frontend Dashboard
 1. Navigate to the frontend directory:
@@ -68,4 +68,47 @@ AI-RESUME-ANALYSER/
    ```bash
    npm run dev
    ```
-   The dashboard UI will run on `http://localhost:5173`.
+   * The dashboard UI will run and expose itself on all network interfaces (e.g., `http://<YOUR_LOCAL_IP>:5173`).
+   * The frontend dynamically communicates with the backend on port `8000` of the host device it's loaded from.
+
+---
+
+## 🌐 Connecting from Other Devices
+
+### A. Devices on the Same Local Network (LAN/Wi-Fi)
+1. **Find your host PC's local IP address:**
+   - **Windows:** Run `ipconfig` in CMD/PowerShell (look for IPv4 Address, e.g., `192.168.1.15`).
+   - **macOS/Linux:** Run `ifconfig` or `ip route` (e.g., look for `inet 192.168.x.x`).
+2. **Access the app:**
+   - On the other device, open a web browser and navigate to `http://<YOUR_LOCAL_IP>:5173`.
+   - The frontend will dynamically resolve and connect to the backend at `http://<YOUR_LOCAL_IP>:8000`.
+
+### B. Devices on a Different Network (Internet / Cellular)
+If you want devices on a completely different network (like cellular data or a remote location) to use the project, you can expose the local servers using a public tunneling tool like **ngrok** or **localtunnel**:
+
+1. **Expose the backend:**
+   ```bash
+   # Run ngrok for backend (or use localtunnel)
+   ngrok http 8000
+   ```
+   Copy the generated public URL (e.g., `https://xxxx-xx.ngrok-free.app`).
+
+2. **Expose the frontend:**
+   ```bash
+   # Run ngrok for frontend
+   ngrok http 5173
+   ```
+   Copy the generated public URL for the frontend.
+
+3. **Configure the frontend to point to the tunneled backend:**
+   You can build or run the frontend by specifying the `VITE_API_URL` environment variable:
+   - **Windows (PowerShell):**
+     ```powershell
+     $env:VITE_API_URL="https://xxxx-xx.ngrok-free.app"; npm run dev
+     ```
+   - **macOS/Linux:**
+     ```bash
+     VITE_API_URL="https://xxxx-xx.ngrok-free.app" npm run dev
+     ```
+   Now access the frontend's ngrok URL from any device connected to any network!
+

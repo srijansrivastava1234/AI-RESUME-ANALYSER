@@ -11,7 +11,11 @@ import CoreParameters from './components/CoreParameters';
 import TabsPanel from './components/TabsPanel';
 import HelpModal from './components/HelpModal';
 
-const BACKEND_URL = 'http://127.0.0.1:8000';
+// Dynamically resolve backend URL. If VITE_API_URL env variable is provided, use it.
+// Otherwise, fall back to using the current page hostname with port 8000.
+// This allows other devices on the network to connect without code changes.
+const BACKEND_URL = import.meta.env.VITE_API_URL || `${window.location.protocol}//${window.location.hostname}:8000`;
+
 
 function App() {
   const [file, setFile] = useState(null);

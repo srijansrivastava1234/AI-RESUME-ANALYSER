@@ -25,11 +25,11 @@ export default function Dropzone({
         >
           <UploadCloud className="upload-icon" style={{ width: '40px', height: '40px', margin: '0 auto 0.75rem' }} />
           <p style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.25rem' }}>Drag & drop your resume</p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>PDF formats only (max. 10MB)</p>
+          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>PDF, DOCX, TXT formats only (max. 10MB)</p>
           <input 
             id="file-upload" 
             type="file" 
-            accept=".pdf" 
+            accept=".pdf,.docx,.txt" 
             onChange={handleFileChange} 
             style={{ display: 'none' }} 
           />

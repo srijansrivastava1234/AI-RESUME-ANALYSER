@@ -1,9 +1,11 @@
 import React from 'react';
+import { Trash2 } from 'lucide-react';
 
 export default function HistoryPanel({
   history,
   loadHistoryItem,
   clearHistory,
+  deleteHistoryItem,
   getScoreColor,
   getScoreBg
 }) {
@@ -42,18 +44,39 @@ export default function HistoryPanel({
               <span style={{ fontSize: '0.8rem', fontWeight: 600, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>{item.filename}</span>
               <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>{item.date}</span>
             </div>
-            <span 
-              style={{ 
-                fontSize: '0.8rem', 
-                fontWeight: 700, 
-                color: getScoreColor(item.score),
-                background: getScoreBg(item.score),
-                padding: '0.2rem 0.5rem',
-                borderRadius: '12px'
-              }}
-            >
-              {item.score}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span 
+                style={{ 
+                  fontSize: '0.8rem', 
+                  fontWeight: 700, 
+                  color: getScoreColor(item.score),
+                  background: getScoreBg(item.score),
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '12px'
+                }}
+              >
+                {item.score}
+              </span>
+              <button
+                onClick={(e) => deleteHistoryItem(item.id, e)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '0.2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderRadius: '4px',
+                  transition: 'var(--transition-smooth)'
+                }}
+                className="delete-history-btn"
+                title="Delete from history"
+              >
+                <Trash2 style={{ width: '14px', height: '14px' }} />
+              </button>
+            </div>
           </div>
         ))}
       </div>

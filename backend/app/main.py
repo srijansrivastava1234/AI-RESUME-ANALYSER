@@ -5,7 +5,7 @@ os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 import logging
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from app.parser import extract_text_from_pdf
+from app.parser import extract_text_from_pdf, extract_text_from_docx, extract_text_from_txt
 from app.analyzer import analyze_resume
 from dotenv import load_dotenv
 
@@ -42,11 +42,11 @@ async def analyze_resume_endpoint(
     file: UploadFile = File(...),
     job_description: str = Form(None)
 ):
-    # Verify file type
-    if not file.filename.endswith(".pdf"):
+    filename_lower = file.filename.lower()
+    if not (filename_lower.endswith(".pdf") or filename_lower.endswith(".docx") or filename_lower.endswith(".txt")):
         raise HTTPException(
             status_code=400,
-            detail="Invalid file format. Only PDF files are supported."
+            detail="Invalid file format. Only PDF, DOCX, and TXT files are supported."
         )
         
     try:
@@ -55,9 +55,15 @@ async def analyze_resume_endpoint(
         # Read file bytes
         file_bytes = await file.read()
         
-        # 1. Parse text from PDF
-        extracted_text = extract_text_from_pdf(file_bytes)
-        logger.info(f"Extracted {len(extracted_text)} characters of text from PDF")
+        # 1. Parse text based on format
+        if filename_lower.endswith(".pdf"):
+            extracted_text = extract_text_from_pdf(file_bytes)
+        elif filename_lower.endswith(".docx"):
+            extracted_text = extract_text_from_docx(file_bytes)
+        else:
+            extracted_text = extract_text_from_txt(file_bytes)
+            
+        logger.info(f"Extracted {len(extracted_text)} characters of text")
         
         # 2. Analyze using Gemini prompt engine
         analysis_report = analyze_resume(extracted_text, job_description)
@@ -66,6 +72,7 @@ async def analyze_resume_endpoint(
         return {
             "filename": file.filename,
             "char_count": len(extracted_text),
+            "extracted_text": extracted_text,
             "report": analysis_report
         }
         

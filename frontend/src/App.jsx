@@ -24,6 +24,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [apiOnline, setApiOnline] = useState(false);
   const [report, setReport] = useState(null);
+  const [extractedText, setExtractedText] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
   const [error, setError] = useState('');
   const [theme, setTheme] = useState(() => {
@@ -49,7 +50,7 @@ function App() {
     }
   }, []);
 
-  const saveToHistory = (filename, score, reportData) => {
+  const saveToHistory = (filename, score, reportData, extractedTextData) => {
     try {
       const historyItem = {
         id: Date.now().toString(),
@@ -61,7 +62,8 @@ function App() {
           hour: '2-digit', 
           minute: '2-digit' 
         }),
-        report: reportData
+        report: reportData,
+        extractedText: extractedTextData
       };
       
       const currentHistory = JSON.parse(localStorage.getItem('resume_history') || '[]');
@@ -75,12 +77,28 @@ function App() {
 
   const loadHistoryItem = (item) => {
     setReport(item.report);
+    setExtractedText(item.extractedText || '');
     setActiveTab('overview');
   };
 
   const clearHistory = () => {
     localStorage.removeItem('resume_history');
     setHistory([]);
+  };
+
+  const deleteHistoryItem = (id, e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    try {
+      const currentHistory = JSON.parse(localStorage.getItem('resume_history') || '[]');
+      const updatedHistory = currentHistory.filter(item => item.id !== id);
+      localStorage.setItem('resume_history', JSON.stringify(updatedHistory));
+      setHistory(updatedHistory);
+    } catch (err) {
+      console.error("Error deleting history item:", err);
+    }
   };
 
   // Check API health status on mount
@@ -112,11 +130,12 @@ function App() {
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
-      if (droppedFile.type === "application/pdf") {
+      const name = droppedFile.name.toLowerCase();
+      if (name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".txt")) {
         setFile(droppedFile);
         setError('');
       } else {
-        setError('Only PDF files are supported.');
+        setError('Only PDF, DOCX, and TXT files are supported.');
       }
     }
   };
@@ -124,11 +143,12 @@ function App() {
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      if (selectedFile.type === "application/pdf") {
+      const name = selectedFile.name.toLowerCase();
+      if (name.endsWith(".pdf") || name.endsWith(".docx") || name.endsWith(".txt")) {
         setFile(selectedFile);
         setError('');
       } else {
-        setError('Only PDF files are supported.');
+        setError('Only PDF, DOCX, and TXT files are supported.');
       }
     }
   };
@@ -136,6 +156,7 @@ function App() {
   const removeFile = () => {
     setFile(null);
     setReport(null);
+    setExtractedText('');
   };
 
   // Submit to API
@@ -167,8 +188,9 @@ function App() {
 
       const data = await response.json();
       setReport(data.report);
+      setExtractedText(data.extracted_text || '');
       setActiveTab('overview');
-      saveToHistory(file.name, data.report.ats_score, data.report);
+      saveToHistory(file.name, data.report.ats_score, data.report, data.extracted_text || '');
     } catch (err) {
       setError(err.message || 'An error occurred during analysis.');
       console.error(err);
@@ -215,6 +237,7 @@ function App() {
           history={history}
           loadHistoryItem={loadHistoryItem}
           clearHistory={clearHistory}
+          deleteHistoryItem={deleteHistoryItem}
           getScoreColor={getScoreColor}
           getScoreBg={getScoreBg}
         />
@@ -236,7 +259,7 @@ function App() {
               <FileText className="placeholder-icon" style={{ width: '64px', height: '64px' }} />
               <div className="placeholder-text">
                 <h3>Ready to Audit Your Resume?</h3>
-                <p>Upload your resume in PDF format, enter an optional target job description, and hit 'Analyze' to run a deep scanner on your resume's ATS compliance score.</p>
+                <p>Upload your resume in PDF, DOCX, or TXT format, enter an optional target job description, and hit 'Analyze' to run a deep scanner on your resume's ATS compliance score.</p>
               </div>
             </div>
           )}
@@ -312,6 +335,7 @@ function App() {
               {/* Tab Navigation & Content */}
               <TabsPanel
                 report={report}
+                extractedText={extractedText}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />

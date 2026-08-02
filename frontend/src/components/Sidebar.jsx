@@ -18,6 +18,7 @@ export default function Sidebar({
   history,
   loadHistoryItem,
   clearHistory,
+  deleteHistoryItem,
   getScoreColor,
   getScoreBg
 }) {
@@ -61,6 +62,7 @@ export default function Sidebar({
         history={history}
         loadHistoryItem={loadHistoryItem}
         clearHistory={clearHistory}
+        deleteHistoryItem={deleteHistoryItem}
         getScoreColor={getScoreColor}
         getScoreBg={getScoreBg}
       />

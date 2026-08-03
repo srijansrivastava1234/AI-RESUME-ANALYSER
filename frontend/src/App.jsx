@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { 
   FileText, 
   Target, 
-  Printer
+  Printer,
+  Copy,
+  Check
 } from 'lucide-react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -31,12 +33,59 @@ function App() {
     return localStorage.getItem('theme') || 'dark';
   });
   const [showHelpModal, setShowHelpModal] = useState(false);
+  const [copiedReport, setCopiedReport] = useState(false);
 
   // Apply theme class to body and sync with localStorage
   useEffect(() => {
-    document.body.className = theme === 'light' ? 'light-theme' : '';
+    document.body.className = theme === 'dark' ? '' : `${theme}-theme`;
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  const copyMarkdownReport = () => {
+    if (!report) return;
+    const detectedKws = report.keywords?.detected?.join(', ') || 'None';
+    const missingKws = report.keywords?.missing?.join(', ') || 'None';
+    
+    let md = `# ATS Resume Analysis Report - ${file?.name || 'Resume'}\n\n`;
+    md += `**ATS Score:** ${report.ats_score}/100\n\n`;
+    if (report.job_compatibility) {
+      md += `## Job Description Compatibility\n`;
+      md += `* **Match Score:** ${report.job_compatibility.score}%\n`;
+      md += `* **Analysis:** ${report.job_compatibility.match_analysis}\n`;
+      if (report.job_compatibility.skill_gaps?.length) {
+        md += `* **Skill Gaps:** ${report.job_compatibility.skill_gaps.join(', ')}\n`;
+      }
+      md += `\n`;
+    }
+    
+    md += `## Core Metrics\n`;
+    report.metrics?.forEach(m => {
+      md += `* **${m.name}:** ${m.score}/100 - ${m.feedback}\n`;
+    });
+    md += `\n`;
+    
+    md += `## Key Strengths\n`;
+    report.key_strengths?.forEach(str => {
+      md += `* ✓ ${str}\n`;
+    });
+    md += `\n`;
+    
+    md += `## Actionable Recommendations\n`;
+    report.actionable_recommendations?.forEach((rec, idx) => {
+      md += `### Recommendation ${idx + 1}: ${rec.issue} (${rec.priority} Priority)\n`;
+      md += `* **Advice:** ${rec.recommendation}\n`;
+      md += `* **Before:** \`${rec.before_after?.before}\`\n`;
+      md += `* **After:** \`${rec.before_after?.after}\`\n\n`;
+    });
+    
+    md += `## Keywords Analysis\n`;
+    md += `* **Detected Keywords:** ${detectedKws}\n`;
+    md += `* **Missing Keywords:** ${missingKws}\n`;
+    
+    navigator.clipboard.writeText(md);
+    setCopiedReport(true);
+    setTimeout(() => setCopiedReport(false), 2000);
+  };
 
   const [history, setHistory] = useState([]);
 
@@ -267,6 +316,29 @@ function App() {
           {!loading && report && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }} className="no-print">
+                <button 
+                  onClick={copyMarkdownReport} 
+                  className="btn-print"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.5rem', 
+                    padding: '0.5rem 1rem', 
+                    background: 'rgba(255, 255, 255, 0.05)', 
+                    border: '1px solid var(--border-color)', 
+                    borderRadius: '8px', 
+                    color: 'white', 
+                    cursor: 'pointer', 
+                    fontFamily: 'var(--font-header)', 
+                    fontWeight: 600, 
+                    fontSize: '0.85rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                  title="Copy the entire report as formatted Markdown"
+                >
+                  {copiedReport ? <Check style={{ width: '16px', height: '16px', color: 'var(--success)' }} /> : <Copy style={{ width: '16px', height: '16px' }} />}
+                  <span>{copiedReport ? 'Report Copied!' : 'Copy Markdown Report'}</span>
+                </button>
                 <button 
                   onClick={() => window.print()} 
                   className="btn-print"

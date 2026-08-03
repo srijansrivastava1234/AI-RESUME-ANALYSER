@@ -805,6 +805,105 @@ h1, h2, h3, h4 {
   -webkit-text-fill-color: transparent;
 }
 
+/* Emerald Green Theme */
+.emerald-theme {
+  --bg-main: #060f0d;
+  --bg-surface: rgba(15, 23, 21, 0.75);
+  --bg-surface-hover: rgba(26, 38, 35, 0.85);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(16, 185, 129, 0.15);
+  
+  --primary: #10b981;
+  --primary-glow: rgba(16, 185, 129, 0.35);
+  --secondary: #059669;
+  --accent: #14b8a6;
+  
+  --text-primary: #f0fdf4;
+  --text-secondary: #a7f3d0;
+  --text-muted: #34d399;
+}
+
+.emerald-theme body {
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(20, 184, 166, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(5, 150, 105, 0.05) 0px, transparent 50%);
+  color: var(--text-primary);
+}
+
+.emerald-theme .text-gradient {
+  background: linear-gradient(135deg, #fff 30%, #10b981 70%, #14b8a6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Royal Purple Theme */
+.violet-theme {
+  --bg-main: #0c0817;
+  --bg-surface: rgba(22, 15, 38, 0.75);
+  --bg-surface-hover: rgba(35, 25, 59, 0.85);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(139, 92, 246, 0.15);
+  
+  --primary: #8b5cf6;
+  --primary-glow: rgba(139, 92, 246, 0.35);
+  --secondary: #d946ef;
+  --accent: #c084fc;
+  
+  --text-primary: #faf5ff;
+  --text-secondary: #e9d5ff;
+  --text-muted: #a78bfa;
+}
+
+.violet-theme body {
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(217, 70, 239, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(168, 85, 247, 0.05) 0px, transparent 50%);
+  color: var(--text-primary);
+}
+
+.violet-theme .text-gradient {
+  background: linear-gradient(135deg, #fff 30%, #d946ef 70%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Amber Gold Theme */
+.amber-theme {
+  --bg-main: #0f0b06;
+  --bg-surface: rgba(26, 20, 15, 0.75);
+  --bg-surface-hover: rgba(38, 30, 22, 0.85);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(245, 158, 11, 0.15);
+  
+  --primary: #f59e0b;
+  --primary-glow: rgba(245, 158, 11, 0.35);
+  --secondary: #d97706;
+  --accent: #fbbf24;
+  
+  --text-primary: #fffbeb;
+  --text-secondary: #fde68a;
+  --text-muted: #fbbf24;
+}
+
+.amber-theme body {
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.12) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(217, 119, 6, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(251, 191, 36, 0.05) 0px, transparent 50%);
+  color: var(--text-primary);
+}
+
+.amber-theme .text-gradient {
+  background: linear-gradient(135deg, #fff 30%, #f59e0b 70%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .light-theme input, .light-theme textarea {
   background: rgba(0, 0, 0, 0.02) !important;
   color: var(--text-primary) !important;

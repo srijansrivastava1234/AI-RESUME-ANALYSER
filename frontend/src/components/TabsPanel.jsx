@@ -56,6 +56,34 @@ export default function TabsPanel({ report, extractedText, activeTab, setActiveT
   const completedCount = Object.values(completedRecommendations).filter(Boolean).length;
   const percentComplete = totalRecs > 0 ? Math.round((completedCount / totalRecs) * 100) : 0;
 
+  const getKeywordFrequency = (text) => {
+    if (!text) return [];
+    const stopwords = new Set([
+      'the', 'and', 'a', 'of', 'to', 'in', 'for', 'is', 'on', 'that', 'by', 'this', 'with', 'i', 'you', 'it', 'he', 'she', 'they', 'we',
+      'as', 'an', 'are', 'at', 'be', 'from', 'has', 'have', 'his', 'her', 'in', 'into', 'its', 'my', 'or', 'their', 'there', 'who', 'which',
+      'was', 'were', 'will', 'with', 'about', 'but', 'not', 'can', 'our', 'out', 'all', 'more', 'some', 'any', 'been', 'other', 'than',
+      'very', 'using', 'used', 'through', 'under', 'over', 'during', 'before', 'after', 'between', 'also', 'each', 'both', 'some'
+    ]);
+    
+    const words = text
+      .toLowerCase()
+      .replace(/[^\w\s-]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 2 && !stopwords.has(w));
+      
+    const freq = {};
+    words.forEach(w => {
+      freq[w] = (freq[w] || 0) + 1;
+    });
+    
+    return Object.entries(freq)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([word, count]) => ({ word: word.charAt(0).toUpperCase() + word.slice(1), count }));
+  };
+
+  const freqKeywords = getKeywordFrequency(extractedText);
+
   return (
     <div className="glass-panel" style={{ padding: '1.5rem' }}>
       <div className="dashboard-tabs">
@@ -356,6 +384,35 @@ export default function TabsPanel({ report, extractedText, activeTab, setActiveT
               ))}
             </div>
           </div>
+
+          {freqKeywords.length > 0 && (
+            <div className="keyword-box" style={{ gridColumn: 'span 2', marginTop: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.5rem' }}>
+              <h4 style={{ color: 'var(--accent)', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Clock style={{ width: '18px', height: '18px' }} />
+                <span>Keyword Density & Frequency Analyzer</span>
+              </h4>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                The following terms appear most frequently in the extracted resume text. Proper density helps pass automatic filters:
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+                {freqKeywords.map((item, idx) => {
+                  const maxCount = freqKeywords[0].count;
+                  const percent = Math.round((item.count / maxCount) * 100);
+                  return (
+                    <div key={idx} style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '0.4rem', fontWeight: 600 }}>
+                        <span style={{ color: 'var(--text-primary)' }}>{item.word}</span>
+                        <span style={{ color: 'var(--accent)' }}>{item.count} {item.count === 1 ? 'time' : 'times'}</span>
+                      </div>
+                      <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
+                        <div style={{ width: `${percent}%`, height: '100%', background: 'linear-gradient(90deg, var(--accent), var(--primary))', borderRadius: '3px' }}></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

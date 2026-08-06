@@ -128,15 +128,27 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
     if not missing:
         missing = ["Unit Testing", "Microservices"]
 
-    ats_score = 65
-    if len(detected) > 3:
-        ats_score += 15
-    if "education" in resume_lower or "university" in resume_lower or "college" in resume_lower:
-        ats_score += 10
-    if job_description and len(job_description) > 50:
-        ats_score = min(ats_score + 5, 95)
+    # Dynamic layout scanning for standard sections
+    has_experience = any(h in resume_lower for h in ["experience", "employment", "history", "work"])
+    has_education = any(h in resume_lower for h in ["education", "academic", "university", "college"])
+    has_skills = any(h in resume_lower for h in ["skills", "technologies", "expertise"])
+    has_projects = any(h in resume_lower for h in ["projects", "personal projects", "portfolio"])
+    
+    sections_found = sum([has_experience, has_education, has_skills, has_projects])
+    layout_score = 60 + (sections_found * 10)
+    
+    if sections_found < 4:
+        missing_sections = []
+        if not has_experience: missing_sections.append("Work Experience")
+        if not has_education: missing_sections.append("Education")
+        if not has_skills: missing_sections.append("Skills")
+        if not has_projects: missing_sections.append("Projects")
+        layout_feedback = f"Your resume is missing one or more standard sections: {', '.join(missing_sections)}. Add these sections to improve ATS indexing."
     else:
-        ats_score = min(ats_score, 90)
+        layout_feedback = "Excellent visual layout structure. All standard sections (Work Experience, Education, Skills, and Projects) were successfully parsed."
+
+    ats_score = int((layout_score + 90 + 70 + (65 + len(detected) * 5)) / 4)
+    ats_score = max(30, min(98, ats_score))
 
     job_compat = None
     if job_description and len(job_description.strip()) > 10:
@@ -159,8 +171,8 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
         "metrics": [
             {
                 "name": "Layout & Formatting",
-                "score": 85,
-                "feedback": "Your layout is well structured. Ensure margins are consistent and bullet points align perfectly."
+                "score": layout_score,
+                "feedback": layout_feedback
             },
             {
                 "name": "Grammar & Readability",
@@ -185,18 +197,18 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
         "section_analysis": [
             {
                 "section": "Education",
-                "score": 90,
-                "comments": "Degrees are clearly formatted. Make sure to list graduation year."
+                "score": 90 if has_education else 40,
+                "comments": "Degrees are clearly formatted. Make sure to list graduation year." if has_education else "Consider adding a dedicated Education section."
             },
             {
                 "section": "Work Experience",
-                "score": 72,
-                "comments": "Good career progression. Focus more on quantification (percentages, dollar amounts, timespans)."
+                "score": 85 if has_experience else 40,
+                "comments": "Good career progression. Focus more on quantification (percentages, dollar amounts, timespans)." if has_experience else "Consider adding a dedicated Work Experience section."
             },
             {
                 "section": "Skills Section",
-                "score": 80,
-                "comments": "Group your skills (e.g. Languages, Frameworks, Tools) to make it easier to read."
+                "score": 85 if has_skills else 40,
+                "comments": "Group your skills (e.g. Languages, Frameworks, Tools) to make it easier to read." if has_skills else "Consider adding a dedicated Skills section."
             }
         ],
         "key_strengths": [

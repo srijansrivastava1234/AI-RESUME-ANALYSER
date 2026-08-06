@@ -40,8 +40,11 @@ export default function Sidebar({
           id="job-desc" 
           placeholder="Paste the target job description here to check your compatibility, skills alignment, and discover specific keywords gaps..." 
           value={jobDesc}
-          onChange={(e) => setJobDesc(e.target.value)}
+          onChange={(e) => setJobDesc(e.target.value.slice(0, 5000))}
         />
+        <div style={{ display: 'flex', justifyContent: 'flex-end', fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '-0.25rem', marginBottom: '0.75rem' }}>
+          {jobDesc.length} / 5000 characters
+        </div>
         <button 
           className="btn-primary" 
           onClick={analyzeResume} 

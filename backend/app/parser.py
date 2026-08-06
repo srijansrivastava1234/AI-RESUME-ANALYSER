@@ -1,8 +1,21 @@
 import io
 import logging
+import re
 from pypdf import PdfReader
 
 logger = logging.getLogger("ResumeParser")
+
+def clean_extracted_text(text: str) -> str:
+    """
+    Cleans extracted text to optimize token usage:
+    - Replaces 3 or more consecutive newlines with 2 newlines.
+    - Replaces 2 or more consecutive spaces with a single space.
+    - Strips leading/trailing whitespaces.
+    """
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    text = re.sub(r'[ \t]{2,}', ' ', text)
+    return text.strip()
+
 
 def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> str:
     """
@@ -28,7 +41,7 @@ def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> str:
             extracted_text.append(text)
             char_count += len(text)
             
-        full_text = "\n".join(extracted_text).strip()
+        full_text = clean_extracted_text("\n".join(extracted_text))
         
         if not full_text:
             raise ValueError("No text could be extracted from the PDF. The file might be scanned or image-only.")
@@ -74,7 +87,7 @@ def extract_text_from_docx(file_bytes: bytes, max_chars: int = 50000) -> str:
                 extracted_text.append(text)
                 char_count += len(text) + 1
                 
-        full_text = "\n".join(extracted_text).strip()
+        full_text = clean_extracted_text("\n".join(extracted_text))
         
         if not full_text:
             raise ValueError("No text could be extracted from the DOCX file.")
@@ -95,7 +108,7 @@ def extract_text_from_txt(file_bytes: bytes, max_chars: int = 50000) -> str:
         except UnicodeDecodeError:
             text = file_bytes.decode('latin-1')
             
-        full_text = text[:max_chars].strip()
+        full_text = clean_extracted_text(text[:max_chars])
         
         if not full_text:
             raise ValueError("No text could be extracted from the TXT file.")

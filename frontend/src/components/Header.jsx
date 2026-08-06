@@ -1,7 +1,7 @@
 import React from 'react';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, HelpCircle } from 'lucide-react';
 
-export default function Header({ theme, setTheme, apiOnline }) {
+export default function Header({ theme, setTheme, apiOnline, setShowHelpModal }) {
   return (
     <header className="app-header">
       <div className="logo-section">
@@ -9,6 +9,28 @@ export default function Header({ theme, setTheme, apiOnline }) {
         <h1><span className="text-gradient">ATS Resume Analyser AI</span></h1>
       </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="no-print">
+        <button
+          onClick={() => setShowHelpModal(true)}
+          style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '20px',
+            color: 'white',
+            padding: '0.3rem 0.75rem',
+            fontSize: '0.75rem',
+            cursor: 'pointer',
+            fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.35rem',
+            transition: 'all 0.2s ease'
+          }}
+          className="btn-help-guide"
+          title="How ATS Score is calculated"
+        >
+          <HelpCircle style={{ width: '14px', height: '14px' }} />
+          <span>Help Guide</span>
+        </button>
         <div className="theme-selector" style={{ display: 'flex', gap: '0.4rem', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid var(--border-color)', padding: '0.3rem 0.5rem', borderRadius: '20px' }}>
           {[
             { id: 'dark', color: '#6366f1', name: 'Dark Indigo' },

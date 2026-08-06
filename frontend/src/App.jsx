@@ -267,6 +267,7 @@ function App() {
         theme={theme}
         setTheme={setTheme}
         apiOnline={apiOnline}
+        setShowHelpModal={setShowHelpModal}
       />
 
       {/* Grid */}

@@ -3,6 +3,7 @@ import os
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
 import logging
+import time
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.parser import extract_text_from_pdf, extract_text_from_docx, extract_text_from_txt
@@ -50,12 +51,14 @@ async def analyze_resume_endpoint(
         )
         
     try:
+        start_time = time.time()
         logger.info(f"Received file: {file.filename} for analysis")
         
         # Read file bytes
         file_bytes = await file.read()
         
         # 1. Parse text based on format
+        parse_start = time.time()
         if filename_lower.endswith(".pdf"):
             extracted_text = extract_text_from_pdf(file_bytes)
         elif filename_lower.endswith(".docx"):
@@ -63,11 +66,16 @@ async def analyze_resume_endpoint(
         else:
             extracted_text = extract_text_from_txt(file_bytes)
             
-        logger.info(f"Extracted {len(extracted_text)} characters of text")
+        parse_duration = time.time() - parse_start
+        logger.info(f"Extracted {len(extracted_text)} characters of text in {parse_duration:.3f}s")
         
         # 2. Analyze using Gemini prompt engine
+        analysis_start = time.time()
         analysis_report = analyze_resume(extracted_text, job_description)
-        logger.info("Resume analysis completed successfully")
+        analysis_duration = time.time() - analysis_start
+        
+        total_duration = time.time() - start_time
+        logger.info(f"Analysis completed in {analysis_duration:.3f}s. Total time: {total_duration:.3f}s")
         
         return {
             "filename": file.filename,

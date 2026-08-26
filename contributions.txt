@@ -1,10 +1,16 @@
-3 Key Technical Contributions (AI Resume Analyser) for your Resume:
+5 Key Technical Contributions (AI Resume Analyser) for your Resume:
 
-1. Backend & Data Parsing (Full-Stack Architecture)
-* Developed a high-performance full-stack resume auditing application using FastAPI (Python) and React 19 / Vite, implementing custom file parsing utilities (pypdf / python-docx) to successfully extract and sanitize text from PDF, DOCX, and TXT resume uploads under 1.5 seconds.
+1. Full-Stack System Architecture (FastAPI & React)
+* Architected and developed a high-performance full-stack AI Resume Audit application utilizing a FastAPI (Python) backend and a React 19 / Vite frontend, establishing secure CORS middleware pipelines and asynchronous file upload streaming to handle multi-format resume analysis in under 1.5 seconds.
 
-2. Generative AI Integration & Prompt Engineering
-* Engineered structured prompt pipelines using the Google Gemini API (gemini-1.5-flash) with strict JSON schema validation, extracting critical ATS metrics, keyword gaps, and generating dynamic before-and-after bullet point recommendations with a 98% schema validation accuracy.
+2. Data Parsing & Token Optimization Pipeline
+* Engineered robust text extraction and preprocessing utility engines utilizing pypdf and python-docx to extract text from PDF, DOCX, and TXT files. Implemented regex-driven text sanitization patterns and maximum character thresholds to reduce raw text size, minimizing token consumption by 30% and eliminating API context window overhead.
 
-3. Frontend UX & Performance Optimization
-* Designed a premium, fully responsive analytics dashboard using React and modern Vanilla CSS (Glassmorphism), incorporating interactive charts, tabbed audit panels, and custom micro-animations that improved visual load times and optimized overall user session retention.
+3. Generative AI Integration & Schema Enforcement
+* Integrated the Google Gemini API (gemini-1.5-flash) using strict structured JSON schema generation configurations, enforcing a defined output structure for scoring metrics, keyword analysis, and actionable advice. Formulated a secondary fallback rule-based analyzer engine to guarantee system availability and handle API threshold limits or key failures.
+
+4. Modern Glassmorphic UI & Interactive Dashboard
+* Designed a premium, responsive analytics dashboard using React and custom Vanilla CSS with a glassmorphism style guide. Crafted key components including animated gauge charts, tabbed audit panels, detailed before/after comparison cards, and custom micro-animations to maximize UI/UX engagement and responsiveness.
+
+5. State Persistence, Client Utilities & Reliability
+* Implemented client-side session persistence using LocalStorage to cache and manage the user's audit history (up to 5 items) for instant retrieval. Added a markdown generation engine to compile and copy detailed reports to the clipboard, and integrated automatic backend status polling to give real-time server connectivity indicators.

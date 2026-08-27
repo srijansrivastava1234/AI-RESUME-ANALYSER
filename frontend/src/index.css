@@ -964,3 +964,16 @@ h1, h2, h3, h4 {
   background: rgba(99, 102, 241, 0.03) !important;
 }
 
+/* Sandbox Tab Styling */
+.sandbox-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .sandbox-grid {
+    grid-template-columns: 3fr 2fr !important;
+  }
+}
+

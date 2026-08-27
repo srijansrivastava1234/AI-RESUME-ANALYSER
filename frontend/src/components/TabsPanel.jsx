@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import { CheckCircle, AlertTriangle, BookOpen, Clock, FileText, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 
-export default function TabsPanel({ report, extractedText, activeTab, setActiveTab }) {
+export default function TabsPanel({
+  report,
+  extractedText,
+  editedText,
+  setEditedText,
+  analyzeSandboxText,
+  activeTab,
+  setActiveTab,
+  loading
+}) {
   const [showRawText, setShowRawText] = useState(false);
   const [copiedKeyword, setCopiedKeyword] = useState(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [completedRecommendations, setCompletedRecommendations] = useState({});
+  const [copiedSandbox, setCopiedSandbox] = useState(false);
 
   // Helper: word count
   const getWordCount = (text) => {
@@ -42,6 +52,31 @@ export default function TabsPanel({ report, extractedText, activeTab, setActiveT
       setCopiedAll(true);
       setTimeout(() => setCopiedAll(false), 2000);
     }
+  };
+
+  const checkKeywordCoverage = (kw) => {
+    if (!editedText) return false;
+    return editedText.toLowerCase().includes(kw.toLowerCase());
+  };
+
+  const copySandboxToClipboard = () => {
+    if (!editedText) return;
+    navigator.clipboard.writeText(editedText);
+    setCopiedSandbox(true);
+    setTimeout(() => setCopiedSandbox(false), 2000);
+  };
+
+  const downloadSandboxAsTxt = () => {
+    if (!editedText) return;
+    const blob = new Blob([editedText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'edited_resume.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   // Recommendations checklist handlers
@@ -98,6 +133,12 @@ export default function TabsPanel({ report, extractedText, activeTab, setActiveT
           onClick={() => setActiveTab('recommendations')}
         >
           Actionable Edits
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'sandbox' ? 'active' : ''}`}
+          onClick={() => setActiveTab('sandbox')}
+        >
+          Resume Sandbox
         </button>
         <button 
           className={`tab-btn ${activeTab === 'keywords' ? 'active' : ''}`}
@@ -244,6 +285,174 @@ export default function TabsPanel({ report, extractedText, activeTab, setActiveT
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Tab: Sandbox Editor */}
+      {activeTab === 'sandbox' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div>
+            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Resume Sandbox & Editor</h4>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+              Refine your resume content directly in the sandbox. Add missing keywords and rewrite bullet points to see real-time updates:
+            </p>
+          </div>
+
+          <div className="sandbox-grid">
+            {/* Left side: Editor */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                  Draft Text Content
+                </span>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                  {getWordCount(editedText)} words | ~{Math.max(1, Math.round((getWordCount(editedText) / 200) * 60))}s read time
+                </span>
+              </div>
+              <textarea
+                value={editedText}
+                onChange={(e) => setEditedText(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '350px',
+                  background: 'rgba(0, 0, 0, 0.2)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '12px',
+                  padding: '1rem',
+                  color: 'white',
+                  fontFamily: 'monospace',
+                  fontSize: '0.85rem',
+                  lineHeight: '1.5',
+                  resize: 'vertical',
+                  outline: 'none',
+                  transition: 'border-color 0.2s ease'
+                }}
+                placeholder="Paste or edit your resume text here..."
+              />
+              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }} className="no-print">
+                <button
+                  onClick={analyzeSandboxText}
+                  disabled={loading || !editedText.trim()}
+                  className="btn-primary"
+                  style={{
+                    padding: '0.6rem 1.2rem',
+                    fontSize: '0.85rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                >
+                  {loading ? 'Analyzing...' : 'Re-analyze Draft'}
+                </button>
+                <button
+                  onClick={copySandboxToClipboard}
+                  disabled={!editedText}
+                  style={{
+                    padding: '0.6rem 1.2rem',
+                    fontSize: '0.85rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid var(--border-color)',
+                    color: 'white',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                >
+                  {copiedSandbox ? <Check style={{ width: '16px', height: '16px', color: 'var(--success)' }} /> : <Copy style={{ width: '16px', height: '16px' }} />}
+                  <span>{copiedSandbox ? 'Copied!' : 'Copy Draft'}</span>
+                </button>
+                <button
+                  onClick={downloadSandboxAsTxt}
+                  disabled={!editedText}
+                  style={{
+                    padding: '0.6rem 1.2rem',
+                    fontSize: '0.85rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid var(--border-color)',
+                    color: 'white',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                >
+                  <FileText style={{ width: '16px', height: '16px' }} />
+                  <span>Download .txt</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Right side: Real-time keyword tracker */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                <h5 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.5rem', color: 'var(--primary)' }}>
+                  Real-Time Keyword Coverage
+                </h5>
+                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                  Integrate these missing terms into your text draft to automatically verify match compliance:
+                </p>
+
+                {!report?.keywords?.missing || report.keywords.missing.length === 0 ? (
+                  <div style={{ fontSize: '0.85rem', color: 'var(--success)', fontWeight: 600 }}>
+                    ✓ Perfect! No missing keywords detected.
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                    {report.keywords.missing.map((kw, i) => {
+                      const isCovered = checkKeywordCoverage(kw);
+                      return (
+                        <div
+                          key={i}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '0.5rem 0.75rem',
+                            background: isCovered ? 'rgba(16, 185, 129, 0.05)' : 'rgba(239, 68, 68, 0.03)',
+                            border: `1px solid ${isCovered ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.1)'}`,
+                            borderRadius: '8px',
+                            fontSize: '0.8rem',
+                            transition: 'all 0.2s ease'
+                          }}
+                        >
+                          <span style={{ fontWeight: 600, color: 'white' }}>{kw}</span>
+                          <span
+                            style={{
+                              fontSize: '0.7rem',
+                              fontWeight: 700,
+                              color: isCovered ? 'var(--success)' : 'var(--danger)',
+                              background: isCovered ? 'var(--success-bg)' : 'var(--danger-bg)',
+                              padding: '0.15rem 0.4rem',
+                              borderRadius: '12px'
+                            }}
+                          >
+                            {isCovered ? '✓ Covered' : '✗ Missing'}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Tips card */}
+              <div style={{ background: 'rgba(99, 102, 241, 0.03)', padding: '1.25rem', borderRadius: '12px', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
+                <h5 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '0.35rem' }}>
+                  Optimization Tips
+                </h5>
+                <ul style={{ paddingLeft: '1.1rem', fontSize: '0.75rem', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  <li>Ensure keywords match exactly, or are used in natural, highly technical context sentences.</li>
+                  <li>Use action-verb combinations (e.g. <em>"Optimized system performance using Docker..."</em> instead of just listing <em>"Docker"</em>).</li>
+                  <li>Avoid packing keywords in a list format; ATS parsers prefer seeing usage in description bullets.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

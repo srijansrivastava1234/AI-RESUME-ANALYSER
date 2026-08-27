@@ -27,6 +27,7 @@ function App() {
   const [apiOnline, setApiOnline] = useState(false);
   const [report, setReport] = useState(null);
   const [extractedText, setExtractedText] = useState('');
+  const [editedText, setEditedText] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
   const [error, setError] = useState('');
   const [theme, setTheme] = useState(() => {
@@ -127,6 +128,7 @@ function App() {
   const loadHistoryItem = (item) => {
     setReport(item.report);
     setExtractedText(item.extractedText || '');
+    setEditedText(item.extractedText || '');
     setActiveTab('overview');
   };
 
@@ -206,6 +208,7 @@ function App() {
     setFile(null);
     setReport(null);
     setExtractedText('');
+    setEditedText('');
   };
 
   // Submit to API
@@ -238,10 +241,55 @@ function App() {
       const data = await response.json();
       setReport(data.report);
       setExtractedText(data.extracted_text || '');
+      setEditedText(data.extracted_text || '');
       setActiveTab('overview');
       saveToHistory(file.name, data.report.ats_score, data.report, data.extracted_text || '');
     } catch (err) {
       setError(err.message || 'An error occurred during analysis.');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Submit edited sandbox text to API
+  const analyzeSandboxText = async () => {
+    if (!editedText.trim()) {
+      setError('Sandbox draft is empty.');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    
+    try {
+      const textBlob = new Blob([editedText], { type: 'text/plain' });
+      const textFile = new File([textBlob], file?.name || 'resume.txt', { type: 'text/plain' });
+      
+      const formData = new FormData();
+      formData.append('file', textFile);
+      if (jobDesc.trim()) {
+        formData.append('job_description', jobDesc);
+      }
+
+      const response = await fetch(`${BACKEND_URL}/api/analyze`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to analyze sandbox draft.');
+      }
+
+      const data = await response.json();
+      setReport(data.report);
+      setExtractedText(data.extracted_text || '');
+      setEditedText(data.extracted_text || '');
+      setActiveTab('overview');
+      saveToHistory(`[Draft] ${file?.name || 'resume.txt'}`, data.report.ats_score, data.report, data.extracted_text || '');
+    } catch (err) {
+      setError(err.message || 'An error occurred during sandbox analysis.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -409,8 +457,12 @@ function App() {
               <TabsPanel
                 report={report}
                 extractedText={extractedText}
+                editedText={editedText}
+                setEditedText={setEditedText}
+                analyzeSandboxText={analyzeSandboxText}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                loading={loading}
               />
             </div>
           )}

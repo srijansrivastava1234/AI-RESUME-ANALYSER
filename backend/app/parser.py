@@ -17,14 +17,16 @@ def clean_extracted_text(text: str) -> str:
     return text.strip()
 
 
-def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> str:
+def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> tuple[str, int]:
     """
     Extracts text content from a PDF file provided as bytes.
     Limits the total characters to max_chars to avoid excessive input lengths.
+    Returns a tuple of (extracted_text, page_count).
     """
     try:
         pdf_file = io.BytesIO(file_bytes)
         reader = PdfReader(pdf_file)
+        total_pages = len(reader.pages)
         
         extracted_text = []
         char_count = 0
@@ -46,7 +48,7 @@ def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> str:
         if not full_text:
             raise ValueError("No text could be extracted from the PDF. The file might be scanned or image-only.")
             
-        return full_text
+        return full_text, total_pages
         
     except Exception as e:
         logger.error(f"Error extracting PDF: {str(e)}")

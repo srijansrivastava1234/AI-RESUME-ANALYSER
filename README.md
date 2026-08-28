@@ -1,11 +1,23 @@
 # AI Resume Analyser
 
+![Python](https://img.shields.io/badge/Python-3.10+-3670A0?style=flat-square&logo=python&logoColor=ffdd54)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-005571?style=flat-square&logo=fastapi)
+![React](https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react&logoColor=61DAFB)
+![Gemini AI](https://img.shields.io/badge/Gemini-AI-4285F4?style=flat-square&logo=google&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+
 A visually premium, modern ATS (Applicant Tracking System) compiler and resume auditing dashboard. It analyzes resume PDFs and compares them against target job descriptions using Gemini AI to score and suggest actionable enhancements.
 
-## 🛠️ Architecture
+## 🛠️ Tech Stack
 
-- **Backend:** FastAPI (Python 3.10+) utilizing Uvicorn, PyPDF for text extraction, and the Google Generative AI SDK for Gemini models.
-- **Frontend:** React 19 + Vite 8, styled with raw CSS (glassmorphism design system) and powered by Lucide icons.
+| Layer | Technology | Purpose |
+|---|---|---|
+| **AI Engine** | Google Gemini API | ATS scoring, keyword analysis, suggestions |
+| **Backend** | FastAPI + Uvicorn | REST API, file parsing, response streaming |
+| **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction |
+| **Frontend** | React 19 + Vite | Interactive dashboard UI |
+| **Styling** | Vanilla CSS (glassmorphism) | Dark premium design system |
+| **Icons** | Lucide React | Consistent icon set |
 
 ## 📂 Project Structure
 

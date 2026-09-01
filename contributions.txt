@@ -1,62 +1,75 @@
 ================================================================================
-           5 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+           7 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
 
 --------------------------------------------------------------------------------
 1. FULL RESUME BULLET POINTS (XYZ / ACTION-RESULT FORMAT)
 --------------------------------------------------------------------------------
 
-1. Full-Stack System Architecture (FastAPI & React 19)
-   • Architected and deployed a high-performance full-stack AI Resume Audit platform
-     utilizing FastAPI (Python) and React 19 / Vite, establishing asynchronous request
-     handling and non-blocking file streaming to process multi-format resumes in under 1.5s.
+1. Asynchronous Full-Stack Architecture & REST API (FastAPI & React 19)
+   • Architected and deployed a low-latency full-stack resume analysis platform using
+     FastAPI (Python) and React 19 / Vite, establishing asynchronous non-blocking request
+     handling and live health-check polling to process multi-format resumes in under 1.5s.
 
-2. Data Parsing & Token Optimization Pipeline
-   • Engineered robust text extraction and preprocessing utility engines utilizing PyPDF
-     and python-docx for PDF, DOCX, and TXT files; implemented regex sanitization and length
-     thresholds to reduce payload size by 30%, minimizing LLM token consumption and eliminating
-     context-window overhead.
+2. Multi-Format Ingestion & Token-Optimized Text Parsing (PyPDF & python-docx)
+   • Engineered a multi-format document ingestion pipeline for PDF, DOCX, and TXT files;
+     implemented regex sanitization, structural normalization, and token pruning to reduce
+     payload size by 30%, minimizing LLM token consumption and eliminating context-window bloat.
 
-3. Generative AI Integration, Schema Enforcement & Fallback Resilience
-   • Integrated Google Gemini 1.5 Flash using strict structured JSON schema generation to
-     deliver deterministic ATS compatibility scoring, keyword gap analysis, and tailored
-     bullet-point rewrites; formulated a secondary heuristic rule-based analyzer engine to
-     guarantee 100% system availability during API rate limits.
+3. Generative AI Orchestration & Strict Schema Enforcement (Google Gemini 1.5 Flash)
+   • Integrated Google Gemini 1.5 Flash utilizing strict structured JSON schema generation to
+     deliver deterministic ATS compatibility scoring, keyword gap classification, and granular
+     section-by-section diagnostic feedback.
 
-4. Modern Glassmorphic UI & Interactive Analytics Dashboard
-   • Designed a responsive dark-theme analytics dashboard using React and custom Vanilla CSS
-     (Glassmorphism), crafting animated score gauge charts, tabbed audit matrices, side-by-side
-     bullet comparison cards, and custom micro-interactions to maximize UX engagement.
+4. Heuristic Fallback & High-Availability Rule Engine (Zero-Downtime Design)
+   • Formulated a deterministic, offline heuristic/rule-based scoring engine capable of
+     extracting action verbs, technical skills, and quantifiable metrics, ensuring 100% platform
+     availability and seamless user experience during LLM rate limits or API outages.
 
-5. State Persistence, Client Utilities & Reliability
-   • Implemented client-side session caching via LocalStorage to persist and retrieve the user's
-     audit history instantly without database overhead; built an automated markdown export engine
-     for one-click clipboard copying and live backend status polling.
+5. Interactive Glassmorphic UI & Real-Time Analytics Dashboard (React & Modern CSS3)
+   • Designed a responsive dark-theme analytics interface using custom glassmorphic styling,
+     animated SVG score gauges, color-coded skill density matrices, and tabbed audit breakdown
+     panels to optimize visual hierarchy and UX engagement.
+
+6. Quantifiable Bullet-Point Rewriter & Impact Synthesizer
+   • Developed an intelligent bullet-point transformation module that flags passive phrasing,
+     synthesizes quantifiable XYZ-format achievements, and displays side-by-side comparisons
+     with one-click clipboard copying.
+
+7. Client-Side Session Persistence & Report Export Pipeline (LocalStorage & Markdown)
+   • Implemented zero-overhead client-side state caching via LocalStorage for instant audit
+     history recall across sessions, alongside an automated Markdown report generator for
+     streamlined multi-format export.
 
 
 --------------------------------------------------------------------------------
 2. CONCISE 1-LINE BULLET POINTS (STANDARD 1-PAGE RESUME)
 --------------------------------------------------------------------------------
 
-• Architected full-stack ATS audit tool with FastAPI & React 19, enabling multi-format resume parsing and AI analysis in < 1.5s.
-• Engineered text parsing pipeline with PyPDF & python-docx, reducing token footprint by 30% via regex normalization.
-• Integrated Google Gemini 1.5 Flash with strict JSON schema enforcement and rule-based fallback logic ensuring 100% uptime.
-• Developed interactive glassmorphic dashboard with React & custom CSS, featuring animated score gauges & gap matrices.
-• Implemented client-side caching via LocalStorage for instant audit history recall and clipboard export utilities.
+• Architected full-stack ATS audit engine using FastAPI and React 19, enabling multi-format resume parsing and analysis in <1.5s.
+• Engineered text extraction pipeline with PyPDF and python-docx, reducing token footprint by 30% through regex normalization.
+• Integrated Google Gemini 1.5 Flash with strict JSON schema enforcement to generate deterministic ATS scores and keyword gap audits.
+• Built a secondary heuristic rule-based analyzer engine guaranteeing 100% uptime during LLM rate limits and network outages.
+• Designed responsive glassmorphic dashboard in React & CSS3 with animated score gauges, keyword matrices, and interactive tabs.
+• Developed an automated bullet-point optimizer transforming passive descriptions into quantifiable, XYZ-formatted impact statements.
+• Implemented client-side session caching with LocalStorage for instant audit history retrieval and one-click Markdown report export.
 
 
 --------------------------------------------------------------------------------
-3. LATEX / OVERLEAF SNIPPET
+3. LATEX / OVERLEAF SNIPPETS
 --------------------------------------------------------------------------------
 
 \resumeSubHeadingListStart
   \resumeProjectHeading
-      {\textbf{AI Resume Analyser} $|$ \emph{FastAPI, React 19, Vite, Gemini API, PyPDF, CSS3}}{2024}
+      {\textbf{AI Resume Analyser} $|$ \emph{FastAPI, React 19, Vite, Gemini API, PyPDF, python-docx, CSS3}}{2024}
       \resumeItemListStart
-        \resumeItem{Architected high-performance full-stack resume audit engine with FastAPI and React 19, achieving sub-1.5s response times.}
-        \resumeItem{Engineered multi-format parsing pipeline (PDF/DOCX/TXT), optimizing raw text payloads to reduce LLM token usage by 30\%.}
-        \resumeItem{Integrated Google Gemini 1.5 Flash using structured JSON schemas and engineered an offline fallback engine for 100\% availability.}
-        \resumeItem{Designed responsive glassmorphism UI featuring live ATS score gauges, interactive keyword matching, and LocalStorage history.}
+        \resumeItem{Architected full-stack resume analysis platform with FastAPI and React 19, achieving sub-1.5s end-to-end processing.}
+        \resumeItem{Engineered multi-format document parser (PDF/DOCX/TXT) with regex sanitization, reducing LLM token usage by 30\%.}
+        \resumeItem{Integrated Google Gemini 1.5 Flash via structured JSON schema enforcement for deterministic ATS scoring and gap analysis.}
+        \resumeItem{Formulated offline heuristic fallback engine to guarantee 100\% platform uptime during API rate limits and outages.}
+        \resumeItem{Designed responsive glassmorphism UI featuring animated score gauges, skill density matrices, and interactive tabs.}
+        \resumeItem{Built bullet-point rewriter engine converting passive resume lines into quantifiable XYZ-format impact statements.}
+        \resumeItem{Implemented LocalStorage session caching for zero-overhead audit history and one-click Markdown report generation.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -65,18 +78,30 @@
 4. INTERVIEW TALKING POINTS (STAR METHOD)
 --------------------------------------------------------------------------------
 
-• System Architecture:
-  "Built with FastAPI for asynchronous, non-blocking I/O and low-latency API responses. The React 19
-  frontend communicates over REST with streamlined payload sizes to keep UI response times under 1.5 seconds."
+1. Full-Stack System Architecture:
+   "Designed an asynchronous FastAPI backend paired with React 19 and Vite to provide real-time, non-blocking
+   resume audits in under 1.5 seconds with live health monitoring."
 
-• LLM Reliability & Schema:
-  "Enforced Gemini's structured output format (JSON Schema) to guarantee deterministic metric scoring
-  and prevent malformed LLM responses from breaking client-side UI components."
+2. Token Optimization & Ingestion:
+   "Engineered document parsers using PyPDF and python-docx, preprocessing raw strings with regex sanitization
+   and token pruning to lower LLM payload overhead by ~30%."
 
-• Failover / Resilience Strategy:
-  "Created a secondary heuristic/rule-based parser and analyzer so the application stays operational
-  even during Gemini API rate limits or network downtime."
+3. Structured AI Outputs:
+   "Leveraged Gemini 1.5 Flash with strict JSON schema definitions, guaranteeing 100% type-safe, deterministic
+   responses for frontend scorecards and matrices."
 
-• Performance & Optimization:
-  "Preprocessed extracted document strings with regex sanitization and character clipping before passing
-  to the LLM, reducing token consumption by ~30%."
+4. High Availability & Failover:
+   "Implemented a dual-engine design with an offline heuristic rule-based fallback, preventing downtime and
+   handling requests even when third-party AI APIs hit rate limits."
+
+5. Frontend Design & Data Visualization:
+   "Crafted a custom glassmorphism design system in pure CSS and React, incorporating SVG gauge meters and
+   tabbed audit matrices for an intuitive candidate experience."
+
+6. Bullet Rewriting & Optimization:
+   "Developed a targeted bullet-point rewriter that detects weak verbs and missing metrics, automatically
+   suggesting action-oriented XYZ accomplishments."
+
+7. Client-Side Persistence & Export:
+   "Integrated browser LocalStorage for instant audit history tracking and built a client-side Markdown exporter
+   for seamless report generation."

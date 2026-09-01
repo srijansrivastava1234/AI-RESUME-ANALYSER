@@ -95,15 +95,17 @@ AI-RESUME-ANALYSER/
 
 ---
 
-## 💼 5 Key Technical Contributions (for Resume)
+## 💼 7 Key Technical Contributions (for Resume)
 
-If you are showcasing this project on your resume or portfolio, here are 5 impact-driven bullet points:
+If you are showcasing this project on your resume or portfolio, here are 7 impact-driven technical contributions:
 
 1. **Full-Stack System Architecture (FastAPI & React 19):** Architected and deployed a high-performance full-stack resume auditing application using **FastAPI** (Python) and **React 19 / Vite**, establishing asynchronous request handling and non-blocking file streaming to process and analyze multi-format resumes in under 1.5 seconds.
 2. **Data Parsing & Token Optimization Pipeline:** Engineered robust text extraction and preprocessing utility engines utilizing **PyPDF** and **python-docx** for PDF, DOCX, and TXT files; implemented regex sanitization and character thresholding to reduce raw payload size by 30%, minimizing LLM token consumption and eliminating context-window overhead.
-3. **Generative AI Integration & Fallback Resilience:** Integrated the **Google Gemini API** (`gemini-1.5-flash`) using strict structured JSON schema validation to deliver deterministic ATS metrics, keyword gap matrices, and tailored recommendations, backed by a secondary heuristic rule-based analyzer engine guaranteeing 100% system availability.
-4. **Modern Glassmorphic UI & Interactive Dashboard:** Designed a responsive analytics dashboard using **React** and custom **Vanilla CSS (Glassmorphism)**, incorporating real-time animated score gauge charts, tabbed audit matrices, and custom micro-animations for optimized user retention.
-5. **State Persistence & Client Utilities:** Implemented client-side session caching via **LocalStorage** to persist and recall audit history instantly without database overhead, coupled with automated markdown report compilation for one-click clipboard copying and live backend status polling.
+3. **Generative AI Integration & Schema Enforcement:** Integrated the **Google Gemini API** (`gemini-1.5-flash`) using strict structured JSON schema validation to deliver deterministic ATS metrics, keyword gap matrices, and tailored recommendations.
+4. **Heuristic Fallback & High Availability:** Formulated an offline heuristic/rule-based analyzer engine that extracts action verbs, technical skills, and quantifiable metrics, guaranteeing 100% system availability during API rate limits.
+5. **Modern Glassmorphic UI & Interactive Dashboard:** Designed a responsive analytics dashboard using **React** and custom **Vanilla CSS (Glassmorphism)**, incorporating real-time animated score gauge charts, tabbed audit matrices, and custom micro-animations for optimized user retention.
+6. **Quantifiable Bullet-Point Rewriter:** Developed an automated transformation engine that flags passive phrasing, synthesizes quantifiable XYZ-format achievements, and displays side-by-side before/after comparisons with one-click clipboard copying.
+7. **State Persistence & Client Utilities:** Implemented client-side session caching via **LocalStorage** to persist and recall audit history instantly without database overhead, coupled with automated markdown report compilation for one-click clipboard copying and live backend status polling. See `contributions.txt` for LaTeX and STAR formats.
 
 ---
 

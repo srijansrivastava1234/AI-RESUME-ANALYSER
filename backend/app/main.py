@@ -20,7 +20,13 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ResumeAnalyserAPI")
 
-app = FastAPI(title="AI Resume Analyser Backend")
+app = FastAPI(
+    title="AI Resume Analyser API",
+    description="High-performance asynchronous API for resume parsing, ATS scoring, and generative AI feedback using Google Gemini.",
+    version=APP_VERSION,
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 # Enable CORS for frontend dashboard connection
 app.add_middleware(

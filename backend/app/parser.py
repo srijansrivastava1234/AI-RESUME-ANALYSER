@@ -7,10 +7,13 @@ logger = logging.getLogger("ResumeParser")
 
 def clean_extracted_text(text: str) -> str:
     """
-    Cleans extracted text to optimize token usage:
+    Cleans and normalizes extracted text to optimize LLM token usage:
     - Replaces 3 or more consecutive newlines with 2 newlines.
-    - Replaces 2 or more consecutive spaces with a single space.
+    - Replaces multiple whitespace/tabs with a single space.
     - Strips leading/trailing whitespaces.
+    
+    :param text: Raw extracted string from document
+    :return: Normalized, token-efficient text string
     """
     text = re.sub(r'\n{3,}', '\n\n', text)
     text = re.sub(r'[ \t]{2,}', ' ', text)
@@ -19,9 +22,13 @@ def clean_extracted_text(text: str) -> str:
 
 def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> tuple[str, int]:
     """
-    Extracts text content from a PDF file provided as bytes.
-    Limits the total characters to max_chars to avoid excessive input lengths.
-    Returns a tuple of (extracted_text, page_count).
+    Extracts text content and page metadata from a PDF file provided as bytes.
+    Limits total character ingestion to max_chars to avoid excessive token overhead.
+
+    :param file_bytes: Raw binary payload of the PDF document
+    :param max_chars: Maximum character limit for ingestion (default: 50,000)
+    :return: Tuple of (cleaned_extracted_text, total_page_count)
+    :raises ValueError: When no extractable text is found (e.g., scanned/image-only PDF)
     """
     try:
         pdf_file = io.BytesIO(file_bytes)

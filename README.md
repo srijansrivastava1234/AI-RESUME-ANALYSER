@@ -82,6 +82,14 @@ AI-RESUME-ANALYSER/
    ```
    * The dashboard UI will run and expose itself on all network interfaces (e.g., `http://<YOUR_LOCAL_IP>:5173`).
    * The frontend dynamically communicates with the backend on port `8000` of the host device it's loaded from.
+   * **Quick Shortcut:** Press `Ctrl + Enter` (or `Cmd + Enter`) anywhere to instantly run the resume audit!
+
+### 4. Run Automated Tests
+Run the backend pytest test suite to verify parsers, heuristic fallback, and API endpoints:
+```bash
+cd backend
+pytest tests/ -v
+```
 
 ---
 

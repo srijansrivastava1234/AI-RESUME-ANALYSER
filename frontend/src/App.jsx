@@ -42,6 +42,20 @@ function App() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  // Keyboard shortcut listener: Ctrl+Enter or Cmd+Enter to run analysis
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        if (file && !loading) {
+          e.preventDefault();
+          analyzeResume();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [file, loading, jobDesc]);
+
   const copyMarkdownReport = () => {
     if (!report) return;
     const detectedKws = report.keywords?.detected?.join(', ') || 'None';

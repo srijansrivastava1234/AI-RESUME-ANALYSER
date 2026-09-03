@@ -7,7 +7,7 @@ import time
 
 APP_VERSION = "1.1.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.parser import extract_text_from_pdf, extract_text_from_docx, extract_text_from_txt
 from app.analyzer import analyze_resume
@@ -27,6 +27,17 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Custom performance & security headers middleware
+@app.middleware("http")
+async def add_process_time_and_security_headers(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = f"{process_time:.4f}s"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    return response
 
 # Enable CORS for frontend dashboard connection
 app.add_middleware(

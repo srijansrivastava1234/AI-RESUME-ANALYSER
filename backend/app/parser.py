@@ -8,6 +8,7 @@ logger = logging.getLogger("ResumeParser")
 def clean_extracted_text(text: str) -> str:
     """
     Cleans and normalizes extracted text to optimize LLM token usage:
+    - Removes null bytes and non-printable control characters.
     - Replaces 3 or more consecutive newlines with 2 newlines.
     - Replaces multiple whitespace/tabs with a single space.
     - Strips leading/trailing whitespaces.
@@ -15,6 +16,8 @@ def clean_extracted_text(text: str) -> str:
     :param text: Raw extracted string from document
     :return: Normalized, token-efficient text string
     """
+    # Remove null bytes and unwanted control characters (except newline and tab)
+    text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', text)
     text = re.sub(r'\n{3,}', '\n\n', text)
     text = re.sub(r'[ \t]{2,}', ' ', text)
     return text.strip()

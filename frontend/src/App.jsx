@@ -4,7 +4,8 @@ import {
   Target, 
   Printer,
   Copy,
-  Check
+  Check,
+  Download
 } from 'lucide-react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -100,6 +101,57 @@ function App() {
     navigator.clipboard.writeText(md);
     setCopiedReport(true);
     setTimeout(() => setCopiedReport(false), 2000);
+  };
+
+  const downloadJSONReport = () => {
+    if (!report) return;
+    const exportData = {
+      filename: file?.name || 'resume_analysis',
+      generated_at: new Date().toISOString(),
+      ats_score: report.ats_score,
+      report,
+      extracted_text: extractedText
+    };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(file?.name || 'resume').replace(/\.[^/.]+$/, "")}_ats_report.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadTxtReport = () => {
+    if (!report) return;
+    let txt = `====================================================\n`;
+    txt += `          ATS RESUME ANALYSIS REPORT                \n`;
+    txt += `====================================================\n\n`;
+    txt += `File Name: ${file?.name || 'Resume'}\n`;
+    txt += `ATS Score: ${report.ats_score}/100\n\n`;
+    if (report.job_compatibility) {
+      txt += `[JOB COMPATIBILITY]\n`;
+      txt += `Match Score: ${report.job_compatibility.score}%\n`;
+      txt += `Analysis: ${report.job_compatibility.match_analysis}\n\n`;
+    }
+    txt += `[CORE METRICS]\n`;
+    report.metrics?.forEach(m => {
+      txt += `• ${m.name}: ${m.score}/100 - ${m.feedback}\n`;
+    });
+    txt += `\n[KEY STRENGTHS]\n`;
+    report.key_strengths?.forEach(s => {
+      txt += `• ${s}\n`;
+    });
+    txt += `\n[KEYWORDS]\n`;
+    txt += `Detected: ${report.keywords?.detected?.join(', ') || 'None'}\n`;
+    txt += `Missing:  ${report.keywords?.missing?.join(', ') || 'None'}\n`;
+    
+    const blob = new Blob([txt], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${(file?.name || 'resume').replace(/\.[^/.]+$/, "")}_ats_summary.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const [history, setHistory] = useState([]);
@@ -378,15 +430,15 @@ function App() {
 
           {!loading && report && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }} className="no-print">
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', flexWrap: 'wrap' }} className="no-print">
                 <button 
                   onClick={copyMarkdownReport} 
                   className="btn-print"
                   style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
-                    gap: '0.5rem', 
-                    padding: '0.5rem 1rem', 
+                    gap: '0.4rem', 
+                    padding: '0.45rem 0.85rem', 
                     background: 'rgba(255, 255, 255, 0.05)', 
                     border: '1px solid var(--border-color)', 
                     borderRadius: '8px', 
@@ -394,13 +446,59 @@ function App() {
                     cursor: 'pointer', 
                     fontFamily: 'var(--font-header)', 
                     fontWeight: 600, 
-                    fontSize: '0.85rem',
+                    fontSize: '0.8rem',
                     transition: 'var(--transition-smooth)'
                   }}
                   title="Copy the entire report as formatted Markdown"
                 >
-                  {copiedReport ? <Check style={{ width: '16px', height: '16px', color: 'var(--success)' }} /> : <Copy style={{ width: '16px', height: '16px' }} />}
-                  <span>{copiedReport ? 'Report Copied!' : 'Copy Markdown Report'}</span>
+                  {copiedReport ? <Check style={{ width: '15px', height: '15px', color: 'var(--success)' }} /> : <Copy style={{ width: '15px', height: '15px' }} />}
+                  <span>{copiedReport ? 'Report Copied!' : 'Copy Markdown'}</span>
+                </button>
+                <button 
+                  onClick={downloadJSONReport} 
+                  className="btn-print"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.4rem', 
+                    padding: '0.45rem 0.85rem', 
+                    background: 'rgba(255, 255, 255, 0.05)', 
+                    border: '1px solid var(--border-color)', 
+                    borderRadius: '8px', 
+                    color: 'white', 
+                    cursor: 'pointer', 
+                    fontFamily: 'var(--font-header)', 
+                    fontWeight: 600, 
+                    fontSize: '0.8rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                  title="Download full analysis payload as structured JSON"
+                >
+                  <Download style={{ width: '15px', height: '15px' }} />
+                  <span>Download JSON</span>
+                </button>
+                <button 
+                  onClick={downloadTxtReport} 
+                  className="btn-print"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.4rem', 
+                    padding: '0.45rem 0.85rem', 
+                    background: 'rgba(255, 255, 255, 0.05)', 
+                    border: '1px solid var(--border-color)', 
+                    borderRadius: '8px', 
+                    color: 'white', 
+                    cursor: 'pointer', 
+                    fontFamily: 'var(--font-header)', 
+                    fontWeight: 600, 
+                    fontSize: '0.8rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                  title="Download clean plain-text summary"
+                >
+                  <FileText style={{ width: '15px', height: '15px' }} />
+                  <span>Summary TXT</span>
                 </button>
                 <button 
                   onClick={() => window.print()} 
@@ -408,8 +506,8 @@ function App() {
                   style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
-                    gap: '0.5rem', 
-                    padding: '0.5rem 1rem', 
+                    gap: '0.4rem', 
+                    padding: '0.45rem 0.85rem', 
                     background: 'rgba(255, 255, 255, 0.05)', 
                     border: '1px solid var(--border-color)', 
                     borderRadius: '8px', 
@@ -417,12 +515,12 @@ function App() {
                     cursor: 'pointer', 
                     fontFamily: 'var(--font-header)', 
                     fontWeight: 600, 
-                    fontSize: '0.85rem',
+                    fontSize: '0.8rem',
                     transition: 'var(--transition-smooth)'
                   }}
                 >
-                  <Printer style={{ width: '16px', height: '16px' }} />
-                  <span>Export Report / Print PDF</span>
+                  <Printer style={{ width: '15px', height: '15px' }} />
+                  <span>Print PDF</span>
                 </button>
               </div>
               

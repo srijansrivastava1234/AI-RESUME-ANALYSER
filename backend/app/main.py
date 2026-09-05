@@ -9,8 +9,11 @@ APP_VERSION = "1.1.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
+from typing import Optional
 from app.parser import extract_text_from_pdf, extract_text_from_docx, extract_text_from_txt
 from app.analyzer import analyze_resume
+from app.rewriter import optimize_bullet_point
 from dotenv import load_dotenv
 
 # Load environmental variables from .env if present
@@ -19,6 +22,10 @@ load_dotenv()
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("ResumeAnalyserAPI")
+
+class OptimizeBulletRequest(BaseModel):
+    bullet: str = Field(..., min_length=5, description="The resume bullet point text to optimize")
+    target_role: Optional[str] = Field(None, description="Optional target job title or role context")
 
 app = FastAPI(
     title="AI Resume Analyser API",
@@ -55,7 +62,8 @@ def read_root():
         "version": APP_VERSION,
         "service": "AI Resume Analyser Service",
         "endpoints": {
-            "/api/analyze": "POST - Upload PDF resume and optional job description to get ATS analysis",
+            "/api/analyze": "POST - Upload PDF/DOCX/TXT resume and optional job description to get ATS analysis",
+            "/api/optimize-bullet": "POST - Optimize single resume bullet point into XYZ format",
             "/api/health": "GET - Service health check"
         }
     }
@@ -139,3 +147,19 @@ async def analyze_resume_endpoint(
             status_code=500,
             detail=f"An error occurred while processing the resume: {str(e)}"
         )
+
+@app.post("/api/optimize-bullet")
+def optimize_bullet_endpoint(payload: OptimizeBulletRequest):
+    """
+    Transforms a single resume bullet point into a high-impact, quantifiable statement
+    following Google's XYZ formula.
+    """
+    try:
+        result = optimize_bullet_point(payload.bullet, payload.target_role)
+        return result
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as err:
+        logger.error(f"Error in bullet optimization: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to optimize bullet: {str(err)}")
+

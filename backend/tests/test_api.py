@@ -66,3 +66,25 @@ def test_analyze_endpoint_invalid_file_extension():
 def test_analyze_endpoint_missing_file():
     response = client.post("/api/analyze")
     assert response.status_code == 422
+
+def test_optimize_bullet_endpoint_valid():
+    payload = {
+        "bullet": "helped maintain customer database and fixed frontend bugs",
+        "target_role": "Backend Engineer"
+    }
+    response = client.post("/api/optimize-bullet", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert "original" in data
+    assert "optimized" in data
+    assert "action_verb_used" in data
+    assert "framework" in data
+    assert "feedback" in data
+
+def test_optimize_bullet_endpoint_too_short():
+    payload = {
+        "bullet": "fix"
+    }
+    response = client.post("/api/optimize-bullet", json=payload)
+    assert response.status_code == 422  # validation error for min_length=5
+

@@ -4,6 +4,18 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-09-05
+
+### Added
+- **Standalone Bullet Optimizer Endpoint**: Exposed `/api/optimize-bullet` endpoint for on-demand transformation of weak resume bullets into high-impact Google XYZ statements.
+- **Categorized Technical Skill Extraction**: Built domain taxonomy keyword extractor in `app.keywords` categorizing skills across Languages, Frameworks, Cloud & DevOps, Databases, and Architecture.
+- **Multi-Format Report Exporters**: Integrated one-click downloads for structured JSON data and formatted plain-text ATS summaries alongside Markdown export and PDF printing.
+- **Instant Sample Resume Loader**: Added "Try Sample" action in Dropzone to load a realistic Software Engineer profile for zero-friction demo testing.
+- **Continuous Integration Workflow**: Created GitHub Actions CI workflow testing across Python 3.11/3.12 and Node.js 20/22 matrices.
+- **FastAPI TestClient Integration Tests**: Added test coverage for API routing, error conditions, file format enforcement, and security headers.
+- **Job Description Counter Badge**: Added live word and character counters with quick-clear and shortcut hints.
+- **Open-Source Contributing Guide**: Added `CONTRIBUTING.md` with development setup, testing commands, and commit conventions.
+
 ---
 
 ## [1.2.0] - 2026-09-03

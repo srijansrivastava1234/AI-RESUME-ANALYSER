@@ -10,6 +10,7 @@ export default function Sidebar({
   handleDrop,
   handleFileChange,
   removeFile,
+  loadSampleResume,
   error,
   jobDesc,
   setJobDesc,
@@ -31,6 +32,7 @@ export default function Sidebar({
         handleDrop={handleDrop}
         handleFileChange={handleFileChange}
         removeFile={removeFile}
+        loadSampleResume={loadSampleResume}
         error={error}
       />
 

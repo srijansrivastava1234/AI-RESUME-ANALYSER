@@ -270,14 +270,50 @@ function App() {
     }
   };
 
+  const loadSampleResume = () => {
+    const sampleText = `Alex Mercer
+Senior Full Stack Engineer | San Francisco, CA | alex.mercer@email.com | (555) 019-2834
+
+PROFESSIONAL SUMMARY
+Results-driven Senior Full Stack Software Engineer with 6+ years of experience designing, scaling, and deploying mission-critical distributed systems. Proven track record in microservice architectures, API latency reduction, and cloud infrastructure optimization.
+
+TECHNICAL SKILLS
+- Languages: Python, TypeScript, JavaScript, SQL, HTML5, CSS3, Go
+- Frameworks & Libraries: React, FastAPI, Node.js, Next.js, Express, Redux, TailwindCSS
+- Cloud & DevOps: AWS (EC2, S3, RDS, Lambda), Docker, Kubernetes, CI/CD (GitHub Actions), Terraform, Linux
+- Databases: PostgreSQL, Redis, MongoDB, MySQL
+- Methodologies: Agile / Scrum, TDD, RESTful APIs, Microservices, System Design
+
+WORK EXPERIENCE
+Senior Software Engineer | CloudScale Tech | 2022 – Present
+• Architected and deployed high-throughput microservices using FastAPI and PostgreSQL, reducing endpoint p99 latency by 42% for 2.5M daily active users.
+• Spearheaded containerization initiative with Docker and Kubernetes on AWS EKS, cutting deployment overhead by 65% and achieving 99.99% system availability.
+• Engineered real-time event-driven data streaming pipeline with Redis and WebSockets, processing 50k events/second with zero packet drop.
+• Mentored 5 junior and mid-level software engineers on code review standards, modern testing methodologies, and architectural design patterns.
+
+Full Stack Developer | Nexa Innovations | 2019 – 2022
+• Developed responsive web applications using React and TypeScript, boosting candidate conversion rates by 28%.
+• Implemented automated CI/CD deployment pipelines with GitHub Actions, reducing release cycle time from 2 weeks to daily automated deployments.
+• Optimized relational database queries and indexed slow schemas in PostgreSQL, resulting in a 35% query performance improvement.
+
+EDUCATION
+Bachelor of Science in Computer Science | University of California, Berkeley | 2015 – 2019
+`;
+    const sampleFile = new File([sampleText], "sample_software_engineer_resume.txt", { type: "text/plain" });
+    setFile(sampleFile);
+    setError("");
+    if (!jobDesc) {
+      setJobDesc("We are seeking a Senior Full Stack Engineer proficient in Python, FastAPI, React, Docker, and AWS to architect high-performance distributed systems.");
+    }
+  };
+
   const removeFile = () => {
     setFile(null);
     setReport(null);
     setExtractedText('');
     setEditedText('');
-  };
-
-  // Submit to API
+    setError('');
+  };// Submit to API
   const analyzeResume = async () => {
     if (!file) {
       setError('Please upload a resume first.');
@@ -393,6 +429,7 @@ function App() {
           handleDrop={handleDrop}
           handleFileChange={handleFileChange}
           removeFile={removeFile}
+          loadSampleResume={loadSampleResume}
           error={error}
           jobDesc={jobDesc}
           setJobDesc={setJobDesc}

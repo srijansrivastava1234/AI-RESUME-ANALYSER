@@ -1,5 +1,5 @@
 import React from 'react';
-import { UploadCloud, FileText, AlertTriangle } from 'lucide-react';
+import { UploadCloud, FileText, AlertTriangle, Sparkles } from 'lucide-react';
 
 const MAX_SIZE_MB = 10;
 const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
@@ -17,6 +17,7 @@ export default function Dropzone({
   handleDrop,
   handleFileChange,
   removeFile,
+  loadSampleResume,
   error
 }) {
   const sizePercent = file ? Math.min((file.size / MAX_SIZE_BYTES) * 100, 100) : 0;
@@ -24,7 +25,33 @@ export default function Dropzone({
 
   return (
     <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <h3 style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Upload Resume</h3>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h3 style={{ fontSize: '1.2rem', margin: 0 }}>Upload Resume</h3>
+        {!file && loadSampleResume && (
+          <button
+            onClick={loadSampleResume}
+            type="button"
+            style={{
+              background: 'rgba(99, 102, 241, 0.15)',
+              border: '1px solid rgba(99, 102, 241, 0.3)',
+              borderRadius: '6px',
+              color: '#818cf8',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              padding: '0.3rem 0.6rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              transition: 'all 0.2s ease'
+            }}
+            title="Load a realistic Software Engineer sample resume for quick testing"
+          >
+            <Sparkles style={{ width: '13px', height: '13px' }} />
+            <span>Try Sample</span>
+          </button>
+        )}
+      </div>
       
       {!file ? (
         <div 

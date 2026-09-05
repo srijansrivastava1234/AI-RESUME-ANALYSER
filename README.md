@@ -8,6 +8,24 @@
 
 A visually premium, modern ATS (Applicant Tracking System) compiler and resume auditing dashboard. It analyzes resume PDFs and compares them against target job descriptions using Gemini AI to score and suggest actionable enhancements.
 
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    A[Candidate Resume: PDF / DOCX / TXT] --> B[FastAPI Async Document Ingestion]
+    J[Target Job Description] --> B
+    B --> C[Token Optimizer & Control Char Sanitizer]
+    C --> D{Gemini API Configured?}
+    D -- Yes --> E[Gemini 1.5 Flash Strict JSON Schema Engine]
+    D -- No / Fallback --> F[Heuristic Rule Engine & Keyword Taxonomy]
+    E --> G[Standardized ATS Audit Payload]
+    F --> G
+    G --> H[React 19 Interactive Glassmorphic Dashboard]
+    H --> I1[Score Gauges & Section Audit]
+    H --> I2[XYZ Bullet Rewriter & Gap Matrix]
+    H --> I3[Multi-Format Exporter: MD / JSON / TXT / PDF]
+```
+
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Purpose |

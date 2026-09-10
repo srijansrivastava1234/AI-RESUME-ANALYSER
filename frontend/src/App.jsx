@@ -13,6 +13,7 @@ import ScoreCard from './components/ScoreCard';
 import CoreParameters from './components/CoreParameters';
 import TabsPanel from './components/TabsPanel';
 import HelpModal from './components/HelpModal';
+import ComparePanel from './components/ComparePanel';
 
 // Dynamically resolve backend URL. If VITE_API_URL env variable is provided, use it.
 // Otherwise, fall back to using the current page hostname with port 8000.
@@ -36,6 +37,7 @@ function App() {
   });
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [copiedReport, setCopiedReport] = useState(false);
+  const [appMode, setAppMode] = useState('audit');
 
   // Apply theme class to body and sync with localStorage
   useEffect(() => {
@@ -418,9 +420,20 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
         setTheme={setTheme}
         apiOnline={apiOnline}
         setShowHelpModal={setShowHelpModal}
+        appMode={appMode}
+        setAppMode={setAppMode}
       />
 
-      {/* Grid */}
+      {appMode === 'compare' ? (
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 1rem 2rem 1rem' }}>
+          <ComparePanel
+            backendUrl={BACKEND_URL}
+            getScoreColor={getScoreColor}
+            getScoreBg={getScoreBg}
+          />
+        </div>
+      ) : (
+      /* Grid */
       <div className="grid-container">
         <Sidebar
           file={file}
@@ -617,6 +630,7 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
           )}
         </div>
       </div>
+      )}
 
       <HelpModal
         showHelpModal={showHelpModal}

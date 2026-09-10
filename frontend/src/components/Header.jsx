@@ -1,13 +1,58 @@
 import React from 'react';
 import { Sparkles, HelpCircle } from 'lucide-react';
 
-export default function Header({ theme, setTheme, apiOnline, setShowHelpModal }) {
+export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, appMode = 'audit', setAppMode }) {
   return (
     <header className="app-header">
       <div className="logo-section">
         <Sparkles className="upload-icon" style={{ margin: 0, width: '28px', height: '28px' }} />
         <h1><span className="text-gradient">ATS Resume Analyser AI</span></h1>
       </div>
+
+      {setAppMode && (
+        <div style={{
+          display: 'flex',
+          background: 'rgba(255, 255, 255, 0.04)',
+          borderRadius: '20px',
+          padding: '2px',
+          border: '1px solid var(--border-color)',
+          gap: '2px'
+        }} className="no-print">
+          <button
+            onClick={() => setAppMode('audit')}
+            style={{
+              background: appMode === 'audit' ? 'var(--primary)' : 'transparent',
+              color: 'white',
+              border: 'none',
+              borderRadius: '16px',
+              padding: '0.35rem 0.85rem',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Single Audit
+          </button>
+          <button
+            onClick={() => setAppMode('compare')}
+            style={{
+              background: appMode === 'compare' ? 'var(--primary)' : 'transparent',
+              color: 'white',
+              border: 'none',
+              borderRadius: '16px',
+              padding: '0.35rem 0.85rem',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            Batch Compare
+          </button>
+        </div>
+      )}
+
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="no-print">
         <button
           onClick={() => setShowHelpModal(true)}

@@ -4,24 +4,33 @@ os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
 import logging
 import time
+from typing import Optional, List
 
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.4.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
+
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
-from typing import Optional
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 from app.parser import extract_text_from_pdf, extract_text_from_docx, extract_text_from_txt
 from app.analyzer import analyze_resume
 from app.rewriter import optimize_bullet_point
+from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
 # Load environmental variables from .env if present
 load_dotenv()
 
-# Setup logging
-logging.basicConfig(level=logging.INFO)
+# Initialize structured JSON logging
+setup_logging(log_level=os.getenv("LOG_LEVEL", "INFO"))
 logger = logging.getLogger("ResumeAnalyserAPI")
+
+# Initialize rate limiter (IP-based, 10 requests/minute for analysis endpoints)
+limiter = Limiter(key_func=get_remote_address)
 
 class OptimizeBulletRequest(BaseModel):
     bullet: str = Field(..., min_length=5, description="The resume bullet point text to optimize")
@@ -35,15 +44,47 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# Custom performance & security headers middleware
+# Attach rate limiter state to the app
+app.state.limiter = limiter
+
+# Rate limit exceeded handler
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
+    logger.warning(f"Rate limit exceeded for IP: {get_remote_address(request)}")
+    return JSONResponse(
+        status_code=429,
+        content={
+            "detail": "Too many requests. You are rate-limited to 10 analysis requests per minute. Please wait before retrying.",
+            "retry_after_seconds": 60
+        }
+    )
+
+# Custom performance, security, and request tracing headers middleware
 @app.middleware("http")
 async def add_process_time_and_security_headers(request: Request, call_next):
+    request_id = generate_request_id()
     start_time = time.time()
+
+    # Attach request_id to request state for downstream access
+    request.state.request_id = request_id
+
+    logger.info(
+        f"[{request_id}] {request.method} {request.url.path} - "
+        f"Client: {get_remote_address(request)}"
+    )
+
     response = await call_next(request)
+
     process_time = time.time() - start_time
     response.headers["X-Process-Time"] = f"{process_time:.4f}s"
+    response.headers["X-Request-ID"] = request_id
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
+
+    logger.info(
+        f"[{request_id}] Response {response.status_code} in {process_time:.4f}s"
+    )
+
     return response
 
 # Enable CORS for frontend dashboard connection
@@ -81,10 +122,13 @@ def health_check():
     }
 
 @app.post("/api/analyze")
+@limiter.limit("10/minute")
 async def analyze_resume_endpoint(
+    request: Request,
     file: UploadFile = File(...),
     job_description: str = Form(None)
 ):
+    request_id = getattr(request.state, "request_id", "unknown")
     filename_lower = file.filename.lower()
     if not (filename_lower.endswith(".pdf") or filename_lower.endswith(".docx") or filename_lower.endswith(".txt")):
         raise HTTPException(
@@ -103,7 +147,7 @@ async def analyze_resume_endpoint(
                 detail=f"File too large. Maximum allowed size is {MAX_FILE_SIZE_BYTES // (1024*1024)}MB. Received {file_size // (1024*1024)}MB."
             )
         start_time = time.time()
-        logger.info(f"Received file: {file.filename} for analysis")
+        logger.info(f"[{request_id}] Received file: {file.filename} for analysis")
         
         # Read file bytes
         file_bytes = await file.read()
@@ -119,7 +163,7 @@ async def analyze_resume_endpoint(
             extracted_text = extract_text_from_txt(file_bytes)
             
         parse_duration = time.time() - parse_start
-        logger.info(f"Extracted {len(extracted_text)} characters of text in {parse_duration:.3f}s")
+        logger.info(f"[{request_id}] Extracted {len(extracted_text)} characters of text in {parse_duration:.3f}s")
         
         # 2. Analyze using Gemini prompt engine
         analysis_start = time.time()
@@ -127,7 +171,7 @@ async def analyze_resume_endpoint(
         analysis_duration = time.time() - analysis_start
         
         total_duration = time.time() - start_time
-        logger.info(f"Analysis completed in {analysis_duration:.3f}s. Total time: {total_duration:.3f}s")
+        logger.info(f"[{request_id}] Analysis completed in {analysis_duration:.3f}s. Total time: {total_duration:.3f}s")
         
         return {
             "filename": file.filename,
@@ -138,18 +182,19 @@ async def analyze_resume_endpoint(
         }
         
     except ValueError as val_err:
-        logger.warning(f"Validation issue: {str(val_err)}")
+        logger.warning(f"[{request_id}] Validation issue: {str(val_err)}")
         raise HTTPException(status_code=400, detail=str(val_err))
         
     except Exception as e:
-        logger.error(f"Error during resume analysis: {str(e)}")
+        logger.error(f"[{request_id}] Error during resume analysis: {str(e)}")
         raise HTTPException(
             status_code=500,
             detail=f"An error occurred while processing the resume: {str(e)}"
         )
 
 @app.post("/api/optimize-bullet")
-def optimize_bullet_endpoint(payload: OptimizeBulletRequest):
+@limiter.limit("20/minute")
+def optimize_bullet_endpoint(request: Request, payload: OptimizeBulletRequest):
     """
     Transforms a single resume bullet point into a high-impact, quantifiable statement
     following Google's XYZ formula.
@@ -162,4 +207,3 @@ def optimize_bullet_endpoint(payload: OptimizeBulletRequest):
     except Exception as err:
         logger.error(f"Error in bullet optimization: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to optimize bullet: {str(err)}")
-

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { CheckCircle, AlertTriangle, BookOpen, Clock, FileText, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 import HygieneCard from './HygieneCard';
+import { calculateKeywordDensity } from '../utils/performance';
 
 export default function TabsPanel({
   report,
@@ -92,33 +93,9 @@ export default function TabsPanel({
   const completedCount = Object.values(completedRecommendations).filter(Boolean).length;
   const percentComplete = totalRecs > 0 ? Math.round((completedCount / totalRecs) * 100) : 0;
 
-  const getKeywordFrequency = (text) => {
-    if (!text) return [];
-    const stopwords = new Set([
-      'the', 'and', 'a', 'of', 'to', 'in', 'for', 'is', 'on', 'that', 'by', 'this', 'with', 'i', 'you', 'it', 'he', 'she', 'they', 'we',
-      'as', 'an', 'are', 'at', 'be', 'from', 'has', 'have', 'his', 'her', 'in', 'into', 'its', 'my', 'or', 'their', 'there', 'who', 'which',
-      'was', 'were', 'will', 'with', 'about', 'but', 'not', 'can', 'our', 'out', 'all', 'more', 'some', 'any', 'been', 'other', 'than',
-      'very', 'using', 'used', 'through', 'under', 'over', 'during', 'before', 'after', 'between', 'also', 'each', 'both', 'some'
-    ]);
-    
-    const words = text
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .split(/\s+/)
-      .filter(w => w.length > 2 && !stopwords.has(w));
-      
-    const freq = {};
-    words.forEach(w => {
-      freq[w] = (freq[w] || 0) + 1;
-    });
-    
-    return Object.entries(freq)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10)
-      .map(([word, count]) => ({ word: word.charAt(0).toUpperCase() + word.slice(1), count }));
-  };
-
-  const freqKeywords = getKeywordFrequency(extractedText);
+  const freqKeywords = useMemo(() => {
+    return calculateKeywordDensity(extractedText, 10);
+  }, [extractedText]);
 
   return (
     <div className="glass-panel" style={{ padding: '1.5rem' }}>

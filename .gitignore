@@ -26,7 +26,9 @@ backend/.env
 sample_resume.pdf
 .system_generated/
 .gemini/
-.agents/
-.DS_Store
-Thumbs.db
+# Test artifacts
+.coverage
+coverage.xml
+.pytest_cache/
+
 srijansrivastava1234/

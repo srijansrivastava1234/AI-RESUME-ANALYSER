@@ -29,9 +29,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r backend/requirements.txt
 
-      - name: Run Pytest Test Suite
+      - name: Run Pytest Test Suite with Coverage
         run: |
-          pytest backend/tests -v
+          pytest backend/tests -v --cov=backend/app --cov-report=term-missing
 
   frontend-build:
     name: Frontend Build & Lint Check (Node.js ${{ matrix.node-version }})

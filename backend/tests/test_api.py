@@ -133,3 +133,50 @@ def test_rate_limiter_configured_on_app():
     assert hasattr(app.state, "limiter")
     assert app.state.limiter is not None
 
+
+def test_hygiene_endpoint_valid_txt():
+    sample_text = (
+        "Alice Smith\n"
+        "alice@example.com | (555) 019-2834 | linkedin.com/in/alicesmith\n"
+        "EXPERIENCE\n"
+        "- Built high-throughput backend services in Python.\n"
+        "- Designed distributed caches with Redis.\n"
+        "- Automated testing pipeline with 90% coverage.\n"
+        "EDUCATION\n"
+        "B.S. in Computer Engineering\n"
+        "SKILLS\n"
+        "Python, FastAPI, Docker, Kubernetes, PostgreSQL\n"
+        "PROJECTS\n"
+        "Distributed Event Broker in Go and Kafka\n"
+    )
+    files = {"file": ("alice_resume.txt", io.BytesIO(sample_text.encode("utf-8")), "text/plain")}
+    response = client.post("/api/hygiene", files=files)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["filename"] == "alice_resume.txt"
+    assert "hygiene" in data
+    assert data["hygiene"]["hygiene_score"] >= 80
+    assert data["hygiene"]["contacts"]["email"] == "alice@example.com"
+    assert len(data["hygiene"]["checklist"]) > 5
+
+
+def test_analyze_endpoint_includes_formatting_hygiene():
+    sample_resume = (
+        "Jane Doe\n"
+        "jane.doe@example.com | (555) 123-4567\n"
+        "Software Engineer\n"
+        "Skills: Python, FastAPI, Docker, React, PostgreSQL\n"
+        "Experience:\n"
+        "- Developed high throughput APIs improving latency by 30%.\n"
+        "- Led containerization migration to Docker Swarm.\n"
+        "- Implemented unit testing reducing defect rate by 40%.\n"
+        "Education: B.S. Computer Science\n"
+    )
+    files = {"file": ("resume.txt", io.BytesIO(sample_resume.encode("utf-8")), "text/plain")}
+    response = client.post("/api/analyze", files=files)
+    assert response.status_code == 200
+    res_data = response.json()
+    assert "formatting_hygiene" in res_data["report"]
+    assert res_data["report"]["formatting_hygiene"]["hygiene_score"] > 50
+
+

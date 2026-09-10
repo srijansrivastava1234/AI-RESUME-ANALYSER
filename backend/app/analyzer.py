@@ -3,6 +3,7 @@ import json
 import logging
 import google.generativeai as genai
 from typing import Optional
+from app.hygiene import audit_resume_hygiene
 
 logger = logging.getLogger("ResumeAnalyzer")
 
@@ -236,7 +237,8 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
                 }
             }
         ],
-        "job_compatibility": job_compat
+        "job_compatibility": job_compat,
+        "formatting_hygiene": audit_resume_hygiene(resume_text)
     }
 
 def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> dict:
@@ -269,6 +271,7 @@ def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> d
         
         # Parse output to ensure validity
         analysis_data = json.loads(result_json)
+        analysis_data["formatting_hygiene"] = audit_resume_hygiene(resume_text)
         return analysis_data
         
     except Exception as e:

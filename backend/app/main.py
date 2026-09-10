@@ -21,6 +21,7 @@ from app.parser import extract_text_from_pdf, extract_text_from_docx, extract_te
 from app.analyzer import analyze_resume
 from app.rewriter import optimize_bullet_point
 from app.comparator import compare_resumes
+from app.hygiene import audit_resume_hygiene
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -107,6 +108,7 @@ def read_root():
         "endpoints": {
             "/api/analyze": "POST - Upload PDF/DOCX/TXT resume and optional job description to get ATS analysis",
             "/api/compare": "POST - Upload multiple resumes for side-by-side ATS ranking",
+            "/api/hygiene": "POST - Evaluate ATS formatting hygiene, contact completeness, and section headers",
             "/api/optimize-bullet": "POST - Optimize single resume bullet point into XYZ format",
             "/api/health": "GET - Service health check"
         }
@@ -262,6 +264,44 @@ async def compare_resumes_endpoint(
             status_code=500,
             detail=f"An error occurred during resume comparison: {str(e)}"
         )
+
+@app.post("/api/hygiene")
+@limiter.limit("20/minute")
+async def check_hygiene_endpoint(
+    request: Request,
+    file: UploadFile = File(...),
+):
+    """
+    Evaluates resume formatting hygiene, section completeness, and contact details
+    without requiring LLM inference.
+    """
+    request_id = getattr(request.state, "request_id", "unknown")
+    filename_lower = file.filename.lower()
+    if not (filename_lower.endswith(".pdf") or filename_lower.endswith(".docx") or filename_lower.endswith(".txt")):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file format for '{file.filename}'. Only PDF, DOCX, and TXT files are supported."
+        )
+
+    try:
+        file_bytes = await file.read()
+        if filename_lower.endswith(".pdf"):
+            text, _ = extract_text_from_pdf(file_bytes)
+        elif filename_lower.endswith(".docx"):
+            text = extract_text_from_docx(file_bytes)
+        else:
+            text = extract_text_from_txt(file_bytes)
+
+        hygiene_report = audit_resume_hygiene(text)
+        return {
+            "filename": file.filename,
+            "hygiene": hygiene_report
+        }
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as err:
+        logger.error(f"[{request_id}] Error in hygiene endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit hygiene: {str(err)}")
 
 @app.post("/api/optimize-bullet")
 @limiter.limit("20/minute")

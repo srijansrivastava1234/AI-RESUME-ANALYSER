@@ -12,30 +12,40 @@ A visually premium, modern ATS (Applicant Tracking System) compiler and resume a
 
 ```mermaid
 graph TD
-    A[Candidate Resume: PDF / DOCX / TXT] --> B[FastAPI Async Document Ingestion]
+    A[Candidate Resumes: PDF / DOCX / TXT] --> B[FastAPI Async Document Ingestion]
     J[Target Job Description] --> B
-    B --> C[Token Optimizer & Control Char Sanitizer]
-    C --> D{Gemini API Configured?}
+    B --> SEC[SlowAPI Rate Limiter & X-Request-ID Tracing]
+    SEC --> C[Token Optimizer & Control Char Sanitizer]
+    C --> HYG[ATS Formatting Hygiene & Section Completeness Evaluator]
+    C --> COMP{Operation Mode?}
+    COMP -- Single Audit --> D{Gemini API Configured?}
+    COMP -- Batch Compare --> CMP[Multi-Resume Comparator & Ranking Engine]
     D -- Yes --> E[Gemini 1.5 Flash Strict JSON Schema Engine]
     D -- No / Fallback --> F[Heuristic Rule Engine & Keyword Taxonomy]
     E --> G[Standardized ATS Audit Payload]
     F --> G
+    CMP --> G
+    HYG --> G
     G --> H[React 19 Interactive Glassmorphic Dashboard]
     H --> I1[Score Gauges & Section Audit]
     H --> I2[XYZ Bullet Rewriter & Gap Matrix]
-    H --> I3[Multi-Format Exporter: MD / JSON / TXT / PDF]
+    H --> I3[Candidate Leaderboard & Delta Rankings]
+    H --> I4[Multi-Format Exporter: MD / JSON / TXT / PDF]
 ```
 
 ## 🛠️ Tech Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
-| **AI Engine** | Google Gemini API | ATS scoring, keyword analysis, suggestions |
-| **Backend** | FastAPI + Uvicorn | REST API, file parsing, response streaming |
-| **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction |
-| **Frontend** | React 19 + Vite | Interactive dashboard UI |
-| **Styling** | Vanilla CSS (glassmorphism) | Dark premium design system |
-| **Icons** | Lucide React | Consistent icon set |
+| **AI Engine** | Google Gemini API (1.5 Flash) | Structured ATS scoring, keyword gap analysis, suggestions |
+| **Backend** | FastAPI + Uvicorn | High-performance asynchronous REST API |
+| **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction and normalization |
+| **Security & Limits** | SlowAPI | IP-based rate limiting and DoS prevention |
+| **Observability** | Python Logging + JSONFormatter | Structured JSON logging with `X-Request-ID` correlation |
+| **Testing** | Pytest + Pytest-Cov + HTTPX | 78%+ automated backend unit & integration test coverage |
+| **Frontend** | React 19 + Vite | Glassmorphic dark dashboard & comparison leaderboard |
+| **Styling** | Vanilla CSS3 (Glassmorphism) | Zero-dependency bespoke modern design system |
+| **Icons** | Lucide React | Clean, scalable icon system |
 
 ## 📂 Project Structure
 
@@ -116,14 +126,18 @@ pytest tests/ -v
 - **⚡ Sub-1.5s Analysis Pipeline:** Optimized async backend parsing across PDF, DOCX, and TXT formats.
 - **🎯 30% Token Reduction:** Smart preprocessing and regex sanitization reducing LLM inference overhead.
 - **🛡️ 100% Availability Fallback:** Secondary heuristic scoring engine if API rate limits or network issues occur.
+- **👥 Multi-Resume Comparison:** Asynchronous batch evaluator ranking up to 5 candidate resumes against target job descriptions.
+- **📋 ATS Formatting Hygiene:** Deterministic checklist auditing contact data, essential headers, and structural compliance.
+- **🔒 Defensive Rate Limiting:** SlowAPI IP-based quotas (10/min analysis, 5/min compare, 20/min bullets) to mitigate DoS.
+- **📊 Structured JSON Logging:** Cloud Logging ready with microsecond timestamps and `X-Request-ID` correlation.
 - **🎨 Glassmorphic UI:** Modern dark-theme aesthetic with animated score gauges and side-by-side comparison cards.
-- **💾 Zero-Database State:** Client-side local session caching and one-click markdown report generation.
+- **💾 Zero-Database State:** Client-side local session caching and one-click markdown, JSON, and TXT report generation.
 
 ---
 
-## 💼 7 Key Technical Contributions (for Resume)
+## 💼 15 Key Technical Contributions (for Resume)
 
-If you are showcasing this project on your resume or portfolio, here are 7 impact-driven technical contributions:
+If you are showcasing this project on your resume or portfolio, here are 15 impact-driven technical contributions:
 
 1. **Full-Stack System Architecture (FastAPI & React 19):** Architected and deployed a high-performance full-stack resume auditing application using **FastAPI** (Python) and **React 19 / Vite**, establishing asynchronous request handling and non-blocking file streaming to process and analyze multi-format resumes in under 1.5 seconds.
 2. **Data Parsing & Token Optimization Pipeline:** Engineered robust text extraction and preprocessing utility engines utilizing **PyPDF** and **python-docx** for PDF, DOCX, and TXT files; implemented regex sanitization and character thresholding to reduce raw payload size by 30%, minimizing LLM token consumption and eliminating context-window overhead.
@@ -131,7 +145,27 @@ If you are showcasing this project on your resume or portfolio, here are 7 impac
 4. **Heuristic Fallback & High Availability:** Formulated an offline heuristic/rule-based analyzer engine that extracts action verbs, technical skills, and quantifiable metrics, guaranteeing 100% system availability during API rate limits.
 5. **Modern Glassmorphic UI & Interactive Dashboard:** Designed a responsive analytics dashboard using **React** and custom **Vanilla CSS (Glassmorphism)**, incorporating real-time animated score gauge charts, tabbed audit matrices, and custom micro-animations for optimized user retention.
 6. **Quantifiable Bullet-Point Rewriter:** Developed an automated transformation engine that flags passive phrasing, synthesizes quantifiable XYZ-format achievements, and displays side-by-side before/after comparisons with one-click clipboard copying.
-7. **State Persistence & Client Utilities:** Implemented client-side session caching via **LocalStorage** to persist and recall audit history instantly without database overhead, coupled with automated markdown report compilation for one-click clipboard copying and live backend status polling. See `contributions.txt` for LaTeX and STAR formats.
+7. **State Persistence & Multi-Format Exporters:** Implemented client-side session caching via **LocalStorage** to persist and recall audit history instantly without database overhead, coupled with automated Markdown, JSON, and TXT report compilation for one-click export and PDF printing.
+8. **Structured JSON Logging & Distributed Tracing:** Implemented enterprise-grade structured JSON logging with custom `X-Request-ID` correlation headers, providing end-to-end request tracing and cloud-ready observability across API endpoints.
+9. **Defensive API Rate Limiting & Abuse Prevention:** Integrated SlowAPI IP-based rate limiting (10 req/min for analysis, 5 req/min for comparison, 20 req/min for bullet optimization) with standard HTTP 429 JSON responses to protect backend compute resources.
+10. **Multi-Resume Batch Comparison & Ranking Engine:** Engineered an asynchronous multi-resume comparator evaluating up to 5 resumes concurrently against a single job description, calculating ATS score differentials, keyword coverage, and generating an automated winner summary.
+11. **ATS Formatting Hygiene & Section Completeness Evaluator:** Developed a deterministic formatting audit engine that detects contact details (email, phone, LinkedIn, GitHub), verifies essential section headers, evaluates bullet density, and computes a 0-100 ATS Formatting Hygiene Score.
+12. **Domain Taxonomy Technical Skill Extractor:** Built a regex-driven skills categorization engine organizing extracted proficiencies into Languages, Frameworks, Cloud & DevOps, Databases, and System Architecture.
+13. **Candidate Comparison Leaderboard UI:** Designed an interactive candidate comparison leaderboard in React featuring gold/silver/bronze rank badges, score differential bars, keyword match metrics, and expandable deep-dive accordions.
+14. **Frontend Performance Optimization & Memoization:** Implemented client-side memoization (`useMemo`) and debouncing utilities to cache high-frequency regex token calculations and word density metrics, eliminating re-rendering stutter during live text editing.
+15. **Automated Continuous Integration & Test Matrix:** Configured a multi-version CI pipeline across Python 3.11/3.12 and Node 20/22, incorporating `pytest-cov` test coverage reporting enforcing 78%+ code coverage across backend modules. See `contributions.txt` for LaTeX and STAR formats.
+
+---
+
+## 📡 REST API Reference
+
+| Endpoint | Method | Rate Limit | Description |
+|---|---|---|---|
+| `/api/analyze` | `POST` | 10 / min | Upload PDF/DOCX/TXT resume and optional job description for full ATS audit |
+| `/api/compare` | `POST` | 5 / min | Upload 2-5 resumes and job description for comparative ATS leaderboard ranking |
+| `/api/hygiene` | `POST` | 20 / min | Evaluate contact details, section completeness, and formatting hygiene score |
+| `/api/optimize-bullet` | `POST` | 20 / min | Rewrite single bullet point into quantifiable Google XYZ impact statement |
+| `/api/health` | `GET` | Unlimited | Health check endpoint returning supported formats and service status |
 
 ---
 

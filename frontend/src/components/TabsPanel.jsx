@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CheckCircle, AlertTriangle, BookOpen, Clock, FileText, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
+import HygieneCard from './HygieneCard';
 
 export default function TabsPanel({
   report,
@@ -203,6 +204,11 @@ export default function TabsPanel({
                 </div>
               </div>
             </div>
+          )}
+
+          {/* ATS Formatting Hygiene Audit */}
+          {report.formatting_hygiene && (
+            <HygieneCard hygiene={report.formatting_hygiene} />
           )}
 
           <div>

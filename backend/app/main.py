@@ -8,6 +8,7 @@ from typing import Optional, List
 
 APP_VERSION = "1.4.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
+MAX_COMPARE_FILES = 5
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -19,6 +20,7 @@ from slowapi.errors import RateLimitExceeded
 from app.parser import extract_text_from_pdf, extract_text_from_docx, extract_text_from_txt
 from app.analyzer import analyze_resume
 from app.rewriter import optimize_bullet_point
+from app.comparator import compare_resumes
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -104,6 +106,7 @@ def read_root():
         "service": "AI Resume Analyser Service",
         "endpoints": {
             "/api/analyze": "POST - Upload PDF/DOCX/TXT resume and optional job description to get ATS analysis",
+            "/api/compare": "POST - Upload multiple resumes for side-by-side ATS ranking",
             "/api/optimize-bullet": "POST - Optimize single resume bullet point into XYZ format",
             "/api/health": "GET - Service health check"
         }
@@ -190,6 +193,71 @@ async def analyze_resume_endpoint(
         raise HTTPException(
             status_code=500,
             detail=f"An error occurred while processing the resume: {str(e)}"
+        )
+
+@app.post("/api/compare")
+@limiter.limit("5/minute")
+async def compare_resumes_endpoint(
+    request: Request,
+    files: List[UploadFile] = File(...),
+    job_description: str = Form(None)
+):
+    """
+    Accepts multiple resume files and a shared job description, analyzes each,
+    and returns a ranked comparison report sorted by ATS score.
+    """
+    request_id = getattr(request.state, "request_id", "unknown")
+
+    if len(files) < 2:
+        raise HTTPException(
+            status_code=400,
+            detail="At least 2 resume files are required for comparison."
+        )
+    if len(files) > MAX_COMPARE_FILES:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Maximum {MAX_COMPARE_FILES} files can be compared at once."
+        )
+
+    try:
+        start_time = time.time()
+        logger.info(f"[{request_id}] Comparing {len(files)} resumes")
+
+        resume_texts = []
+        for file in files:
+            filename_lower = file.filename.lower()
+            if not (filename_lower.endswith(".pdf") or filename_lower.endswith(".docx") or filename_lower.endswith(".txt")):
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Invalid file format for '{file.filename}'. Only PDF, DOCX, and TXT files are supported."
+                )
+
+            file_bytes = await file.read()
+            if filename_lower.endswith(".pdf"):
+                text, _ = extract_text_from_pdf(file_bytes)
+            elif filename_lower.endswith(".docx"):
+                text = extract_text_from_docx(file_bytes)
+            else:
+                text = extract_text_from_txt(file_bytes)
+
+            resume_texts.append({"filename": file.filename, "text": text})
+
+        comparison_report = compare_resumes(resume_texts, job_description)
+
+        total_duration = time.time() - start_time
+        logger.info(f"[{request_id}] Comparison completed in {total_duration:.3f}s")
+
+        return comparison_report
+
+    except ValueError as val_err:
+        logger.warning(f"[{request_id}] Comparison validation: {str(val_err)}")
+        raise HTTPException(status_code=400, detail=str(val_err))
+
+    except Exception as e:
+        logger.error(f"[{request_id}] Error during comparison: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"An error occurred during resume comparison: {str(e)}"
         )
 
 @app.post("/api/optimize-bullet")

@@ -1,5 +1,5 @@
 ================================================================================
-           7 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+           15 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -31,15 +31,53 @@
      animated SVG score gauges, color-coded skill density matrices, and tabbed audit breakdown
      panels to optimize visual hierarchy and UX engagement.
 
-6. Quantifiable Bullet-Point Rewriter & Impact Synthesizer
+6. Quantifiable Bullet-Point Rewriter & Impact Synthesizer (Google XYZ Formula)
    • Developed an intelligent bullet-point transformation module that flags passive phrasing,
      synthesizes quantifiable XYZ-format achievements, and displays side-by-side comparisons
      with one-click clipboard copying.
 
-7. Client-Side Session Persistence & Report Export Pipeline (LocalStorage & Markdown)
+7. Client-Side Session Persistence & Multi-Format Export Pipeline (LocalStorage & Multi-Export)
    • Implemented zero-overhead client-side state caching via LocalStorage for instant audit
-     history recall across sessions, alongside an automated Markdown report generator for
-     streamlined multi-format export.
+     history recall across sessions, alongside automated Markdown, JSON, and TXT report generators
+     for streamlined multi-format export and PDF printing.
+
+8. Structured JSON Logging & Distributed Request Tracing (Observability & Correlation IDs)
+   • Implemented enterprise-grade structured JSON logging with microsecond timestamps, module
+     tracing, and custom X-Request-ID correlation headers to ensure end-to-end auditability
+     across parsing, AI inference, and error paths.
+
+9. Defensive API Rate Limiting & DoS Mitigation (SlowAPI & IP Throttling)
+   • Integrated client-IP rate limiting using SlowAPI (10 req/min for analysis, 5 req/min for batch
+     comparison, 20 req/min for bullet optimization), delivering RFC-compliant HTTP 429 responses
+     with retry-after metadata to safeguard cloud backend resources.
+
+10. Multi-Resume Batch Comparison & Candidate Ranking Engine
+    • Engineered an asynchronous multi-resume comparator evaluating up to 5 resumes concurrently
+      against a single job description, calculating ATS score differentials, keyword coverage,
+      and generating an automated winner summary.
+
+11. ATS Formatting Hygiene & Section Completeness Evaluator
+    • Developed a deterministic formatting audit engine that detects contact details (email, phone,
+      LinkedIn, GitHub), verifies essential section headers, evaluates bullet density, and
+      computes a 0-100 ATS Formatting Hygiene Score with actionable structural checklists.
+
+12. Domain Taxonomy Technical Skill Extractor & Categorizer
+    • Built a regex-driven skills categorization engine organizing extracted proficiencies into
+      Languages, Frameworks, Cloud & DevOps, Databases, and System Architecture to compute
+      category-specific keyword alignment.
+
+13. Candidate Leaderboard & Comparative Ranking Dashboard (React UI)
+    • Designed an interactive candidate comparison leaderboard in React featuring gold/silver/bronze
+      rank badges, score differential bars, keyword match metrics, and expandable deep-dive accordions.
+
+14. Frontend Performance Optimization & Memoized Density Algorithms
+    • Implemented client-side memoization (useMemo) and debouncing utilities to cache high-frequency
+      regex token calculations and word density metrics, eliminating re-rendering stutter during live text editing.
+
+15. Continuous Integration & Automated Test Suite (GitHub Actions & Pytest-Cov)
+    • Configured a multi-version CI pipeline across Python 3.11/3.12 and Node 20/22, incorporating
+      pytest-cov coverage reporting enforcing 78%+ code coverage across parsers, heuristic engines,
+      comparators, and REST endpoints.
 
 
 --------------------------------------------------------------------------------
@@ -52,7 +90,15 @@
 • Built a secondary heuristic rule-based analyzer engine guaranteeing 100% uptime during LLM rate limits and network outages.
 • Designed responsive glassmorphic dashboard in React & CSS3 with animated score gauges, keyword matrices, and interactive tabs.
 • Developed an automated bullet-point optimizer transforming passive descriptions into quantifiable, XYZ-formatted impact statements.
-• Implemented client-side session caching with LocalStorage for instant audit history retrieval and one-click Markdown report export.
+• Implemented client-side session caching with LocalStorage for instant audit history retrieval and multi-format Markdown/JSON/TXT export.
+• Deployed structured JSON logging with X-Request-ID request tracing, establishing production observability across all API endpoints.
+• Added SlowAPI IP-based rate limiting on sensitive endpoints to prevent API abuse, compute exhaustion, and denial-of-service.
+• Engineered multi-resume batch comparison engine evaluating up to 5 resumes against target jobs with automated ranking summaries.
+• Developed ATS formatting hygiene engine detecting contact details, section completeness, and computing a 100-point structural score.
+• Implemented domain taxonomy skill extractor categorizing competencies across Languages, Frameworks, Cloud, Databases, and Architecture.
+• Built interactive candidate comparison leaderboard in React with rank badges, score delta bars, and expandable candidate profiles.
+• Optimized frontend performance with memoized keyword density calculations and debouncing, eliminating keystroke latency in sandbox editor.
+• Established automated GitHub Actions CI pipeline with pytest-cov test coverage matrix testing Python 3.11/3.12 and Node 20/22.
 
 
 --------------------------------------------------------------------------------
@@ -61,7 +107,7 @@
 
 \resumeSubHeadingListStart
   \resumeProjectHeading
-      {\textbf{AI Resume Analyser} $|$ \emph{FastAPI, React 19, Vite, Gemini API, PyPDF, python-docx, CSS3}}{2024}
+      {\textbf{AI Resume Analyser} $|$ \emph{FastAPI, React 19, Vite, Gemini API, PyPDF, python-docx, SlowAPI, CSS3}}{2024}
       \resumeItemListStart
         \resumeItem{Architected full-stack resume analysis platform with FastAPI and React 19, achieving sub-1.5s end-to-end processing.}
         \resumeItem{Engineered multi-format document parser (PDF/DOCX/TXT) with regex sanitization, reducing LLM token usage by 30\%.}
@@ -69,7 +115,15 @@
         \resumeItem{Formulated offline heuristic fallback engine to guarantee 100\% platform uptime during API rate limits and outages.}
         \resumeItem{Designed responsive glassmorphism UI featuring animated score gauges, skill density matrices, and interactive tabs.}
         \resumeItem{Built bullet-point rewriter engine converting passive resume lines into quantifiable XYZ-format impact statements.}
-        \resumeItem{Implemented LocalStorage session caching for zero-overhead audit history and one-click Markdown report generation.}
+        \resumeItem{Implemented LocalStorage session caching for zero-overhead audit history and multi-format Markdown/JSON/TXT export.}
+        \resumeItem{Structured JSON logging pipeline with X-Request-ID trace correlation, delivering cloud-ready observability.}
+        \resumeItem{Secured API endpoints against DoS with SlowAPI IP-based rate limiting and standard HTTP 429 retry headers.}
+        \resumeItem{Engineered batch comparison engine analyzing and ranking up to 5 candidate resumes against target job descriptions.}
+        \resumeItem{Created ATS formatting hygiene audit assessing contact details, essential sections, and structural compliance.}
+        \resumeItem{Constructed categorized skill extractor mapping competencies across Languages, Frameworks, Cloud, and Databases.}
+        \resumeItem{Designed candidate comparison leaderboard in React featuring rank badges, score differentials, and strength metrics.}
+        \resumeItem{Optimized client-side rendering performance using useMemo and debounce helpers for real-time text density updates.}
+        \resumeItem{Built CI/CD pipeline using GitHub Actions and pytest-cov, enforcing 78\%+ backend test coverage across matrix builds.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -100,8 +154,40 @@
 
 6. Bullet Rewriting & Optimization:
    "Developed a targeted bullet-point rewriter that detects weak verbs and missing metrics, automatically
-   suggesting action-oriented XYZ accomplishments."
+   suggesting action-oriented Google XYZ accomplishments."
 
 7. Client-Side Persistence & Export:
-   "Integrated browser LocalStorage for instant audit history tracking and built a client-side Markdown exporter
-   for seamless report generation."
+   "Integrated browser LocalStorage for instant audit history tracking and built a client-side exporter
+   supporting Markdown, structured JSON, and clean TXT reports."
+
+8. Production Logging & Tracing:
+   "Integrated structured JSON logging with custom X-Request-ID correlation headers, enabling distributed trace
+   tracking across parsing, inference, and error reporting."
+
+9. Defensive Security & Rate Limiting:
+   "Configured SlowAPI rate limiters to guard against automated abuse, enforcing per-IP quotas on compute-heavy
+   AI analysis and batch comparison endpoints."
+
+10. Multi-Resume Comparison & Ranking:
+    "Created a multi-resume batch evaluator comparing up to 5 resumes simultaneously against a single job description,
+    generating an ATS leaderboard with score deltas."
+
+11. ATS Hygiene & Layout Auditing:
+    "Formulated a deterministic hygiene checker auditing contact data presence (email, phone, LinkedIn, GitHub),
+    standard section headers, and formatting hygiene scored out of 100."
+
+12. Categorized Skill Extraction:
+    "Built a domain taxonomy keyword matcher that extracts and groups candidate skills into Languages, Frameworks,
+    Cloud/DevOps, Databases, and Architecture."
+
+13. Comparative UI Leaderboard:
+    "Designed a comparative leaderboard in React displaying candidate rankings, gold/silver/bronze badges,
+    and side-by-side strengths breakdowns."
+
+14. Frontend Performance & Memoization:
+    "Employed React useMemo and debounced execution to cache expensive keyword density computations,
+    ensuring butter-smooth typing in the live sandbox editor."
+
+15. Continuous Integration & Test Coverage:
+    "Established a GitHub Actions CI workflow testing across Python and Node.js matrix versions,
+    incorporating pytest-cov to guarantee 78%+ test coverage."

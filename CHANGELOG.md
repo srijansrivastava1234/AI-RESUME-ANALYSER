@@ -4,6 +4,21 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-09-10
+
+### Added
+- **Multi-Resume Comparison Engine**: Implemented `app.comparator` and exposed `POST /api/compare` allowing concurrent evaluation and ranking of 2-5 candidate resumes against target job descriptions.
+- **ATS Formatting Hygiene Evaluator**: Created `app.hygiene` and exposed `POST /api/hygiene` auditing contact info (email, phone, LinkedIn, GitHub), standard section headers, bullet density, and computing a 100-point hygiene score.
+- **Candidate Comparison Leaderboard UI**: Added `ComparePanel.jsx` and mode switcher in header enabling side-by-side candidate ranking with gold/silver/bronze rank badges, score differentials, and strengths accordions.
+- **ATS Formatting Hygiene Card**: Added `HygieneCard.jsx` inside the overview tab displaying contact detection chips, section audit checklist, and actionable structural advice.
+- **SlowAPI Defensive Rate Limiting**: Added IP-based rate limiting (10/min for `/api/analyze`, 5/min for `/api/compare`, 20/min for `/api/optimize-bullet`) with RFC-compliant HTTP 429 JSON responses.
+- **Structured JSON Logging & Request Tracing**: Created `app.logging_config` featuring JSON log output, microsecond timestamps, and custom `X-Request-ID` correlation headers across all endpoints.
+- **Frontend Performance Utilities**: Created `frontend/src/utils/performance.js` with `calculateKeywordDensity`, `debounce`, and `memoize` helpers; integrated `useMemo` in `TabsPanel.jsx` to eliminate typing latency in sandbox mode.
+- **Pytest-Cov Test Coverage in CI**: Integrated `pytest-cov` in `.github/workflows/ci.yml` and `pytest.ini`, establishing 78%+ test coverage across parsers, analyzers, rules, comparators, hygiene, and APIs.
+- **Expanded 15 Technical Contributions**: Scaled `contributions.txt` and `README.md` from 7 to 15 comprehensive technical achievements with XYZ bullets, 1-line resume items, LaTeX snippets, and STAR talking points.
+
+---
+
 ## [1.3.0] - 2026-09-05
 
 ### Added

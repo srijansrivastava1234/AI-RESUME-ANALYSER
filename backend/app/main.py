@@ -219,6 +219,15 @@ async def compare_resumes_endpoint(
             detail=f"Maximum {MAX_COMPARE_FILES} files can be compared at once."
         )
 
+    # Validate all file extensions first
+    for file in files:
+        filename_lower = file.filename.lower()
+        if not (filename_lower.endswith(".pdf") or filename_lower.endswith(".docx") or filename_lower.endswith(".txt")):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid file format for '{file.filename}'. Only PDF, DOCX, and TXT files are supported."
+            )
+
     try:
         start_time = time.time()
         logger.info(f"[{request_id}] Comparing {len(files)} resumes")
@@ -226,12 +235,6 @@ async def compare_resumes_endpoint(
         resume_texts = []
         for file in files:
             filename_lower = file.filename.lower()
-            if not (filename_lower.endswith(".pdf") or filename_lower.endswith(".docx") or filename_lower.endswith(".txt")):
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Invalid file format for '{file.filename}'. Only PDF, DOCX, and TXT files are supported."
-                )
-
             file_bytes = await file.read()
             if filename_lower.endswith(".pdf"):
                 text, _ = extract_text_from_pdf(file_bytes)

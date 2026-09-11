@@ -76,6 +76,102 @@ def audit_text_layer_integrity(raw_text: str) -> dict:
     }
 
 
+def audit_layout_linearization(raw_text: str) -> dict:
+    """
+    Audits the structural linearization of parsed resume text to detect
+    multi-column reading-order traps, gutter collisions, and table fragmentation.
+
+    Enterprise ATS engines (Taleo, Workday, Ashby, Daxtra) rely on vertical scanlines
+    or recursive XY-cuts. Multi-column documents with horizontal gutters (<12pt) or
+    divider rules often scramble left-and-right text streams into incoherent text soup.
+
+    :param raw_text: Raw unnormalized text extracted directly from the document parser
+    :return: Dictionary containing linearization score, risk tier, detected anomalies, and recommendations
+    """
+    if not raw_text or not raw_text.strip():
+        return {
+            "linearization_score": 0,
+            "risk_tier": "Empty Document",
+            "gutter_anomaly_lines": 0,
+            "divider_count": 0,
+            "is_linear_safe": False,
+            "issues": ["No extractable text to audit layout linearization."]
+        }
+
+    lines = raw_text.splitlines()
+    non_empty_lines = [line for line in lines if line.strip()]
+    non_empty_count = len(non_empty_lines)
+
+    if non_empty_count == 0:
+        return {
+            "linearization_score": 0,
+            "risk_tier": "Empty Document",
+            "gutter_anomaly_lines": 0,
+            "divider_count": 0,
+            "is_linear_safe": False,
+            "issues": ["Document contains only whitespace."]
+        }
+
+    gutter_anomaly_lines = 0
+    divider_matches = 0
+    issues = []
+
+    for line in non_empty_lines:
+        # Check for wide horizontal gutter spaces (>= 4 consecutive spaces or tabs between words)
+        if re.search(r'\S+(\t| {4,})\S+', line):
+            gutter_anomaly_lines += 1
+
+        # Check for ASCII table borders or dividers: +---+, |---|, =====, _____
+        if re.search(r'(\+{2,}|[\|\-_=]{4,})', line):
+            divider_matches += 1
+
+    score = 100
+
+    # Calculate gutter penalty
+    gutter_ratio = gutter_anomaly_lines / non_empty_count
+    if gutter_ratio > 0.35:
+        score -= 45
+        issues.append(
+            f"High multi-column density detected ({gutter_anomaly_lines} lines have wide gutter gaps). Standard ATS parsers may scramble reading order across columns."
+        )
+    elif gutter_ratio > 0.15:
+        score -= 25
+        issues.append(
+            f"Moderate multi-column layout risk detected ({gutter_anomaly_lines} lines with wide spacing). Ensure critical contact information and skills are not in sidebars."
+        )
+
+    # Calculate table/divider penalty
+    if divider_matches > 5:
+        score -= 20
+        issues.append(
+            f"Detected {divider_matches} ASCII table or divider patterns. Complex tables frequently cause OCR bounding-box collapse."
+        )
+    elif divider_matches > 2:
+        score -= 10
+        issues.append(
+            f"Detected {divider_matches} divider lines. Consider replacing ASCII dividers with native standard whitespace."
+        )
+
+    score = max(0, min(100, score))
+
+    if score >= 80:
+        risk_tier = "Safe Single-Column"
+    elif score >= 55:
+        risk_tier = "Moderate Multi-Column Risk"
+    else:
+        risk_tier = "High Reading-Order Trap Risk"
+
+    return {
+        "linearization_score": score,
+        "risk_tier": risk_tier,
+        "gutter_anomaly_lines": gutter_anomaly_lines,
+        "divider_count": divider_matches,
+        "is_linear_safe": score >= 75,
+        "issues": issues
+    }
+
+
+
 def clean_extracted_text(text: str) -> str:
     """
     Cleans and normalizes extracted text to optimize LLM token usage:

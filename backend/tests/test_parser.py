@@ -7,7 +7,8 @@ from app.parser import (
     extract_text_from_docx,
     extract_text_from_pdf,
     clean_extracted_text,
-    audit_text_layer_integrity
+    audit_text_layer_integrity,
+    audit_layout_linearization
 )
 
 SAMPLE_PDF_PATH = os.path.join(os.path.dirname(__file__), "..", "..", "sample_resume.pdf")
@@ -105,3 +106,57 @@ def test_extract_text_from_real_pdf():
         extracted_text, page_count = extract_text_from_pdf(pdf_bytes)
         assert len(extracted_text) > 0
         assert page_count >= 1
+
+
+def test_audit_layout_linearization_clean_single_column():
+    clean_resume = (
+        "Sarah Jenkins\n"
+        "Lead Software Engineer\n"
+        "sarah@example.com | (555) 234-5678\n"
+        "Experience\n"
+        "Spearheaded cloud migration to Kubernetes across 8 microservices.\n"
+        "Automated CI/CD deployment pipelines using GitHub Actions.\n"
+        "Education\n"
+        "B.S. in Computer Science - University of California\n"
+    )
+    audit = audit_layout_linearization(clean_resume)
+    assert audit["linearization_score"] == 100
+    assert audit["risk_tier"] == "Safe Single-Column"
+    assert audit["is_linear_safe"] is True
+    assert audit["gutter_anomaly_lines"] == 0
+
+
+def test_audit_layout_linearization_multi_column_gutter():
+    multi_col_resume = (
+        "SKILLS                      WORK EXPERIENCE\n"
+        "Python, React, Docker       Senior Engineer at TechCorp\n"
+        "PostgreSQL, Redis           Led distributed system migration\n"
+        "AWS, Terraform, CI/CD       Reduced latency by 45%\n"
+        "Kafka, RabbitMQ             Managed 5 direct report engineers\n"
+    )
+    audit = audit_layout_linearization(multi_col_resume)
+    assert audit["gutter_anomaly_lines"] >= 4
+    assert audit["linearization_score"] < 75
+    assert "multi-column" in audit["issues"][0].lower()
+
+
+def test_audit_layout_linearization_ascii_tables():
+    table_resume = (
+        "+-----------------------------------------------+\n"
+        "| Project Name     | Tech Stack  | Outcome      |\n"
+        "+-----------------------------------------------+\n"
+        "| Stream Engine    | Python, Go  | 50k RPS      |\n"
+        "+-----------------------------------------------+\n"
+        "| Payment Gateway  | FastAPI     | $2M processed|\n"
+        "+-----------------------------------------------+\n"
+    )
+    audit = audit_layout_linearization(table_resume)
+    assert audit["divider_count"] >= 4
+    assert audit["linearization_score"] < 100
+
+
+
+def test_audit_layout_linearization_empty():
+    assert audit_layout_linearization("")["linearization_score"] == 0
+    assert audit_layout_linearization("   \n\t  ")["risk_tier"] == "Empty Document"
+

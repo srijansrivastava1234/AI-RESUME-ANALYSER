@@ -22,6 +22,7 @@ from app.analyzer import analyze_resume
 from app.rewriter import optimize_bullet_point
 from app.comparator import compare_resumes
 from app.hygiene import audit_resume_hygiene
+from app.xyz_scorer import score_resume_bullet
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -38,6 +39,10 @@ limiter = Limiter(key_func=get_remote_address)
 class OptimizeBulletRequest(BaseModel):
     bullet: str = Field(..., min_length=5, description="The resume bullet point text to optimize")
     target_role: Optional[str] = Field(None, description="Optional target job title or role context")
+
+class ScoreBulletRequest(BaseModel):
+    bullet: str = Field(..., min_length=1, description="The resume bullet point text to evaluate")
+    seniority: Optional[str] = Field("mid", description="Seniority level: 'junior', 'mid', 'senior', or 'staff'")
 
 app = FastAPI(
     title="AI Resume Analyser API",
@@ -109,6 +114,7 @@ def read_root():
             "/api/analyze": "POST - Upload PDF/DOCX/TXT resume and optional job description to get ATS analysis",
             "/api/compare": "POST - Upload multiple resumes for side-by-side ATS ranking",
             "/api/hygiene": "POST - Evaluate ATS formatting hygiene, contact completeness, and section headers",
+            "/api/score-bullet": "POST - Deterministic Google/IBM XYZ mathematical bullet impact evaluation",
             "/api/optimize-bullet": "POST - Optimize single resume bullet point into XYZ format",
             "/api/health": "GET - Service health check"
         }
@@ -302,6 +308,25 @@ async def check_hygiene_endpoint(
     except Exception as err:
         logger.error(f"[{request_id}] Error in hygiene endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit hygiene: {str(err)}")
+
+@app.post("/api/score-bullet")
+@limiter.limit("20/minute")
+def score_bullet_endpoint(request: Request, payload: ScoreBulletRequest):
+    """
+    Evaluates a resume bullet point using the deterministic Google/IBM X-Y-Z formula:
+    'Accomplished [X] as measured by [Y], by doing [Z]'
+    """
+    try:
+        seniority = payload.seniority.lower() if payload.seniority else "mid"
+        if seniority not in ["junior", "mid", "senior", "staff"]:
+            seniority = "mid"
+        result = score_resume_bullet(payload.bullet, seniority=seniority)
+        return result
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as err:
+        logger.error(f"Error in bullet scoring: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to score bullet: {str(err)}")
 
 @app.post("/api/optimize-bullet")
 @limiter.limit("20/minute")

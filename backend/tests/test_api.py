@@ -180,3 +180,50 @@ def test_analyze_endpoint_includes_formatting_hygiene():
     assert res_data["report"]["formatting_hygiene"]["hygiene_score"] > 50
 
 
+def test_score_bullet_endpoint_elite():
+    payload = {
+        "bullet": "Spearheaded migration of legacy monolith to FastAPI microservices on AWS, reducing p99 latency by 45% and saving $120k annually.",
+        "seniority": "senior"
+    }
+    response = client.post("/api/score-bullet", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["score"] >= 85
+    assert data["tier"] == "Elite XYZ Impact"
+    assert "Spearheaded" in data["detected_action_verbs"]
+    assert any("45%" in m for m in data["detected_metrics"])
+    assert any("fastapi" in t.lower() for t in data["detected_tools"])
+
+
+def test_score_bullet_endpoint_passive_penalty():
+    payload = {
+        "bullet": "Responsible for assisting the development team with regular bug fixes and software updates.",
+        "seniority": "mid"
+    }
+    response = client.post("/api/score-bullet", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["score"] < 50
+    assert data["tier"] == "Weak / Passive Phrasing"
+    duty_penalties = [p for p in data["penalties"] if p["name"] == "Passive Duty Statement"]
+    assert len(duty_penalties) == 1
+    assert duty_penalties[0]["deduction"] == 40
+
+
+def test_score_bullet_endpoint_seniority_levels():
+    bullet = "Built microservices using Python and PostgreSQL."
+    for level in ["junior", "mid", "senior", "staff"]:
+        res = client.post("/api/score-bullet", json={"bullet": bullet, "seniority": level})
+        assert res.status_code == 200
+        assert "score" in res.json()
+
+
+def test_score_bullet_endpoint_empty_and_short():
+    res = client.post("/api/score-bullet", json={"bullet": "   ", "seniority": "mid"})
+    assert res.status_code == 200
+    data = res.json()
+    assert data["score"] == 0
+    assert data["tier"] == "Empty"
+
+
+

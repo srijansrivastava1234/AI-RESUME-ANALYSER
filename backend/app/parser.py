@@ -5,6 +5,77 @@ from pypdf import PdfReader
 
 logger = logging.getLogger("ResumeParser")
 
+def audit_text_layer_integrity(raw_text: str) -> dict:
+    """
+    Audits the programmatic text layer of an ingested resume for Unicode integrity,
+    broken font CMaps, and layout encoding traps (per ISO 19005-2 PDF/A standards).
+
+    Detects:
+    - Unicode Private Use Area (PUA) glyphs (\\uE000-\\uF8FF) caused by missing /ToUnicode mappings.
+    - Unicode replacement characters (\\uFFFD) indicating text layer decode corruption.
+    - Invisible / zero-width characters (\\u200B-\\u200D, \\uFEFF) that distort search indexing.
+
+    :param raw_text: Raw or partially cleaned text extracted from the document
+    :return: Dictionary containing text layer health score and detected anomalies
+    """
+    if not raw_text:
+        return {
+            "text_layer_health_score": 0,
+            "is_searchable": False,
+            "pua_glyph_count": 0,
+            "replacement_char_count": 0,
+            "zero_width_char_count": 0,
+            "issues": ["Document contains no extractable text layer."]
+        }
+
+    # Detect Private Use Area glyphs (\uE000-\uF8FF)
+    pua_matches = re.findall(r'[\uE000-\uF8FF]', raw_text)
+    pua_count = len(pua_matches)
+
+    # Detect Unicode replacement characters (\uFFFD)
+    replacement_matches = re.findall(r'\uFFFD', raw_text)
+    replacement_count = len(replacement_matches)
+
+    # Detect zero-width characters
+    zero_width_matches = re.findall(r'[\u200B\u200C\u200D\uFEFF]', raw_text)
+    zero_width_count = len(zero_width_matches)
+
+    score = 100
+    issues = []
+
+    if replacement_count > 0:
+        penalty = min(40, replacement_count * 5)
+        score -= penalty
+        issues.append(
+            f"Detected {replacement_count} replacement character(s) (\uFFFD). The PDF text stream may be corrupted or lack valid font encoding."
+        )
+
+    if pua_count > 0:
+        penalty = min(40, pua_count * 4)
+        score -= penalty
+        issues.append(
+            f"Detected {pua_count} Private Use Area (PUA) glyph(s) (\uE000-\uF8FF). Custom fonts without a /ToUnicode CMap render text unsearchable in ATS parsers."
+        )
+
+    if zero_width_count > 5:
+        score -= 15
+        issues.append(
+            f"Detected {zero_width_count} zero-width or hidden characters. These can interfere with ATS tokenizer segmentation."
+        )
+
+    score = max(0, min(100, score))
+    is_searchable = score >= 50 and len(raw_text.strip()) >= 30
+
+    return {
+        "text_layer_health_score": score,
+        "is_searchable": is_searchable,
+        "pua_glyph_count": pua_count,
+        "replacement_char_count": replacement_count,
+        "zero_width_char_count": zero_width_count,
+        "issues": issues
+    }
+
+
 def clean_extracted_text(text: str) -> str:
     """
     Cleans and normalizes extracted text to optimize LLM token usage:
@@ -18,9 +89,12 @@ def clean_extracted_text(text: str) -> str:
     """
     # Remove null bytes and unwanted control characters (except newline and tab)
     text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', text)
+    # Remove zero-width characters that disrupt tokenization
+    text = re.sub(r'[\u200B\u200C\u200D\uFEFF]', '', text)
     text = re.sub(r'\n{3,}', '\n\n', text)
     text = re.sub(r'[ \t]{2,}', ' ', text)
     return text.strip()
+
 
 
 def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> tuple[str, int]:

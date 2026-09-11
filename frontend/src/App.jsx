@@ -14,6 +14,7 @@ import CoreParameters from './components/CoreParameters';
 import TabsPanel from './components/TabsPanel';
 import HelpModal from './components/HelpModal';
 import ComparePanel from './components/ComparePanel';
+import BulletImpactLab from './components/BulletImpactLab';
 
 // Dynamically resolve backend URL. If VITE_API_URL env variable is provided, use it.
 // Otherwise, fall back to using the current page hostname with port 8000.
@@ -430,6 +431,12 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
             backendUrl={BACKEND_URL}
             getScoreColor={getScoreColor}
             getScoreBg={getScoreBg}
+          />
+        </div>
+      ) : appMode === 'xyz' ? (
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 1rem 2rem 1rem' }}>
+          <BulletImpactLab
+            backendUrl={BACKEND_URL}
           />
         </div>
       ) : (

@@ -50,6 +50,22 @@ export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, a
           >
             Batch Compare
           </button>
+          <button
+            onClick={() => setAppMode('xyz')}
+            style={{
+              background: appMode === 'xyz' ? 'var(--primary)' : 'transparent',
+              color: 'white',
+              border: 'none',
+              borderRadius: '16px',
+              padding: '0.35rem 0.85rem',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            XYZ Impact Lab
+          </button>
         </div>
       )}
 

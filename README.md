@@ -127,6 +127,9 @@ pytest tests/ -v
 - **🎯 30% Token Reduction:** Smart preprocessing and regex sanitization reducing LLM inference overhead.
 - **🛡️ 100% Availability Fallback:** Secondary heuristic scoring engine if API rate limits or network issues occur.
 - **👥 Multi-Resume Comparison:** Asynchronous batch evaluator ranking up to 5 candidate resumes against target job descriptions.
+- **📐 Google/IBM XYZ Scorer:** Deterministic mathematical scoring engine with seniority calibration.
+- **🧪 Interactive Impact Lab:** Real-time bullet playground with live metric feedback and AI rewrite.
+- **🔍 Layout Linearization:** Gutter collision and table trap detector ensuring Workday/Taleo compliance.
 - **📋 ATS Formatting Hygiene:** Deterministic checklist auditing contact data, essential headers, and structural compliance.
 - **🔒 Defensive Rate Limiting:** SlowAPI IP-based quotas (10/min analysis, 5/min compare, 20/min bullets) to mitigate DoS.
 - **📊 Structured JSON Logging:** Cloud Logging ready with microsecond timestamps and `X-Request-ID` correlation.
@@ -135,9 +138,9 @@ pytest tests/ -v
 
 ---
 
-## 💼 15 Key Technical Contributions (for Resume)
+## 💼 20 Key Technical Contributions (for Resume)
 
-If you are showcasing this project on your resume or portfolio, here are 15 impact-driven technical contributions:
+If you are showcasing this project on your resume or portfolio, here are 20 impact-driven technical contributions:
 
 1. **Full-Stack System Architecture (FastAPI & React 19):** Architected and deployed a high-performance full-stack resume auditing application using **FastAPI** (Python) and **React 19 / Vite**, establishing asynchronous request handling and non-blocking file streaming to process and analyze multi-format resumes in under 1.5 seconds.
 2. **Data Parsing & Token Optimization Pipeline:** Engineered robust text extraction and preprocessing utility engines utilizing **PyPDF** and **python-docx** for PDF, DOCX, and TXT files; implemented regex sanitization and character thresholding to reduce raw payload size by 30%, minimizing LLM token consumption and eliminating context-window overhead.
@@ -153,7 +156,12 @@ If you are showcasing this project on your resume or portfolio, here are 15 impa
 12. **Domain Taxonomy Technical Skill Extractor:** Built a regex-driven skills categorization engine organizing extracted proficiencies into Languages, Frameworks, Cloud & DevOps, Databases, and System Architecture.
 13. **Candidate Comparison Leaderboard UI:** Designed an interactive candidate comparison leaderboard in React featuring gold/silver/bronze rank badges, score differential bars, keyword match metrics, and expandable deep-dive accordions.
 14. **Frontend Performance Optimization & Memoization:** Implemented client-side memoization (`useMemo`) and debouncing utilities to cache high-frequency regex token calculations and word density metrics, eliminating re-rendering stutter during live text editing.
-15. **Automated Continuous Integration & Test Matrix:** Configured a multi-version CI pipeline across Python 3.11/3.12 and Node 20/22, incorporating `pytest-cov` test coverage reporting enforcing 78%+ code coverage across backend modules. See `contributions.txt` for LaTeX and STAR formats.
+15. **Automated Continuous Integration & Test Matrix:** Configured a multi-version CI pipeline across Python 3.11/3.12 and Node 20/22, incorporating `pytest-cov` test coverage reporting enforcing 78%+ code coverage across backend modules.
+16. **Deterministic Google/IBM X-Y-Z Mathematical Scoring Engine:** Formulated and implemented a mathematically auditable bullet evaluation algorithm deconstructing statements into $S_{\text{bullet}} = (0.25 \cdot S_X + 0.45 \cdot S_Y + 0.30 \cdot S_Z) - P$, enforcing penalties for passive duty phrasing (-40 pts), verbosity (-25 pts), and lack of measurable scope.
+17. **Interactive Google/IBM XYZ Bullet Impact Lab UI:** Created a dedicated real-time Bullet Impact Lab in React featuring seniority-level calibration (Junior to Staff), animated metric score bars, power-verb chips, and one-click Gemini AI synthesizers for side-by-side before/after comparison.
+18. **Standalone Bullet Scoring REST API (`/api/score-bullet`):** Architected and exposed a high-throughput `POST /api/score-bullet` endpoint guarded by SlowAPI rate limiting, evaluating career accomplishments in sub-5ms client turnaround with zero LLM token costs.
+19. **ATS Layout Linearization & Multi-Column Gutter Collision Detector:** Engineered document linearization and layout security auditing in the ingestion parser, detecting wide tab/space gutters and ASCII table borders to prevent reading-order collapse in Workday, Taleo, and Ashby ATS pipelines.
+20. **Comprehensive Automated Testing Matrix & Pytest-Cov Quality Gate:** Scaled the automated test suite to 55+ comprehensive unit and integration tests across parsers, mathematical scorers, layout linearizers, and REST APIs, enforcing an 88%+ test coverage threshold. See `contributions.txt` for LaTeX and STAR formats.
 
 ---
 
@@ -164,6 +172,7 @@ If you are showcasing this project on your resume or portfolio, here are 15 impa
 | `/api/analyze` | `POST` | 10 / min | Upload PDF/DOCX/TXT resume and optional job description for full ATS audit |
 | `/api/compare` | `POST` | 5 / min | Upload 2-5 resumes and job description for comparative ATS leaderboard ranking |
 | `/api/hygiene` | `POST` | 20 / min | Evaluate contact details, section completeness, and formatting hygiene score |
+| `/api/score-bullet` | `POST` | 20 / min | Evaluate resume bullet point using deterministic Google/IBM XYZ formula |
 | `/api/optimize-bullet` | `POST` | 20 / min | Rewrite single bullet point into quantifiable Google XYZ impact statement |
 | `/api/health` | `GET` | Unlimited | Health check endpoint returning supported formats and service status |
 

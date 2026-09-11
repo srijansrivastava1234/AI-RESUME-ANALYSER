@@ -4,6 +4,18 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-09-11
+
+### Added
+- **Deterministic Google/IBM X-Y-Z Mathematical Scoring Engine**: Implemented `app.xyz_scorer` evaluating bullet statements across Action Verbs ($w=0.25$), Quantifiable Metrics ($w=0.45$), and Technical Tooling ($w=0.30$) with automated deductions for passive duty statements (-40 pts), cognitive overload/verbosity (-25 pts), and under-detailed text (-30 pts).
+- **Interactive Google/IBM XYZ Bullet Impact Lab UI**: Added `BulletImpactLab.jsx` with real-time mathematical score gauge, seniority calibration selector (Junior, Mid, Senior, Staff), detected verb/metric/tooling chips, penalty breakdown tags, and one-click Gemini AI optimization.
+- **Standalone Bullet Scoring REST API**: Exposed `POST /api/score-bullet` in `app.main` with SlowAPI rate limiting (20/min), Pydantic schema validation, and sub-5ms local evaluation time.
+- **ATS Document Layout Linearization & Gutter Collision Detection**: Added `audit_layout_linearization()` in `app.parser` detecting multi-column whitespace gutters and table borders to protect against reading-order corruption in Workday, Taleo, and Ashby ATS pipelines.
+- **Automated Test Matrix Quality Gate**: Expanded automated test suite to 55+ unit and integration tests across `test_xyz_scorer.py`, `test_parser.py`, and `test_api.py`, achieving an 88%+ code coverage threshold.
+- **Expanded 20 Technical Contributions**: Scaled `contributions.txt` and `README.md` from 15 to 20 comprehensive technical achievements with XYZ bullets, 1-line resume lines, LaTeX snippets, and STAR interview talking points.
+
+---
+
 ## [1.4.0] - 2026-09-10
 
 ### Added

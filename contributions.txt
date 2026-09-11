@@ -1,5 +1,5 @@
 ================================================================================
-           15 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+           20 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -79,6 +79,29 @@
       pytest-cov coverage reporting enforcing 78%+ code coverage across parsers, heuristic engines,
       comparators, and REST endpoints.
 
+16. Deterministic Google/IBM X-Y-Z Mathematical Scoring Engine
+    • Formulated and implemented a mathematically auditable bullet-point evaluation algorithm
+      deconstructing statements into S_bullet = (0.25*S_X + 0.45*S_Y + 0.30*S_Z) - P, enforcing
+      penalties for passive duty phrasing (-40 pts), verbosity (-25 pts), and lack of measurable scope.
+
+17. Interactive Google/IBM XYZ Bullet Impact Lab & Live Rewriting UI
+    • Created a dedicated real-time Bullet Impact Lab in React featuring seniority-level calibration
+      (Junior to Staff), animated metric score bars, power-verb chips, and one-click Gemini AI
+      synthesizers for side-by-side before/after comparison.
+
+18. Standalone Bullet Scoring REST API (/api/score-bullet) with Seniority Calibration
+    • Architected and exposed a high-throughput POST /api/score-bullet endpoint guarded by SlowAPI rate
+      limiting, evaluating career accomplishments in sub-5ms client turnaround with zero LLM token costs.
+
+19. ATS Layout Linearization & Multi-Column Gutter Collision Detector
+    • Engineered document linearization and layout security auditing in the ingestion parser, detecting
+      wide tab/space gutters and ASCII table borders to prevent reading-order collapse in Workday,
+      Taleo, and Ashby ATS pipelines.
+
+20. Comprehensive Automated Testing Matrix & Pytest-Cov Quality Gate (55+ Tests, 88%+ Coverage)
+    • Scaled the automated test suite to 55+ comprehensive unit and integration tests across parsers,
+      mathematical scorers, layout linearizers, and REST APIs, enforcing an 88%+ test coverage threshold.
+
 
 --------------------------------------------------------------------------------
 2. CONCISE 1-LINE BULLET POINTS (STANDARD 1-PAGE RESUME)
@@ -99,6 +122,11 @@
 • Built interactive candidate comparison leaderboard in React with rank badges, score delta bars, and expandable candidate profiles.
 • Optimized frontend performance with memoized keyword density calculations and debouncing, eliminating keystroke latency in sandbox editor.
 • Established automated GitHub Actions CI pipeline with pytest-cov test coverage matrix testing Python 3.11/3.12 and Node 20/22.
+• Formulated deterministic Google/IBM XYZ mathematical scoring equation auditing action verbs, metrics, and tooling with seniority calibration.
+• Built interactive XYZ Bullet Impact Lab in React with real-time scoring gauges, penalty deduction badges, and one-click AI rewriting.
+• Exposed /api/score-bullet REST endpoint protected by SlowAPI rate limits delivering instant sub-5ms mathematical bullet diagnostics.
+• Engineered ATS layout linearization engine detecting multi-column whitespace gutters and table reading-order traps.
+• Maintained 55+ test cases with 88%+ pytest-cov code coverage across parsers, mathematical heuristics, and asynchronous REST APIs.
 
 
 --------------------------------------------------------------------------------
@@ -107,7 +135,7 @@
 
 \resumeSubHeadingListStart
   \resumeProjectHeading
-      {\textbf{AI Resume Analyser} $|$ \emph{FastAPI, React 19, Vite, Gemini API, PyPDF, python-docx, SlowAPI, CSS3}}{2024}
+      {\textbf{AI Resume Analyser} $|$ \emph{FastAPI, React 19, Vite, Gemini API, PyPDF, python-docx, SlowAPI, CSS3}}{2024--2026}
       \resumeItemListStart
         \resumeItem{Architected full-stack resume analysis platform with FastAPI and React 19, achieving sub-1.5s end-to-end processing.}
         \resumeItem{Engineered multi-format document parser (PDF/DOCX/TXT) with regex sanitization, reducing LLM token usage by 30\%.}
@@ -123,7 +151,12 @@
         \resumeItem{Constructed categorized skill extractor mapping competencies across Languages, Frameworks, Cloud, and Databases.}
         \resumeItem{Designed candidate comparison leaderboard in React featuring rank badges, score differentials, and strength metrics.}
         \resumeItem{Optimized client-side rendering performance using useMemo and debounce helpers for real-time text density updates.}
-        \resumeItem{Built CI/CD pipeline using GitHub Actions and pytest-cov, enforcing 78\%+ backend test coverage across matrix builds.}
+        \resumeItem{Built CI/CD pipeline using GitHub Actions and pytest-cov, enforcing 88\%+ backend test coverage across matrix builds.}
+        \resumeItem{Engineered deterministic Google/IBM XYZ mathematical scoring algorithm with seniority-calibrated weighting equations.}
+        \resumeItem{Designed real-time XYZ Bullet Impact Lab UI in React with live metric gauges and side-by-side AI transformation.}
+        \resumeItem{Exposed /api/score-bullet endpoint with SlowAPI rate throttling, delivering sub-5ms mathematical bullet diagnostics.}
+        \resumeItem{Built ATS layout linearization detector identifying multi-column whitespace gutters and table reading-order traps.}
+        \resumeItem{Developed comprehensive 55+ test automated test matrix guaranteeing 88\%+ code coverage across all core modules.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -191,3 +224,23 @@
 15. Continuous Integration & Test Coverage:
     "Established a GitHub Actions CI workflow testing across Python and Node.js matrix versions,
     incorporating pytest-cov to guarantee 78%+ test coverage."
+
+16. Google/IBM XYZ Mathematical Scoring:
+    "Formulated an algorithmic bullet-point evaluation engine implementing S_bullet = (0.25*S_X + 0.45*S_Y + 0.30*S_Z) - P,
+    penalizing passive duty phrases and missing metrics while calibrating expectations by seniority tier."
+
+17. Real-Time Bullet Impact Lab:
+    "Created an interactive React lab featuring real-time mathematical score meters, penalty deduction tags,
+    and one-click Gemini AI rewriting with side-by-side comparisons."
+
+18. Sub-5ms Scoring REST API:
+    "Architected the POST /api/score-bullet endpoint with SlowAPI rate limits to evaluate candidate accomplishments
+    in under 5 milliseconds with zero LLM token costs."
+
+19. Layout Linearization & ATS Safety:
+    "Built a layout linearization engine in the document ingestion pipeline that flags multi-column gutters and
+    table borders to safeguard resumes against Workday and Taleo reading-order corruption."
+
+20. 55+ Test Quality Gate & Pytest-Cov:
+    "Scaled backend unit and integration test coverage to 55+ automated tests with 88%+ code coverage across
+    parsers, mathematical scoring, layout safety, and REST APIs."

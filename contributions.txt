@@ -1,5 +1,5 @@
 ================================================================================
-           20 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+           25 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -102,6 +102,30 @@
     • Scaled the automated test suite to 55+ comprehensive unit and integration tests across parsers,
       mathematical scorers, layout linearizers, and REST APIs, enforcing an 88%+ test coverage threshold.
 
+21. Deterministic 4-Pillar ATS Compliance Scoring & Letter Grade Engine
+    • Formulated and deployed a mathematically auditable 4-pillar compliance engine deconstructing resumes into
+      Keywords & Hard Skills (40%), Google/IBM X-Y-Z Impact (30%), Structural Parseability (15%), and Reading
+      Density/Word Budget (15%), mapping composite scores to executive letter grades (A+, A, B, C, D) with percentile benchmarking.
+
+22. Regulatory Safe Harbor Verification (EU AI Act & NYC Local Law 144)
+    • Architected automated regulatory compliance auditing certifying 100% deterministic rule arithmetic per EU AI Act
+      (Regulation (EU) 2024/1689 Annex III High-Risk recruitment & Article 86 Right to Explanation), eliminating demographic
+      proxy variables to guarantee AEDT bias safe harbor under NYC Local Law 144.
+
+23. Metric False-Positive Disambiguation & Binary Impact Detection
+    • Engineered precision regex guards filtering out software version strings (e.g. Python 3.11, Node v18), network ports
+      (Port 8080), and RFC/ISO standards from falsely inflating candidate metric scores, while establishing pattern recognition
+      for high-impact binary achievements (e.g., zero downtime, patent granted, zero-day mitigation).
+
+24. Agent-Native Bring-Your-Own-Key (BYOK) Prompt Synthesis Engine
+    • Designed an Agent-Native prompt synthesis module that translates ATS diagnostic deficiencies, missing competencies,
+      and passive duty statements into executable, anti-hallucination prompts formatted for frontier external LLMs
+      (Claude 3.5 Sonnet, GPT-4o, Cursor) adhering to candidate BYOK data governance.
+
+25. Interactive 4-Pillar Compliance & Safe Harbor Audit Dashboard (React UI)
+    • Built an interactive compliance audit dashboard in React featuring glowing executive letter grade badges, 4-pillar
+      score breakdown cards, regulatory safe harbor compliance cards, reading density meters, and 1-click clipboard prompt export.
+
 
 --------------------------------------------------------------------------------
 2. CONCISE 1-LINE BULLET POINTS (STANDARD 1-PAGE RESUME)
@@ -127,6 +151,11 @@
 • Exposed /api/score-bullet REST endpoint protected by SlowAPI rate limits delivering instant sub-5ms mathematical bullet diagnostics.
 • Engineered ATS layout linearization engine detecting multi-column whitespace gutters and table reading-order traps.
 • Maintained 55+ test cases with 88%+ pytest-cov code coverage across parsers, mathematical heuristics, and asynchronous REST APIs.
+• Formulated deterministic 4-pillar ATS compliance algorithm (Keywords 40%, XYZ 30%, Structure 15%, Density 15%) with A+ to D letter grades.
+• Architected regulatory safe harbor audit verifying EU AI Act Article 86 Right to Explanation and NYC LL 144 AEDT bias safeguards.
+• Engineered false-positive regex guards preventing software versions (Python 3.11) and ports (8080) from falsely inflating metric scores.
+• Built Agent-Native BYOK prompt synthesis engine generating structured, anti-hallucination refactoring prompts for Claude 3.5 and GPT-4o.
+• Created interactive 4-Pillar Compliance Dashboard in React with letter grade badges, safe harbor cards, and 1-click prompt export.
 
 
 --------------------------------------------------------------------------------
@@ -157,6 +186,11 @@
         \resumeItem{Exposed /api/score-bullet endpoint with SlowAPI rate throttling, delivering sub-5ms mathematical bullet diagnostics.}
         \resumeItem{Built ATS layout linearization detector identifying multi-column whitespace gutters and table reading-order traps.}
         \resumeItem{Developed comprehensive 55+ test automated test matrix guaranteeing 88\%+ code coverage across all core modules.}
+        \resumeItem{Formulated deterministic 4-pillar ATS compliance framework (Keywords 40\%, XYZ 30\%, Structure 15\%, Density 15\%) with letter grades.}
+        \resumeItem{Architected regulatory safe harbor engine verifying EU AI Act Art. 86 transparency and NYC LL 144 bias mitigation.}
+        \resumeItem{Engineered false-positive regex guards eliminating version numbers and network ports from metric inflation.}
+        \resumeItem{Designed Agent-Native BYOK prompt synthesis pipeline generating structured refactoring prompts for Claude and GPT-4o.}
+        \resumeItem{Built interactive 4-pillar compliance audit panel in React with letter grade meters, safe harbor badges, and prompt export.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -244,3 +278,23 @@
 20. 55+ Test Quality Gate & Pytest-Cov:
     "Scaled backend unit and integration test coverage to 55+ automated tests with 88%+ code coverage across
     parsers, mathematical scoring, layout safety, and REST APIs."
+
+21. 4-Pillar ATS Compliance & Grading:
+    "Architected an auditable 4-pillar compliance framework weighting Keywords (40%), Google/IBM XYZ Impact (30%),
+    Structural Parseability (15%), and Reading Density (15%), computing executive letter grades from A+ to D."
+
+22. Regulatory Safe Harbor & AI Governance:
+    "Implemented automated regulatory verification ensuring compliance with EU AI Act High-Risk recruitment transparency
+    (Article 86 Right to Explanation) and NYC Local Law 144 AEDT bias safe harbors by excluding demographic proxy variables."
+
+23. Metric False-Positive Disambiguation:
+    "Constructed defensive regex guards ensuring software versions like 'Python 3.11' and ports like 'Port 8080'
+    do not falsely register as impact metrics, while capturing true-positive binary accomplishments like 'zero downtime'."
+
+24. Agent-Native BYOK Prompt Synthesis:
+    "Created an Agent-Native prompt synthesizer that transforms candidate gap audits into structured, zero-hallucination
+    markdown prompts for frontier LLMs (Claude 3.5, GPT-4o, Cursor) under a Bring-Your-Own-Key privacy model."
+
+25. Interactive Compliance & Safe Harbor UI:
+    "Designed a responsive compliance dashboard in React displaying executive letter grade cards, pillar breakdown meters,
+    regulatory safe harbor compliance certificates, and one-click prompt clipboard copying."

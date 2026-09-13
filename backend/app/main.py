@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List
 
-APP_VERSION = "1.5.0"
+APP_VERSION = "1.6.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 
@@ -23,6 +23,8 @@ from app.rewriter import optimize_bullet_point
 from app.comparator import compare_resumes
 from app.hygiene import audit_resume_hygiene
 from app.xyz_scorer import score_resume_bullet
+from app.compliance import audit_ats_compliance
+from app.agent_prompt import generate_agent_refactor_prompt, generate_byok_export_package
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -43,6 +45,19 @@ class OptimizeBulletRequest(BaseModel):
 class ScoreBulletRequest(BaseModel):
     bullet: str = Field(..., min_length=1, description="The resume bullet point text to evaluate")
     seniority: Optional[str] = Field("mid", description="Seniority level: 'junior', 'mid', 'senior', or 'staff'")
+
+class ComplianceAuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="The plain text of the resume to audit")
+    job_description: Optional[str] = Field(None, description="Optional target job description")
+    seniority: Optional[str] = Field("mid", description="Seniority level: 'junior', 'mid', 'senior', 'staff', or 'executive'")
+    target_pages: Optional[int] = Field(1, description="Expected page budget: 1 or 2 pages")
+
+class AgentPromptRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="The plain text of the resume")
+    job_description: Optional[str] = Field(None, description="Optional target job description")
+    seniority: Optional[str] = Field("mid", description="Target seniority level")
+    missing_keywords: Optional[List[str]] = Field(None, description="Optional identified missing keywords")
+    weak_bullets: Optional[List[str]] = Field(None, description="Optional weak bullets to rewrite")
 
 app = FastAPI(
     title="AI Resume Analyser API",
@@ -116,6 +131,8 @@ def read_root():
             "/api/hygiene": "POST - Evaluate ATS formatting hygiene, contact completeness, and section headers",
             "/api/score-bullet": "POST - Deterministic Google/IBM XYZ mathematical bullet impact evaluation",
             "/api/optimize-bullet": "POST - Optimize single resume bullet point into XYZ format",
+            "/api/compliance-audit": "POST - Deterministic 4-Pillar ATS Compliance Audit & Regulatory Safe Harbor check",
+            "/api/agent-prompt": "POST - Synthesize Agent-Native BYOK refactoring prompt for external LLMs",
             "/api/health": "GET - Service health check"
         }
     }
@@ -180,6 +197,17 @@ async def analyze_resume_endpoint(
         analysis_start = time.time()
         analysis_report = analyze_resume(extracted_text, job_description)
         analysis_duration = time.time() - analysis_start
+        
+        # 3. Augment with deterministic 4-Pillar Compliance Scorecard & BYOK Agent Prompt
+        compliance_audit = audit_ats_compliance(extracted_text, job_description)
+        byok_prompt = generate_agent_refactor_prompt(
+            resume_text=extracted_text,
+            job_description=job_description,
+            target_seniority="mid",
+            missing_keywords=compliance_audit.get("pillars", {}).get("keywords", {}).get("missing_keywords", [])
+        )
+        analysis_report["compliance_audit"] = compliance_audit
+        analysis_report["byok_agent_prompt"] = byok_prompt
         
         total_duration = time.time() - start_time
         logger.info(f"[{request_id}] Analysis completed in {analysis_duration:.3f}s. Total time: {total_duration:.3f}s")
@@ -343,3 +371,48 @@ def optimize_bullet_endpoint(request: Request, payload: OptimizeBulletRequest):
     except Exception as err:
         logger.error(f"Error in bullet optimization: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to optimize bullet: {str(err)}")
+
+@app.post("/api/compliance-audit")
+@limiter.limit("20/minute")
+def audit_compliance_endpoint(request: Request, payload: ComplianceAuditRequest):
+    """
+    Executes deterministic 4-Pillar ATS Compliance Audit & Regulatory Safe Harbor check.
+    """
+    try:
+        result = audit_ats_compliance(
+            resume_text=payload.resume_text,
+            job_description=payload.job_description,
+            target_seniority=payload.seniority or "mid",
+            target_pages=payload.target_pages or 1
+        )
+        return result
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as err:
+        logger.error(f"Error in compliance audit endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit ATS compliance: {str(err)}")
+
+@app.post("/api/agent-prompt")
+@limiter.limit("30/minute")
+def generate_agent_prompt_endpoint(request: Request, payload: AgentPromptRequest):
+    """
+    Synthesizes an Agent-Native BYOK refactoring prompt formatted for external frontier LLMs.
+    """
+    try:
+        prompt = generate_agent_refactor_prompt(
+            resume_text=payload.resume_text,
+            job_description=payload.job_description,
+            target_seniority=payload.seniority or "mid",
+            missing_keywords=payload.missing_keywords,
+            identified_weak_bullets=payload.weak_bullets
+        )
+        return {
+            "seniority": payload.seniority or "mid",
+            "agent_prompt": prompt
+        }
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as err:
+        logger.error(f"Error in agent prompt endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate agent prompt: {str(err)}")
+

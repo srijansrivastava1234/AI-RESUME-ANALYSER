@@ -308,6 +308,38 @@ def audit_ats_compliance(
         grade_descriptor = "Critical Deficiencies Detected (High Parser Attrition)"
 
     # -------------------------------------------------------------------------
+    # Percentile Rank & Executive Summary
+    # -------------------------------------------------------------------------
+    if composite_score >= 95:
+        percentile_rank = 99.0
+    elif composite_score >= 90:
+        percentile_rank = round(95.0 + (composite_score - 90) * 0.8, 1)
+    elif composite_score >= 80:
+        percentile_rank = round(80.0 + (composite_score - 80) * 1.5, 1)
+    elif composite_score >= 70:
+        percentile_rank = round(60.0 + (composite_score - 70) * 2.0, 1)
+    elif composite_score >= 60:
+        percentile_rank = round(35.0 + (composite_score - 60) * 2.5, 1)
+    else:
+        percentile_rank = max(5.0, round(composite_score * 0.58, 1))
+
+    pillar_scores = {
+        "Keywords & Hard Skills": pillar1_score,
+        "Google/IBM X-Y-Z Impact": pillar2_score,
+        "Structural Parseability": pillar3_score,
+        "Reading Density": pillar4_score
+    }
+    strongest_pillar = max(pillar_scores, key=pillar_scores.get)
+    weakest_pillar = min(pillar_scores, key=pillar_scores.get)
+
+    executive_summary = (
+        f"Candidate ranks in the {percentile_rank}th percentile for {seniority_key.title()} roles, "
+        f"achieving Grade {letter_grade} ({composite_score}/100 - {grade_descriptor}). "
+        f"Leading asset: {strongest_pillar} ({pillar_scores[strongest_pillar]}/100). "
+        f"Primary optimization vector: {weakest_pillar} ({pillar_scores[weakest_pillar]}/100)."
+    )
+
+    # -------------------------------------------------------------------------
     # Regulatory Safe Harbor & Legal Compliance Audit
     # -------------------------------------------------------------------------
     regulatory_safe_harbor = {
@@ -324,6 +356,8 @@ def audit_ats_compliance(
         "composite_score": composite_score,
         "letter_grade": letter_grade,
         "grade_descriptor": grade_descriptor,
+        "percentile_rank": percentile_rank,
+        "executive_summary": executive_summary,
         "target_seniority": seniority_key,
         "target_pages": target_pages,
         "word_count": word_count,

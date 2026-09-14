@@ -1,5 +1,5 @@
 import pytest
-from app.xyz_scorer import score_resume_bullet
+from app.xyz_scorer import score_resume_bullet, evaluate_bullet_verb_diversity
 
 class TestXYZScorer:
     def test_score_resume_bullet_elite_xyz(self):
@@ -67,3 +67,33 @@ class TestXYZScorer:
         assert result["score"] >= 85
         assert result["component_scores"]["metric_score"] == 100
         assert any("$30k" in m or "$30" in m for m in result["detected_metrics"])
+
+    def test_evaluate_bullet_verb_diversity_diverse(self):
+        bullets = [
+            "Architected asynchronous streaming pipeline with FastAPI.",
+            "Engineered zero-downtime deployment workflows on Kubernetes.",
+            "Spearheaded database indexing to reduce latency by 35%.",
+            "Optimized memory consumption in Go microservices."
+        ]
+        res = evaluate_bullet_verb_diversity(bullets)
+        assert res["diversity_score"] >= 90
+        assert res["unique_verbs_count"] >= 4
+        assert len(res["repetition_warnings"]) == 0
+
+    def test_evaluate_bullet_verb_diversity_repetition(self):
+        bullets = [
+            "Developed REST endpoints for payment processing.",
+            "Developed authentication middleware using JWT.",
+            "Developed automated reporting pipeline in Python.",
+            "Developed frontend React dashboard."
+        ]
+        res = evaluate_bullet_verb_diversity(bullets)
+        assert res["diversity_score"] <= 60
+        assert any("developed" in w.lower() for w in res["repetition_warnings"])
+        assert "developed" in res["overused_verbs"]
+        assert res["overused_verbs"]["developed"] >= 3
+
+    def test_evaluate_bullet_verb_diversity_empty(self):
+        res = evaluate_bullet_verb_diversity([])
+        assert res["diversity_score"] == 100
+        assert res["total_verbs_found"] == 0

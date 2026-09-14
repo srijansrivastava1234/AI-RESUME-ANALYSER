@@ -191,6 +191,8 @@ def audit_resume_hygiene(text: str) -> Dict[str, Any]:
         }
     ]
 
+    readability = calculate_readability_metrics(text)
+
     return {
         "hygiene_score": total_hygiene_score,
         "rating": "Excellent" if total_hygiene_score >= 85 else "Good" if total_hygiene_score >= 70 else "Needs Improvement",
@@ -200,5 +202,66 @@ def audit_resume_hygiene(text: str) -> Dict[str, Any]:
         "sections": detected_sections,
         "missing_sections": missing_sections,
         "checklist": checklist,
+        "readability": readability,
         "recommendations": recommendations,
     }
+
+
+def calculate_readability_metrics(text: str) -> Dict[str, Any]:
+    """
+    Computes deterministic readability heuristics (Flesch-Kincaid & Gunning Fog)
+    tailored for resume bullet density and executive scannability.
+    """
+    if not text or not text.strip():
+        return {
+            "fk_grade_level": 10.0,
+            "gunning_fog": 10.0,
+            "reading_ease_tier": "Optimal",
+            "avg_sentence_length": 15.0,
+            "complex_word_ratio": 0.15
+        }
+
+    raw_sentences = [s.strip() for s in re.split(r'[\.\n!?]+', text) if len(s.strip().split()) >= 3]
+    sentence_count = max(1, len(raw_sentences))
+    words = re.findall(r'\b[a-zA-Z]+\b', text)
+    word_count = max(1, len(words))
+
+    def count_syllables(w: str) -> int:
+        w = w.lower()
+        if len(w) <= 3:
+            return 1
+        w = re.sub(r'(?:[^laeiouy]es|ed|[^laeiouy]e)$', '', w)
+        w = re.sub(r'^y', '', w)
+        matches = re.findall(r'[aeiouy]{1,2}', w)
+        return max(1, len(matches))
+
+    syllable_counts = [count_syllables(w) for w in words]
+    total_syllables = sum(syllable_counts)
+    complex_words = sum(1 for c in syllable_counts if c >= 3)
+
+    # Flesch-Kincaid Grade Level
+    asl = word_count / sentence_count
+    asw = total_syllables / word_count
+    fk_grade = round(0.39 * asl + 11.8 * asw - 15.59, 1)
+    fk_grade = max(1.0, min(20.0, fk_grade))
+
+    # Gunning Fog Index
+    complex_ratio = complex_words / word_count
+    fog = round(0.4 * (asl + 100 * complex_ratio), 1)
+    fog = max(1.0, min(20.0, fog))
+
+    if fk_grade <= 12.0:
+        ease_tier = "Optimal Technical Clarity"
+    elif fk_grade <= 15.0:
+        ease_tier = "Dense Executive Prose"
+    else:
+        ease_tier = "High Cognitive Complexity"
+
+    return {
+        "fk_grade_level": fk_grade,
+        "gunning_fog": fog,
+        "reading_ease_tier": ease_tier,
+        "avg_sentence_length": round(asl, 1),
+        "complex_word_ratio": round(complex_ratio, 2)
+    }
+

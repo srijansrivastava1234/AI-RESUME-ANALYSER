@@ -1,0 +1,198 @@
+================================================================================
+           TOP 15 CURATED TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+================================================================================
+Curated from the 25-point master inventory to maximize technical depth,
+architectural differentiation, mathematical rigor, and recruiter impact.
+
+--------------------------------------------------------------------------------
+1. FULL RESUME BULLET POINTS (XYZ / ACTION-RESULT FORMAT)
+--------------------------------------------------------------------------------
+
+1. Asynchronous Full-Stack Architecture & REST API (FastAPI & React 19)
+   • Architected and deployed a low-latency full-stack resume analysis platform using
+     FastAPI (Python) and React 19 / Vite, establishing asynchronous non-blocking request
+     handling and live health-check polling to process multi-format resumes in under 1.5s.
+
+2. Deterministic 4-Pillar ATS Compliance Scoring & Letter Grade Engine
+   • Formulated and deployed a mathematically auditable 4-pillar compliance engine deconstructing
+     resumes into Keywords & Hard Skills (40%), Google/IBM X-Y-Z Impact (30%), Structural
+     Parseability (15%), and Reading Density (15%), mapping composite scores to executive letter
+     grades (A+ to D) with percentile benchmarking.
+
+3. Generative AI Orchestration & Strict Schema Enforcement (Google Gemini 1.5 Flash)
+   • Integrated Google Gemini 1.5 Flash utilizing strict structured JSON schema generation to
+     deliver deterministic ATS compatibility scoring, keyword gap classification, and granular
+     section-by-section diagnostic feedback.
+
+4. Heuristic Fallback & High-Availability Rule Engine (Zero-Downtime Design)
+   • Formulated a deterministic, offline heuristic/rule-based scoring engine capable of
+     extracting action verbs, technical skills, and quantifiable metrics, ensuring 100% platform
+     availability and seamless user experience during LLM rate limits or API outages.
+
+5. Deterministic Google/IBM X-Y-Z Mathematical Scoring Engine
+   • Formulated and implemented a mathematically auditable bullet-point evaluation algorithm
+     deconstructing statements into S_bullet = (0.25*S_X + 0.45*S_Y + 0.30*S_Z) - P, enforcing
+     penalties for passive duty phrasing (-40 pts), verbosity (-25 pts), and lack of measurable scope
+     with seniority calibration across Junior to Staff levels.
+
+6. Regulatory Safe Harbor Verification (EU AI Act & NYC Local Law 144)
+   • Architected automated regulatory compliance auditing certifying 100% deterministic rule arithmetic
+     per EU AI Act (Regulation (EU) 2024/1689 Annex III High-Risk recruitment & Article 86 Right to Explanation),
+     eliminating demographic proxy variables to guarantee AEDT bias safe harbor under NYC Local Law 144.
+
+7. Agent-Native Bring-Your-Own-Key (BYOK) Prompt Synthesis Engine
+   • Designed an Agent-Native prompt synthesis module that translates ATS diagnostic deficiencies,
+     missing competencies, and passive duty statements into executable, anti-hallucination prompts
+     formatted for frontier external LLMs (Claude 3.5 Sonnet, GPT-4o, Cursor) adhering to candidate BYOK data governance.
+
+8. ATS Layout Linearization & Multi-Column Gutter Collision Detector
+   • Engineered document linearization and layout security auditing in the ingestion parser, detecting
+     wide tab/space gutters and ASCII table borders to prevent reading-order collapse in Workday,
+     Taleo, and Ashby ATS pipelines.
+
+9. Multi-Format Ingestion & Token-Optimized Text Parsing (PyPDF & python-docx)
+   • Engineered a multi-format document ingestion pipeline for PDF, DOCX, and TXT files;
+     implemented regex sanitization, structural normalization, and token pruning to reduce
+     payload size by 30%, minimizing LLM token consumption and eliminating context-window bloat.
+
+10. Multi-Resume Batch Comparison & Candidate Ranking Engine
+    • Engineered an asynchronous multi-resume comparator evaluating up to 5 resumes concurrently
+      against a single job description, calculating ATS score differentials, keyword coverage,
+      and generating an automated winner summary.
+
+11. Defensive API Rate Limiting & DoS Mitigation (SlowAPI & IP Throttling)
+    • Integrated client-IP rate limiting using SlowAPI (10 req/min for analysis, 5 req/min for batch
+      comparison, 20 req/min for bullet optimization), delivering RFC-compliant HTTP 429 responses
+      with retry-after metadata to safeguard cloud backend resources.
+
+12. Structured JSON Logging & Distributed Request Tracing (Observability & Correlation IDs)
+    • Implemented enterprise-grade structured JSON logging with microsecond timestamps, module
+      tracing, and custom X-Request-ID correlation headers to ensure end-to-end auditability
+      across parsing, AI inference, and error paths.
+
+13. Metric False-Positive Disambiguation & Binary Impact Detection
+    • Engineered precision regex guards filtering out software version strings (e.g. Python 3.11, Node v18)
+      and network ports (Port 8080) from falsely inflating candidate metric scores, while establishing pattern
+      recognition for high-impact binary achievements (e.g., zero downtime, patent granted, zero-day mitigation).
+
+14. Interactive Glassmorphic UI & Real-Time Analytics Dashboard (React & Modern CSS3)
+    • Designed a responsive dark-theme analytics interface using custom glassmorphic styling,
+      animated SVG score gauges, color-coded skill density matrices, and tabbed audit breakdown
+      panels to optimize visual hierarchy and UX engagement.
+
+15. Continuous Integration & Automated Test Suite (GitHub Actions & Pytest-Cov)
+    • Configured a multi-version CI pipeline across Python 3.11/3.12 and Node 20/22, scaling the test suite
+      to 65+ unit and integration tests with pytest-cov enforcing an 88%+ code coverage threshold.
+
+
+--------------------------------------------------------------------------------
+2. CONCISE 1-LINE BULLET POINTS (STANDARD 1-PAGE RESUME)
+--------------------------------------------------------------------------------
+
+• Architected full-stack ATS audit engine using FastAPI and React 19, enabling multi-format resume parsing and analysis in <1.5s.
+• Formulated deterministic 4-pillar ATS compliance algorithm (Keywords 40%, XYZ 30%, Structure 15%, Density 15%) with A+ to D letter grades.
+• Integrated Google Gemini 1.5 Flash with strict JSON schema enforcement to generate deterministic ATS scores and keyword gap audits.
+• Built a secondary heuristic rule-based analyzer engine guaranteeing 100% uptime during LLM rate limits and network outages.
+• Formulated deterministic Google/IBM XYZ mathematical scoring equation auditing action verbs, metrics, and tooling with seniority calibration.
+• Architected regulatory safe harbor audit verifying EU AI Act Article 86 Right to Explanation and NYC LL 144 AEDT bias safeguards.
+• Built Agent-Native BYOK prompt synthesis engine generating structured, anti-hallucination refactoring prompts for Claude 3.5 and GPT-4o.
+• Engineered ATS layout linearization engine detecting multi-column whitespace gutters and table reading-order traps.
+• Engineered text extraction pipeline with PyPDF and python-docx, reducing token footprint by 30% through regex normalization.
+• Engineered multi-resume batch comparison engine evaluating up to 5 resumes against target jobs with automated ranking summaries.
+• Added SlowAPI IP-based rate limiting on sensitive endpoints to prevent API abuse, compute exhaustion, and denial-of-service.
+• Deployed structured JSON logging with X-Request-ID request tracing, establishing production observability across all API endpoints.
+• Engineered false-positive regex guards preventing software versions (Python 3.11) and ports (8080) from falsely inflating metric scores.
+• Designed responsive glassmorphic dashboard in React & CSS3 with animated score gauges, keyword matrices, and interactive tabs.
+• Established automated GitHub Actions CI pipeline with 65+ tests and 88%+ pytest-cov coverage across Python 3.11/3.12 and Node 20/22.
+
+
+--------------------------------------------------------------------------------
+3. LATEX / OVERLEAF SNIPPETS
+--------------------------------------------------------------------------------
+
+\resumeSubHeadingListStart
+  \resumeProjectHeading
+      {\textbf{AI Resume Analyser} $|$ \emph{FastAPI, React 19, Vite, Gemini API, PyPDF, python-docx, SlowAPI, CSS3}}{2024--2026}
+      \resumeItemListStart
+        \resumeItem{Architected full-stack resume analysis platform with FastAPI and React 19, achieving sub-1.5s end-to-end processing.}
+        \resumeItem{Formulated deterministic 4-pillar ATS compliance framework (Keywords 40\%, XYZ 30\%, Structure 15\%, Density 15\%) with letter grades.}
+        \resumeItem{Integrated Google Gemini 1.5 Flash via structured JSON schema enforcement for deterministic ATS scoring and gap analysis.}
+        \resumeItem{Formulated offline heuristic fallback engine to guarantee 100\% platform uptime during API rate limits and outages.}
+        \resumeItem{Engineered deterministic Google/IBM XYZ mathematical scoring algorithm with seniority-calibrated weighting equations.}
+        \resumeItem{Architected regulatory safe harbor engine verifying EU AI Act Art. 86 transparency and NYC LL 144 bias mitigation.}
+        \resumeItem{Designed Agent-Native BYOK prompt synthesis pipeline generating structured refactoring prompts for Claude and GPT-4o.}
+        \resumeItem{Built ATS layout linearization detector identifying multi-column whitespace gutters and table reading-order traps.}
+        \resumeItem{Engineered multi-format document parser (PDF/DOCX/TXT) with regex sanitization, reducing LLM token usage by 30\%.}
+        \resumeItem{Engineered batch comparison engine analyzing and ranking up to 5 candidate resumes against target job descriptions.}
+        \resumeItem{Secured API endpoints against DoS with SlowAPI IP-based rate limiting and standard HTTP 429 retry headers.}
+        \resumeItem{Structured JSON logging pipeline with X-Request-ID trace correlation, delivering cloud-ready observability.}
+        \resumeItem{Engineered false-positive regex guards eliminating version numbers and network ports from metric inflation.}
+        \resumeItem{Designed responsive glassmorphism UI featuring animated score gauges, skill density matrices, and interactive tabs.}
+        \resumeItem{Built CI/CD pipeline using GitHub Actions, maintaining 65+ tests and 88\%+ backend coverage across matrix builds.}
+      \resumeItemListEnd
+\resumeSubHeadingListEnd
+
+
+--------------------------------------------------------------------------------
+4. INTERVIEW TALKING POINTS (STAR METHOD)
+--------------------------------------------------------------------------------
+
+1. Full-Stack System Architecture:
+   "Designed an asynchronous FastAPI backend paired with React 19 and Vite to provide real-time, non-blocking
+   resume audits in under 1.5 seconds with live health monitoring."
+
+2. 4-Pillar ATS Compliance & Grading:
+   "Architected an auditable 4-pillar compliance framework weighting Keywords (40%), Google/IBM XYZ Impact (30%),
+   Structural Parseability (15%), and Reading Density (15%), computing executive letter grades from A+ to D."
+
+3. Structured AI Outputs:
+   "Leveraged Gemini 1.5 Flash with strict JSON schema definitions, guaranteeing 100% type-safe, deterministic
+   responses for frontend scorecards and matrices."
+
+4. High Availability & Failover:
+   "Implemented a dual-engine design with an offline heuristic rule-based fallback, preventing downtime and
+   handling requests even when third-party AI APIs hit rate limits."
+
+5. Google/IBM XYZ Mathematical Scoring:
+   "Formulated an algorithmic bullet-point evaluation engine implementing S_bullet = (0.25*S_X + 0.45*S_Y + 0.30*S_Z) - P,
+   penalizing passive duty phrases and missing metrics while calibrating expectations by seniority tier."
+
+6. Regulatory Safe Harbor & AI Governance:
+   "Implemented automated regulatory verification ensuring compliance with EU AI Act High-Risk recruitment transparency
+   (Article 86 Right to Explanation) and NYC Local Law 144 AEDT bias safe harbors by excluding demographic proxy variables."
+
+7. Agent-Native BYOK Prompt Synthesis:
+   "Created an Agent-Native prompt synthesizer that transforms candidate gap audits into structured, zero-hallucination
+   markdown prompts for frontier LLMs (Claude 3.5, GPT-4o, Cursor) under a Bring-Your-Own-Key privacy model."
+
+8. Layout Linearization & ATS Safety:
+   "Built a layout linearization engine in the document ingestion pipeline that flags multi-column gutters and
+   table borders to safeguard resumes against Workday and Taleo reading-order corruption."
+
+9. Token Optimization & Ingestion:
+   "Engineered document parsers using PyPDF and python-docx, preprocessing raw strings with regex sanitization
+   and token pruning to lower LLM payload overhead by ~30%."
+
+10. Multi-Resume Comparison & Ranking:
+    "Created a multi-resume batch evaluator comparing up to 5 resumes simultaneously against a single job description,
+    generating an ATS leaderboard with score deltas."
+
+11. Defensive Security & Rate Limiting:
+    "Configured SlowAPI rate limiters to guard against automated abuse, enforcing per-IP quotas on compute-heavy
+    AI analysis and batch comparison endpoints."
+
+12. Production Logging & Tracing:
+    "Integrated structured JSON logging with custom X-Request-ID correlation headers, enabling distributed trace
+    tracking across parsing, inference, and error reporting."
+
+13. Metric False-Positive Disambiguation:
+    "Constructed defensive regex guards ensuring software versions like 'Python 3.11' and ports like 'Port 8080'
+    do not falsely register as impact metrics, while capturing true-positive binary accomplishments like 'zero downtime'."
+
+14. Frontend Design & Data Visualization:
+    "Crafted a custom glassmorphism design system in pure CSS and React, incorporating SVG gauge meters and
+    tabbed audit matrices for an intuitive candidate experience."
+
+15. 65+ Test Quality Gate & Pytest-Cov:
+    "Scaled backend unit and integration test coverage to 65+ automated tests with 88%+ code coverage across
+    parsers, mathematical scoring, layout safety, and REST APIs."

@@ -19,7 +19,8 @@ def generate_agent_refactor_prompt(
     job_description: Optional[str] = None,
     target_seniority: str = "mid",
     missing_keywords: Optional[List[str]] = None,
-    identified_weak_bullets: Optional[List[str]] = None
+    identified_weak_bullets: Optional[List[str]] = None,
+    target_model: str = "general"
 ) -> str:
     """
     Synthesizes a production-grade Agent-Native markdown prompt configured
@@ -30,7 +31,8 @@ def generate_agent_refactor_prompt(
     :param target_seniority: Seniority level (junior, mid, senior, staff, executive)
     :param missing_keywords: List of missing technical competencies
     :param identified_weak_bullets: List of weak/passive duty bullets needing rewrite
-    :return: Formatted markdown prompt ready for one-click clipboard copy
+    :param target_model: Target LLM architecture ('claude', 'gpt', 'cursor', or 'general')
+    :return: Formatted prompt ready for one-click clipboard copy
     """
     seniority = target_seniority.capitalize()
 
@@ -45,11 +47,82 @@ def generate_agent_refactor_prompt(
         identified_weak_bullets = weak[:5]  # Limit to top 5 weak bullets
 
     bullets_section = "\n".join([f"- \"{b}\"" for b in identified_weak_bullets]) if identified_weak_bullets else "- [All existing bullets achieved >= 70 XYZ threshold. Provide candidate bullets to optimize.]"
-
     keywords_section = ", ".join(missing_keywords) if missing_keywords else "None identified (Maintain technical keyword density)"
     jd_section = job_description.strip() if job_description and job_description.strip() else "Targeting modern engineering standards for this seniority level."
 
-    prompt = f"""# ROLE: SENIOR TECHNICAL RESUME ARCHITECT & ATS COMPLIANCE SPECIALIST
+    model_key = target_model.lower().strip()
+
+    if model_key in ["claude", "anthropic"]:
+        prompt = f"""<system>
+You are an expert Technical Career Dossier Architect and ATS Compliance Auditor.
+Your task is to refactor candidate resume bullets using the Google/IBM X-Y-Z accomplishment formula.
+Target Seniority: {seniority}.
+</system>
+
+<context>
+<job_description>
+{jd_section}
+</job_description>
+<identified_skill_gaps>
+{keywords_section}
+</identified_skill_gaps>
+</context>
+
+<bullets_to_refactor>
+{bullets_section}
+</bullets_to_refactor>
+
+<rules>
+1. Formula: Accomplished [X], measured by [Y], by doing [Z].
+2. Anti-Fabrication: Do NOT hallucinate unverified metrics. Use placeholders like [X% / $Y] if metric is missing.
+3. Seniority Calibration: Enforce {seniority}-level scope, architecture, and business outcomes.
+4. Word Budget: 18–28 words per bullet. Eliminate passive duty phrases.
+</rules>
+
+<output_instructions>
+Output refactored bullets in clean markdown with a brief 1-line rationale for each change.
+</output_instructions>"""
+    elif model_key in ["cursor", "composer"]:
+        prompt = f"""/* CURSOR COMPOSER: RESUME REFACTORING INSTRUCTION */
+// Target Seniority: {seniority}
+// Job Context: {jd_section[:200]}...
+
+## INSTRUCTIONS:
+Refactor the following candidate bullets into Google/IBM X-Y-Z statements:
+Accomplished [X] as measured by [Y], by doing [Z].
+
+## COMPETENCY GAPS TO INTEGRATE (if verified):
+{keywords_section}
+
+## WEAK BULLETS:
+{bullets_section}
+
+## CONSTRAINTS:
+- No metric hallucination (use [bracketed placeholders] for unknown numbers).
+- Target 18-28 words per bullet.
+- Use past-tense power verbs (Architected, Engineered, Spearheaded, Optimized).
+"""
+    elif model_key in ["gpt", "openai"]:
+        prompt = f"""# SYSTEM: RESUME OPTIMIZATION AGENT (GPT-4o)
+Seniority Target: {seniority}
+
+## TARGET JOB DESCRIPTION:
+{jd_section}
+
+## MISSING KEYWORDS TO INCORPORATE:
+{keywords_section}
+
+## CANDIDATE BULLETS TO REFACTOR:
+{bullets_section}
+
+## MANDATORY GUIDELINES:
+1. Apply Google XYZ: "Accomplished [X] as measured by [Y], by doing [Z]".
+2. Anti-Hallucination: Never fabricate ungrounded metrics.
+3. Length: Strictly 18-28 words per bullet.
+4. Active Voice: Start with active Bloom's taxonomy verbs.
+"""
+    else:
+        prompt = f"""# ROLE: SENIOR TECHNICAL RESUME ARCHITECT & ATS COMPLIANCE SPECIALIST
 
 You are acting as an elite career dossier editor and ATS compliance auditor.
 Your mission is to rewrite the candidate's weak resume bullet points using strictly the **Google/IBM X-Y-Z Accomplishment Formula**:
@@ -82,6 +155,7 @@ Calibrate your rewrites specifically for a **{seniority}** seniority level.
 5. **OUTPUT FORMAT**: Return ONLY the refactored bullets in Markdown format with a brief 1-line rationale for each change.
 """
     return prompt.strip()
+
 
 
 def generate_byok_export_package(

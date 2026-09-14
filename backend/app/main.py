@@ -58,6 +58,7 @@ class AgentPromptRequest(BaseModel):
     seniority: Optional[str] = Field("mid", description="Target seniority level")
     missing_keywords: Optional[List[str]] = Field(None, description="Optional identified missing keywords")
     weak_bullets: Optional[List[str]] = Field(None, description="Optional weak bullets to rewrite")
+    target_model: Optional[str] = Field("general", description="Target model architecture: 'claude', 'gpt', 'cursor', or 'general'")
 
 class VerbDiversityRequest(BaseModel):
     bullets: List[str] = Field(..., min_length=1, description="List of resume bullet points to evaluate for verb diversity")
@@ -407,10 +408,12 @@ def generate_agent_prompt_endpoint(request: Request, payload: AgentPromptRequest
             job_description=payload.job_description,
             target_seniority=payload.seniority or "mid",
             missing_keywords=payload.missing_keywords,
-            identified_weak_bullets=payload.weak_bullets
+            identified_weak_bullets=payload.weak_bullets,
+            target_model=payload.target_model or "general"
         )
         return {
             "seniority": payload.seniority or "mid",
+            "target_model": payload.target_model or "general",
             "agent_prompt": prompt
         }
     except ValueError as val_err:

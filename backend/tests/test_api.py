@@ -226,4 +226,28 @@ def test_score_bullet_endpoint_empty_and_short():
     assert data["tier"] == "Empty"
 
 
+def test_verb_diversity_endpoint_success():
+    payload = {
+        "bullets": [
+            "Architected low-latency microservices with FastAPI and Kafka.",
+            "Engineered automated CI/CD pipeline cutting deployment times by 40%.",
+            "Spearheaded database indexing in PostgreSQL to reduce query latency.",
+            "Optimized memory usage in Go microservices."
+        ]
+    }
+    res = client.post("/api/verb-diversity", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert "diversity_score" in data
+    assert data["diversity_score"] >= 80
+    assert data["total_verbs_found"] >= 4
+    assert len(data["repetition_warnings"]) == 0
+
+
+def test_verb_diversity_endpoint_empty_list():
+    res = client.post("/api/verb-diversity", json={"bullets": []})
+    assert res.status_code == 422  # Pydantic min_items=1 validation error
+
+
+
 

@@ -60,7 +60,7 @@ class AgentPromptRequest(BaseModel):
     weak_bullets: Optional[List[str]] = Field(None, description="Optional weak bullets to rewrite")
 
 class VerbDiversityRequest(BaseModel):
-    bullets: List[str] = Field(..., min_items=1, description="List of resume bullet points to evaluate for verb diversity")
+    bullets: List[str] = Field(..., min_length=1, description="List of resume bullet points to evaluate for verb diversity")
 
 app = FastAPI(
     title="AI Resume Analyser API",

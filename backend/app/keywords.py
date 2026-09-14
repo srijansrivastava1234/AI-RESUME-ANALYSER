@@ -24,19 +24,32 @@ SKILL_TAXONOMY: Dict[str, List[str]] = {
     ]
 }
 
+from functools import lru_cache
+
+# Precompiled skill patterns for sub-millisecond keyword matching
+_COMPILED_SKILL_PATTERNS: Dict[str, re.Pattern] = {
+    skill: re.compile(
+        r'(?:\b|(?<=[^a-zA-Z0-9]))' + re.escape(skill) + r'(?:\b|(?=[^a-zA-Z0-9]))'
+    )
+    for skills in SKILL_TAXONOMY.values()
+    for skill in skills
+}
+
 def extract_skills_by_category(text: str) -> Dict[str, List[str]]:
     """
-    Scans input text against the technical skill taxonomy and categorizes detected skills.
+    Scans input text against the technical skill taxonomy and categorizes detected skills
+    using precompiled regexes for maximum throughput.
     """
+    if not text:
+        return {}
     text_lower = text.lower()
     results: Dict[str, List[str]] = {}
     
     for category, skills in SKILL_TAXONOMY.items():
         matched = []
         for skill in skills:
-            # Word boundary regex matching to avoid substring false positives (e.g., 'go' in 'good')
-            pattern = r'(?:\b|(?<=[^a-zA-Z0-9]))' + re.escape(skill) + r'(?:\b|(?=[^a-zA-Z0-9]))'
-            if re.search(pattern, text_lower):
+            pattern = _COMPILED_SKILL_PATTERNS.get(skill)
+            if pattern and pattern.search(text_lower):
                 matched.append(skill.title() if len(skill) > 3 else skill.upper())
         if matched:
             results[category] = sorted(list(set(matched)))

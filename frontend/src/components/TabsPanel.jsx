@@ -40,6 +40,7 @@ export default function TabsPanel({
   const [targetPages, setTargetPages] = useState(1);
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [showFullPrompt, setShowFullPrompt] = useState(false);
+  const [selectedPromptModel, setSelectedPromptModel] = useState('claude');
 
   // Helper: word count
   const getWordCount = (text) => {
@@ -779,23 +780,69 @@ export default function TabsPanel({
           return 'rgba(239, 68, 68, 0.4)';
         };
 
+        const getModelPromptText = () => {
+          const gaps = (complianceData.pillars?.keywords?.missing_keywords || []).join(', ') || 'None identified';
+          const seniority = targetSeniority.toUpperCase();
+          if (selectedPromptModel === 'claude') {
+            return `<system>
+You are an expert Technical Career Dossier Architect and ATS Compliance Auditor.
+Your task is to refactor candidate resume bullets using the Google/IBM X-Y-Z accomplishment formula:
+Accomplished [X] as measured by [Y], by doing [Z].
+Target Seniority: ${seniority}.
+</system>
+
+<context>
+<identified_skill_gaps>
+${gaps}
+</identified_skill_gaps>
+</context>
+
+<rules>
+1. Formula: Accomplished [X], measured by [Y], by doing [Z].
+2. Anti-Fabrication: Do NOT hallucinate unverified metrics. Use placeholders like [X% / $Y] if metric is missing.
+3. Seniority Calibration: Enforce ${seniority}-level scope, architecture, and business outcomes.
+4. Word Budget: 18–28 words per bullet. Eliminate passive duty phrases.
+</rules>
+
+<output_instructions>
+Output refactored bullets in clean markdown with a brief 1-line rationale for each change.
+</output_instructions>`;
+          } else if (selectedPromptModel === 'cursor') {
+            return `/* CURSOR COMPOSER: RESUME REFACTORING INSTRUCTION */
+// Target Seniority: ${seniority}
+// Identified Skill Gaps: ${gaps}
+
+## INSTRUCTIONS:
+Refactor the candidate bullets into Google/IBM X-Y-Z statements:
+Accomplished [X] as measured by [Y], by doing [Z].
+
+## CONSTRAINTS:
+- No metric hallucination (use [bracketed placeholders] for unknown numbers).
+- Target 18-28 words per bullet.
+- Use past-tense power verbs (Architected, Engineered, Spearheaded, Optimized).`;
+          } else if (selectedPromptModel === 'gpt') {
+            return `# SYSTEM: RESUME OPTIMIZATION AGENT (GPT-4o)
+Seniority Target: ${seniority}
+
+## MISSING KEYWORDS TO INCORPORATE:
+${gaps}
+
+## MANDATORY GUIDELINES:
+1. Apply Google XYZ: "Accomplished [X] as measured by [Y], by doing [Z]".
+2. Anti-Hallucination: Never fabricate ungrounded metrics.
+3. Length: Strictly 18-28 words per bullet.
+4. Active Voice: Start with active Bloom's taxonomy verbs.`;
+          }
+          return report?.byok_agent_prompt || `# ROLE: SENIOR TECHNICAL RESUME ARCHITECT & ATS COMPLIANCE SPECIALIST
+
+Accomplished [X] as measured by [Y], by doing [Z]
+Target Seniority: ${seniority}
+Identified Competency Gaps: ${gaps}
+Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
+        };
+
         const handleCopyAgentPrompt = () => {
-          const promptText = report?.byok_agent_prompt || `# ROLE: SENIOR TECHNICAL RESUME ARCHITECT & ATS COMPLIANCE SPECIALIST
-
-You are acting as an elite career dossier editor and ATS compliance auditor.
-Your mission is to rewrite the candidate's weak resume bullet points using strictly the Google/IBM X-Y-Z Accomplishment Formula:
-> "Accomplished [X] as measured by [Y], by doing [Z]"
-
-Target Seniority: ${targetSeniority.toUpperCase()}
-
-IDENTIFIED COMPETENCY GAPS:
-${(complianceData.pillars?.keywords?.missing_keywords || []).join(', ') || 'None identified'}
-
-STRICT ANTI-FABRICATION RULES:
-1. ZERO FABRICATION: Never invent metrics, percentages, or tools not confirmed by the candidate.
-2. FRONT-LOAD IMPACT: Start with strong Bloom's taxonomy action verbs.
-3. COGNITIVE LOAD CEILING: Keep each bullet between 18 and 28 words.
-`;
+          const promptText = getModelPromptText();
           navigator.clipboard.writeText(promptText);
           setCopiedPrompt(true);
           setTimeout(() => setCopiedPrompt(false), 2000);
@@ -1082,6 +1129,34 @@ STRICT ANTI-FABRICATION RULES:
               </p>
 
               <div style={{ position: 'relative' }}>
+                <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.65rem', flexWrap: 'wrap' }}>
+                  {[
+                    { id: 'claude', label: 'Claude 3.5 (XML)' },
+                    { id: 'gpt', label: 'OpenAI GPT-4o' },
+                    { id: 'cursor', label: 'Cursor Composer' },
+                    { id: 'general', label: 'Universal Markdown' }
+                  ].map((m) => (
+                    <button
+                      key={m.id}
+                      type="button"
+                      onClick={() => setSelectedPromptModel(m.id)}
+                      style={{
+                        padding: '0.28rem 0.65rem',
+                        fontSize: '0.74rem',
+                        borderRadius: '6px',
+                        border: '1px solid var(--border-color)',
+                        background: selectedPromptModel === m.id ? 'var(--primary)' : 'rgba(255,255,255,0.05)',
+                        color: selectedPromptModel === m.id ? 'white' : 'var(--text-secondary)',
+                        cursor: 'pointer',
+                        fontWeight: selectedPromptModel === m.id ? 700 : 500,
+                        transition: 'all 0.15s ease'
+                      }}
+                    >
+                      {m.label}
+                    </button>
+                  ))}
+                </div>
+
                 <pre style={{
                   background: 'rgba(0,0,0,0.35)',
                   padding: '1rem',
@@ -1094,11 +1169,7 @@ STRICT ANTI-FABRICATION RULES:
                   transition: 'all 0.3s ease',
                   border: '1px solid var(--border-color)'
                 }}>
-                  {report?.byok_agent_prompt || `# ROLE: SENIOR TECHNICAL RESUME ARCHITECT & ATS COMPLIANCE SPECIALIST
-
-Accomplished [X] as measured by [Y], by doing [Z]
-Target Seniority: ${targetSeniority.toUpperCase()}
-Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`}
+                  {getModelPromptText()}
                 </pre>
                 <button
                   onClick={() => setShowFullPrompt(!showFullPrompt)}

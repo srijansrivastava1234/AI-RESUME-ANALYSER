@@ -165,9 +165,27 @@ def test_api_compliance_audit_endpoint():
     data = response.json()
     assert "composite_score" in data
     assert "letter_grade" in data
+    assert "percentile_rank" in data
+    assert "executive_summary" in data
+    assert isinstance(data["percentile_rank"], (int, float))
+    assert 1.0 <= data["percentile_rank"] <= 99.0
+    assert "Candidate ranks in the" in data["executive_summary"]
     assert "pillars" in data
     assert "regulatory_safe_harbor" in data
     assert data["target_seniority"] == "senior"
+
+
+def test_compliance_percentile_and_executive_summary():
+    result = audit_ats_compliance(
+        resume_text=SAMPLE_RESUME,
+        job_description=SAMPLE_JOB_DESC,
+        target_seniority="staff"
+    )
+    assert "percentile_rank" in result
+    assert "executive_summary" in result
+    assert 0.0 <= result["percentile_rank"] <= 99.0
+    assert "Staff" in result["executive_summary"]
+    assert "Grade" in result["executive_summary"]
 
 
 def test_api_agent_prompt_endpoint():

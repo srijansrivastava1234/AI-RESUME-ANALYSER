@@ -209,3 +209,81 @@ def score_resume_bullet(bullet: str, seniority: Optional[str] = "mid") -> Dict[s
         "penalties": penalties,
         "improvement_tips": improvement_tips
     }
+
+
+def evaluate_bullet_verb_diversity(bullets: List[str]) -> Dict[str, Any]:
+    """
+    Analyzes action verb distribution and repetition across multiple resume bullet points.
+    Flags overused verbs (e.g., 'developed', 'led' repeated multiple times) and computes a
+    0-100 Action Verb Diversity Score.
+    """
+    if not bullets:
+        return {
+            "diversity_score": 100,
+            "total_verbs_found": 0,
+            "unique_verbs_count": 0,
+            "repetition_warnings": [],
+            "overused_verbs": {},
+            "recommendations": ["No bullets provided to evaluate."]
+        }
+
+    verb_counts: Dict[str, int] = {}
+    total_verbs = 0
+    all_known_verbs = POWER_ACTION_VERBS | MEDIUM_ACTION_VERBS
+
+    for b in bullets:
+        cleaned = b.strip().strip("•-* \t\n").lower()
+        if not cleaned:
+            continue
+        words = re.findall(r'\b[a-z]+\b', cleaned)
+        if not words:
+            continue
+
+        found_in_bullet = set()
+        # Check first word priority
+        if words[0] in all_known_verbs:
+            v = words[0]
+            verb_counts[v] = verb_counts.get(v, 0) + 1
+            total_verbs += 1
+            found_in_bullet.add(v)
+
+        for w in words[1:5]:
+            if w in all_known_verbs and w not in found_in_bullet:
+                verb_counts[w] = verb_counts.get(w, 0) + 1
+                total_verbs += 1
+                found_in_bullet.add(w)
+
+    unique_count = len(verb_counts)
+    overused = {v: count for v, count in verb_counts.items() if count >= 2 and total_verbs >= 3}
+
+    if total_verbs == 0:
+        diversity_score = 50
+    else:
+        ratio = unique_count / total_verbs
+        diversity_score = max(20, min(100, int(round(ratio * 100))))
+        for count in verb_counts.values():
+            if count >= 3:
+                diversity_score = max(20, diversity_score - (count - 2) * 15)
+
+    warnings = []
+    for verb, count in overused.items():
+        if count >= 3:
+            warnings.append(f"Severe repetition: Action verb '{verb}' is used {count} times.")
+        else:
+            warnings.append(f"Action verb '{verb}' is repeated {count} times.")
+
+    recommendations = []
+    if overused:
+        recommendations.append("Diversify repetitive action verbs with domain-specific power verbs (e.g. 'orchestrated', 'streamlined', 'spearheaded').")
+    if total_verbs > 0 and unique_count == total_verbs:
+        recommendations.append("Excellent verb variety! Demonstrates broad competency and active ownership.")
+
+    return {
+        "diversity_score": diversity_score,
+        "total_verbs_found": total_verbs,
+        "unique_verbs_count": unique_count,
+        "repetition_warnings": warnings,
+        "overused_verbs": overused,
+        "recommendations": recommendations
+    }
+

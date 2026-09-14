@@ -177,6 +177,49 @@ export default function HygieneCard({ hygiene }) {
             })}
           </div>
 
+          {/* Readability & Prose Clarity Metrics */}
+          {hygiene.readability && (
+            <div style={{
+              background: 'rgba(255,255,255,0.03)',
+              borderRadius: '10px',
+              padding: '0.85rem 1rem',
+              border: '1px solid var(--border-color)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                  Readability & Cognitive Skim Index
+                </span>
+                <span style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  color: 'var(--primary)',
+                  background: 'rgba(99, 102, 241, 0.1)',
+                  padding: '2px 8px',
+                  borderRadius: '10px'
+                }}>
+                  {hygiene.readability.reading_ease_tier}
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.5rem', fontSize: '0.78rem' }}>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Flesch-Kincaid Grade</span>
+                  <strong style={{ color: 'var(--text-main)' }}>Grade {hygiene.readability.fk_grade_level}</strong>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Gunning Fog</span>
+                  <strong style={{ color: 'var(--text-main)' }}>{hygiene.readability.gunning_fog} Index</strong>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Avg Sentence / Bullet</span>
+                  <strong style={{ color: 'var(--text-main)' }}>{hygiene.readability.avg_sentence_length} words</strong>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Hygiene Recommendations */}
           {recommendations && recommendations.length > 0 && (
             <div style={{

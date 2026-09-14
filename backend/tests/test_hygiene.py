@@ -4,7 +4,7 @@ Validates contact extraction, section heading detection, scoring logic, and chec
 """
 
 import pytest
-from app.hygiene import audit_resume_hygiene
+from app.hygiene import audit_resume_hygiene, calculate_readability_metrics
 
 
 WELL_FORMED_RESUME = """
@@ -106,3 +106,27 @@ class TestResumeHygiene:
             assert "passed" in item
             assert "status" in item
             assert "detail" in item
+
+    def test_readability_metrics_included(self):
+        """Verifies readability metrics are properly computed and returned in hygiene report."""
+        report = audit_resume_hygiene(WELL_FORMED_RESUME)
+        assert "readability" in report
+        readability = report["readability"]
+        assert "fk_grade_level" in readability
+        assert "gunning_fog" in readability
+        assert "reading_ease_tier" in readability
+        assert 1.0 <= readability["fk_grade_level"] <= 20.0
+        assert 1.0 <= readability["gunning_fog"] <= 20.0
+
+    def test_calculate_readability_metrics_direct(self):
+        """Verifies direct calculation of readability scores on standard prose."""
+        sample_text = (
+            "Architected high-throughput microservices using FastAPI and Kafka. "
+            "Engineered zero-downtime deployment workflows on Kubernetes. "
+            "Spearheaded database indexing in PostgreSQL to reduce query latency by 35%."
+        )
+        metrics = calculate_readability_metrics(sample_text)
+        assert "fk_grade_level" in metrics
+        assert metrics["reading_ease_tier"] in ["Optimal Technical Clarity", "Dense Executive Prose"]
+        assert metrics["avg_sentence_length"] > 0
+

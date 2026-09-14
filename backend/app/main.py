@@ -22,7 +22,7 @@ from app.analyzer import analyze_resume
 from app.rewriter import optimize_bullet_point
 from app.comparator import compare_resumes
 from app.hygiene import audit_resume_hygiene
-from app.xyz_scorer import score_resume_bullet
+from app.xyz_scorer import score_resume_bullet, evaluate_bullet_verb_diversity
 from app.compliance import audit_ats_compliance
 from app.agent_prompt import generate_agent_refactor_prompt, generate_byok_export_package
 from app.logging_config import setup_logging, generate_request_id
@@ -58,6 +58,9 @@ class AgentPromptRequest(BaseModel):
     seniority: Optional[str] = Field("mid", description="Target seniority level")
     missing_keywords: Optional[List[str]] = Field(None, description="Optional identified missing keywords")
     weak_bullets: Optional[List[str]] = Field(None, description="Optional weak bullets to rewrite")
+
+class VerbDiversityRequest(BaseModel):
+    bullets: List[str] = Field(..., min_items=1, description="List of resume bullet points to evaluate for verb diversity")
 
 app = FastAPI(
     title="AI Resume Analyser API",
@@ -415,4 +418,18 @@ def generate_agent_prompt_endpoint(request: Request, payload: AgentPromptRequest
     except Exception as err:
         logger.error(f"Error in agent prompt endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to generate agent prompt: {str(err)}")
+
+@app.post("/api/verb-diversity")
+@limiter.limit("30/minute")
+def evaluate_verb_diversity_endpoint(request: Request, payload: VerbDiversityRequest):
+    """
+    Evaluates action verb distribution, redundancy, and diversity score across candidate bullet points.
+    """
+    try:
+        result = evaluate_bullet_verb_diversity(payload.bullets)
+        return result
+    except Exception as err:
+        logger.error(f"Error in verb diversity endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to evaluate verb diversity: {str(err)}")
+
 

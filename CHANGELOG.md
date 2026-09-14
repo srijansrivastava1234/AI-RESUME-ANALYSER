@@ -4,6 +4,20 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-09-14
+
+### Added
+- **Curated Top 15 Technical Contributions Inventory**: Formulated and published `contributions_top15.txt` curating the highest-signal technical contributions from the 25-point master inventory across Full XYZ, 1-Line Bullets, LaTeX snippets, and STAR interview talking points.
+- **Action Verb Diversity Engine & Repetition Penalty**: Formulated `evaluate_bullet_verb_diversity()` in `app.xyz_scorer` and exposed `POST /api/verb-diversity` with SlowAPI rate limiting to audit repetitive verbs and compute a 0-100 diversity index.
+- **Quantitative Readability Index**: Implemented `calculate_readability_metrics()` in `app.hygiene` calculating Flesch-Kincaid Grade Level and Gunning Fog indices embedded within the ATS hygiene scorecard.
+- **Multi-Model Prompt Synthesis Engine**: Expanded `app.agent_prompt` with tailored prompt architectures for Anthropic Claude 3.5 Sonnet (XML tags), OpenAI GPT-4o, and Cursor Composer.
+- **Interactive Model Selector in Prompt Exporter**: Added interactive prompt model switching in `TabsPanel.jsx` allowing 1-click clipboard export for Claude, GPT-4o, Cursor, or Universal Markdown.
+- **Readability & Cognitive Skim UI Card**: Added a dedicated readability metrics panel in `HygieneCard.jsx` displaying Flesch-Kincaid Grade, Gunning Fog index, and average sentence length.
+- **Performance Optimization via Precompiled Regexes**: Precompiled skill taxonomy patterns in `app.keywords` for sub-millisecond keyword classification throughput.
+- **Expanded Test Suite to 75+ Automated Tests**: Added comprehensive unit and integration tests across `test_agent_prompt.py`, `test_xyz_scorer.py`, `test_hygiene.py`, `test_compliance.py`, and `test_api.py`.
+
+---
+
 ## [1.6.0] - 2026-09-13
 
 ### Added

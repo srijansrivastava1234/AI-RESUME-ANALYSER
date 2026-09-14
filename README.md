@@ -185,6 +185,7 @@ If you are showcasing this project on your resume or portfolio, here are 25 impa
 | `/api/optimize-bullet` | `POST` | 20 / min | Rewrite single bullet point into quantifiable Google XYZ impact statement |
 | `/api/compliance-audit` | `POST` | 20 / min | Execute 4-pillar compliance audit, letter grading, and regulatory safe harbor check |
 | `/api/agent-prompt` | `POST` | 30 / min | Synthesize Agent-Native BYOK refactoring prompt for Claude 3.5, GPT-4o, and Cursor |
+| `/api/verb-diversity` | `POST` | 30 / min | Evaluate action verb variety, repetition penalties, and diversity score across bullet points |
 | `/api/health` | `GET` | Unlimited | Health check endpoint returning supported formats and service status |
 
 ---

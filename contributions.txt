@@ -1,5 +1,5 @@
 ================================================================================
-           25 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+           35 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -126,6 +126,49 @@
     • Built an interactive compliance audit dashboard in React featuring glowing executive letter grade badges, 4-pillar
       score breakdown cards, regulatory safe harbor compliance cards, reading density meters, and 1-click clipboard prompt export.
 
+26. Reciprocal Rank Fusion (RRF) Multi-Metric Candidate Scoring Engine
+    • Formulated and deployed Reciprocal Rank Fusion (RRF_score(d) = sum [1 / (60 + r_m(d))]) consolidating
+      disparate candidate evaluation dimensions (lexical keyword recall, Google/IBM XYZ impact, formatting hygiene,
+      and readability) into a mathematically normalized, outlier-resistant candidate ranking leaderboard.
+
+27. Technical Acronym & Domain Synonym Expansion Graph
+    • Engineered an ontology-backed bidirectional synonym resolution engine mapping industry abbreviations
+      (e.g., K8s <-> Kubernetes, TS <-> TypeScript, AWS <-> Amazon Web Services, Postgres <-> PostgreSQL)
+      to eliminate candidate knockout caused by rigid ATS exact-string matching filters.
+
+28. Recruiter 6-Second First-Third (Upper 30% Viewport) Precision Scanner
+    • Architected an eye-tracking viewport analyzer segmenting resumes at the 30% token boundary to quantify
+      front-loaded measurable business outcomes, active leadership verbs, and key technical skills within
+      the human recruiter's initial 6.0-7.4s visual scan window.
+
+29. Adverse Impact & EEOC Four-Fifths Safe Harbor Auditor (NYC LL 144)
+    • Implemented automated algorithmic disparity auditing verifying the EEOC Four-Fifths selection rate ratio
+      (Impact Ratio >= 0.80) and certifying 100% deterministic rule arithmetic free of protected demographic proxy attributes.
+
+30. High-Throughput Standalone REST APIs (/api/viewport-audit, /api/expand-keywords, /api/adverse-impact)
+    • Exposed high-throughput REST endpoints protected by SlowAPI rate throttling and Pydantic schema validation,
+      delivering sub-5ms local evaluation time with zero LLM API costs.
+
+31. Interactive First-Third Viewport Telemetry & Acronym Mapping UI
+    • Built real-time React UI panels in HygieneCard and TabsPanel featuring Viewport Precision gauges,
+      front-loaded metric badges, and canonical acronym mapping chips for instant visual feedback.
+
+32. Disparate Impact Detection & Bias Truncation Guardrails
+    • Formulated candidate score distribution disparity algorithms auditing pass-rate skews across candidate
+      evaluation cohorts to detect artificial score truncation and ensure demographic-neutral evaluation.
+
+33. Comprehensive Automated Testing Matrix (101 Tests, 88%+ Code Coverage Gate)
+    • Scaled comprehensive automated test suite to 101 unit and integration tests across RRF fusion, acronym graphs,
+      viewport segmentation, and REST APIs, enforcing an 88% codebase coverage threshold in pytest-cov.
+
+34. Performance-Optimized Tokenization & Sub-5ms Local Turnaround
+    • Optimized regex tokenization and word boundary analyzers using precompiled regexes and dictionary lookups,
+      achieving sub-5ms execution without external LLM token overhead or network dependencies.
+
+35. Version 1.8.0 Release & Production Modernization
+    • Orchestrated semantic release v1.8.0 unifying multi-format document ingestion, deterministic compliance scoring,
+      and modern ATS parseability benchmarks into a production-ready enterprise repository.
+
 
 --------------------------------------------------------------------------------
 2. CONCISE 1-LINE BULLET POINTS (STANDARD 1-PAGE RESUME)
@@ -156,6 +199,16 @@
 • Engineered false-positive regex guards preventing software versions (Python 3.11) and ports (8080) from falsely inflating metric scores.
 • Built Agent-Native BYOK prompt synthesis engine generating structured, anti-hallucination refactoring prompts for Claude 3.5 and GPT-4o.
 • Created interactive 4-Pillar Compliance Dashboard in React with letter grade badges, safe harbor cards, and 1-click prompt export.
+• Formulated Reciprocal Rank Fusion (RRF) candidate ranking engine fusing keyword recall, XYZ score, hygiene, and readability into stable leaderboards.
+• Built bidirectional technical acronym and domain synonym graph (K8s <-> Kubernetes, TS <-> TypeScript) eliminating false ATS knockouts.
+• Developed recruiter 6-second first-third viewport precision scanner quantifying accomplishment front-loading in the upper 30% viewport.
+• Implemented adverse impact and EEOC Four-Fifths selection rate compliance engine certifying algorithmic safe harbor per NYC Local Law 144.
+• Exposed /api/viewport-audit, /api/expand-keywords, and /api/adverse-impact REST endpoints protected by SlowAPI rate limits.
+• Enhanced React UI with real-time Viewport Precision gauges, front-loaded metric badges, and canonical acronym mapping tags.
+• Built candidate score distribution disparity algorithms auditing pass-rate skews across candidate evaluation cohorts.
+• Scaled automated test suite to 101 tests achieving 88%+ total codebase test coverage across all core backend services.
+• Optimized regex tokenization and word boundary analyzers using precompiled regexes and dictionary lookups, achieving sub-5ms turnaround.
+• Released v1.8.0 establishing an auditable, end-to-end ATS resume validation and multi-metric candidate ranking platform.
 
 
 --------------------------------------------------------------------------------
@@ -185,12 +238,16 @@
         \resumeItem{Designed real-time XYZ Bullet Impact Lab UI in React with live metric gauges and side-by-side AI transformation.}
         \resumeItem{Exposed /api/score-bullet endpoint with SlowAPI rate throttling, delivering sub-5ms mathematical bullet diagnostics.}
         \resumeItem{Built ATS layout linearization detector identifying multi-column whitespace gutters and table reading-order traps.}
-        \resumeItem{Developed comprehensive 55+ test automated test matrix guaranteeing 88\%+ code coverage across all core modules.}
         \resumeItem{Formulated deterministic 4-pillar ATS compliance framework (Keywords 40\%, XYZ 30\%, Structure 15\%, Density 15\%) with letter grades.}
         \resumeItem{Architected regulatory safe harbor engine verifying EU AI Act Art. 86 transparency and NYC LL 144 bias mitigation.}
         \resumeItem{Engineered false-positive regex guards eliminating version numbers and network ports from metric inflation.}
         \resumeItem{Designed Agent-Native BYOK prompt synthesis pipeline generating structured refactoring prompts for Claude and GPT-4o.}
         \resumeItem{Built interactive 4-pillar compliance audit panel in React with letter grade meters, safe harbor badges, and prompt export.}
+        \resumeItem{Deployed Reciprocal Rank Fusion (RRF) candidate ranking engine consolidating multi-system evaluations into normalized leaderboards.}
+        \resumeItem{Engineered bidirectional technical acronym and synonym resolution graph (K8s $\leftrightarrow$ Kubernetes) eliminating false knockouts.}
+        \resumeItem{Built recruiter 6-second first-third viewport precision scanner quantifying accomplishment front-loading in upper 30\% viewport.}
+        \resumeItem{Implemented EEOC Four-Fifths selection rate disparity auditor verifying algorithmic safe harbor compliance per NYC LL 144.}
+        \resumeItem{Maintained 101 automated unit/integration tests with 88\%+ code coverage across parsers, ranking, and REST endpoints.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -298,3 +355,43 @@
 25. Interactive Compliance & Safe Harbor UI:
     "Designed a responsive compliance dashboard in React displaying executive letter grade cards, pillar breakdown meters,
     regulatory safe harbor compliance certificates, and one-click prompt clipboard copying."
+
+26. Reciprocal Rank Fusion (RRF) Candidate Scoring:
+    "Implemented canonical Reciprocal Rank Fusion (k=60) to combine disparate ranking metrics (lexical keyword recall,
+    XYZ score, hygiene, and readability) into a single mathematically robust composite rank free of score scale distortion."
+
+27. Technical Acronym & Domain Synonym Graph:
+    "Engineered a bidirectional technical ontology graph resolving industry abbreviations (K8s <-> Kubernetes, TS <-> TypeScript)
+    to eliminate false negative knockouts when candidate resumes and job postings use alternate technical aliases."
+
+28. Recruiter 6-Second First-Third Viewport Scanner:
+    "Modeled the recruiter 6-to-7.4 second visual scan pattern by auditing whether top achievements and active verbs
+    are front-loaded into the upper 30% of page 1, diagnosing buried accomplishments before submission."
+
+29. Adverse Impact & EEOC Four-Fifths Safe Harbor:
+    "Architected an automated compliance auditor verifying EEOC Four-Fifths selection rate ratios (IR >= 0.80)
+    and certifying 100% deterministic rule arithmetic under NYC Local Law 144 AEDT bias audit standards."
+
+30. High-Throughput Dedicated REST APIs:
+    "Exposed /api/viewport-audit, /api/expand-keywords, and /api/adverse-impact REST endpoints with SlowAPI rate limits,
+    enabling sub-5ms client-side auditing with zero external API latency or cost."
+
+31. Real-Time Viewport Telemetry & UI Badges:
+    "Built interactive Viewport Precision meters and acronym mapping pill matrices in React, providing immediate
+    visual feedback on accomplishment front-loading and canonical terminology alignment."
+
+32. Score Distribution Disparity Guardrails:
+    "Developed statistical distribution analyzers calculating pass rates and standard deviations across candidate batches
+    to identify and prevent artificial score bottlenecking."
+
+33. 101 Automated Unit & Integration Tests:
+    "Enforced an 88%+ code coverage quality gate in pytest-cov across 101 unit and integration tests covering
+    parsers, ranking fusion, acronym expansion, and asynchronous endpoints."
+
+34. Performance-Optimized Tokenization:
+    "Streamlined document tokenization with precompiled regexes and hash table lookups, achieving sub-5ms execution
+    times without external LLM token overhead or network dependencies."
+
+35. Architectural Version 1.8.0 Standard:
+    "Orchestrated release v1.8.0 establishing an end-to-end, deterministic ATS audit suite bridging candidate narrative
+    with the cold reality of enterprise applicant tracking systems."

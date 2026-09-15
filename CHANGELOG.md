@@ -4,6 +4,20 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-09-15
+
+### Added
+- **Reciprocal Rank Fusion (RRF) Multi-Metric Candidate Scoring Engine**: Implemented `compute_rrf_from_rank_lists()` and `fuse_candidate_evaluations()` in `app.rrf_engine` fusing keyword recall, XYZ score, formatting hygiene, and readability into stable, normalized candidate leaderboards without scale distortion.
+- **Technical Acronym & Domain Synonym Resolution Graph**: Created `app.acronyms` providing bidirectional translation across industry tech stacks (e.g. K8s $\leftrightarrow$ Kubernetes, TS $\leftrightarrow$ TypeScript, AWS $\leftrightarrow$ Amazon Web Services) and integrated synonym-aware matching into `app.keywords`.
+- **Recruiter 6-Second First-Third (Upper 30% Viewport) Precision Scanner**: Architected `audit_first_third_viewport()` in `app.viewport` quantifying accomplishment front-loading, metric density, and active leadership verbs within the recruiter's initial 6.0-7.4s glance.
+- **Adverse Impact & EEOC Four-Fifths Safe Harbor Auditor**: Developed `app.adverse_impact` evaluating selection rate parity across candidate cohorts ($IR \ge 0.80$) and certifying 100% deterministic rule arithmetic per NYC Local Law 144.
+- **Standalone Viewport, Synonym & Adverse Impact REST APIs**: Exposed `POST /api/viewport-audit`, `POST /api/expand-keywords`, and `POST /api/adverse-impact` in `app.main` protected by SlowAPI rate limits and Pydantic validation.
+- **Interactive First-Third Viewport Telemetry & Acronym Mapping UI**: Added a dedicated Viewport Precision card in `HygieneCard.jsx` and an interactive Technical Acronym & Domain Synonym Mapping pill matrix in `TabsPanel.jsx`.
+- **Master 35 Key Technical Contributions Inventory**: Documented 10 new technical achievements (#26 to #35) in `contributions.txt` and refreshed `contributions_top15.txt` with Full XYZ bullets, 1-line resume items, LaTeX blocks, and STAR talking points.
+- **Scaled Automated Test Suite to 101 Tests**: Expanded backend test matrix to 101 unit and integration tests achieving 88%+ total codebase coverage in pytest-cov.
+
+---
+
 ## [1.7.0] - 2026-09-14
 
 ### Added

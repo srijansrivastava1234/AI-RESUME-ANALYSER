@@ -217,3 +217,53 @@ def test_api_analyze_endpoint_enriches_compliance():
     assert "byok_agent_prompt" in data["report"]
     assert "composite_score" in data["report"]["compliance_audit"]
     assert "letter_grade" in data["report"]["compliance_audit"]
+
+
+def test_four_fifths_ratio_calculation():
+    from app.adverse_impact import calculate_four_fifths_ratio
+    # Benchmark group selection rate: 80% (0.80), target group: 68% (0.68)
+    # Ratio: 0.68 / 0.80 = 0.85 (passes four-fifths)
+    ratio = calculate_four_fifths_ratio(0.68, 0.80)
+    assert ratio == 0.85
+
+    # Target group: 50% (0.50), benchmark: 80% (0.80) -> ratio = 0.625 (fails four-fifths)
+    failing_ratio = calculate_four_fifths_ratio(0.50, 0.80)
+    assert failing_ratio == 0.625
+
+
+def test_audit_group_selection_rates_compliant():
+    from app.adverse_impact import audit_group_selection_rates
+    # Cohort A: 60/100 = 60%, Cohort B: 50/100 = 50% -> 50/60 = 0.8333 >= 0.80
+    data = {
+        "Cohort_A": {"total": 100, "selected": 60},
+        "Cohort_B": {"total": 100, "selected": 50}
+    }
+    report = audit_group_selection_rates(data)
+    assert report["is_compliant"] is True
+    assert report["status"] == "COMPLIANT_SAFE_HARBOR"
+    assert report["benchmark_group"] == "Cohort_A"
+    assert report["lowest_impact_ratio"] >= 0.80
+
+
+def test_audit_group_selection_rates_disparate_impact():
+    from app.adverse_impact import audit_group_selection_rates
+    # Cohort A: 80/100 = 80%, Cohort B: 30/100 = 30% -> 30/80 = 0.375 < 0.80
+    data = {
+        "Cohort_A": {"total": 100, "selected": 80},
+        "Cohort_B": {"total": 100, "selected": 30}
+    }
+    report = audit_group_selection_rates(data)
+    assert report["is_compliant"] is False
+    assert report["status"] == "ADVERSE_IMPACT_DETECTED"
+    assert report["lowest_impact_ratio"] < 0.80
+
+
+def test_audit_score_distribution_disparity():
+    from app.adverse_impact import audit_score_distribution_disparity
+    scores = [85, 90, 72, 65, 95, 45, 80, 75]
+    summary = audit_score_distribution_disparity(scores, passing_threshold=70.0)
+    assert summary["total_candidates"] == 8
+    assert summary["passing_candidates"] == 6
+    assert summary["pass_rate"] == 0.75
+    assert summary["audit_tier"] == "BALANCED"
+

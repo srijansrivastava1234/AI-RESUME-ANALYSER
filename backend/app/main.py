@@ -25,6 +25,9 @@ from app.hygiene import audit_resume_hygiene
 from app.xyz_scorer import score_resume_bullet, evaluate_bullet_verb_diversity
 from app.compliance import audit_ats_compliance
 from app.agent_prompt import generate_agent_refactor_prompt, generate_byok_export_package
+from app.viewport import audit_first_third_viewport
+from app.acronyms import expand_technical_terms
+from app.adverse_impact import audit_group_selection_rates
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -62,6 +65,17 @@ class AgentPromptRequest(BaseModel):
 
 class VerbDiversityRequest(BaseModel):
     bullets: List[str] = Field(..., min_length=1, description="List of resume bullet points to evaluate for verb diversity")
+
+class ViewportAuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="The plain text of the resume to audit for viewport precision")
+    target_skills: Optional[List[str]] = Field(None, description="Optional target skills to search in upper viewport")
+
+class AcronymExpansionRequest(BaseModel):
+    text: str = Field(..., min_length=2, description="Text containing technical acronyms or terms to expand")
+
+class AdverseImpactRequest(BaseModel):
+    group_data: dict = Field(..., description="Dictionary mapping group names to {'total': int, 'selected': int}")
+
 
 app = FastAPI(
     title="AI Resume Analyser API",
@@ -434,5 +448,48 @@ def evaluate_verb_diversity_endpoint(request: Request, payload: VerbDiversityReq
     except Exception as err:
         logger.error(f"Error in verb diversity endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to evaluate verb diversity: {str(err)}")
+
+@app.post("/api/viewport-audit")
+@limiter.limit("20/minute")
+def audit_viewport_endpoint(request: Request, payload: ViewportAuditRequest):
+    """
+    Evaluates recruiter 6-second scan readability and accomplishment front-loading in upper 30% viewport.
+    """
+    try:
+        result = audit_first_third_viewport(
+            raw_text=payload.resume_text,
+            target_skills=payload.target_skills
+        )
+        return result
+    except Exception as err:
+        logger.error(f"Error in viewport audit endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit viewport precision: {str(err)}")
+
+@app.post("/api/expand-keywords")
+@limiter.limit("30/minute")
+def expand_keywords_endpoint(request: Request, payload: AcronymExpansionRequest):
+    """
+    Identifies technical abbreviations in text and resolves them to canonical industry terms.
+    """
+    try:
+        result = expand_technical_terms(payload.text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in expand keywords endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to expand technical terms: {str(err)}")
+
+@app.post("/api/adverse-impact")
+@limiter.limit("15/minute")
+def adverse_impact_endpoint(request: Request, payload: AdverseImpactRequest):
+    """
+    Audits selection rate parity and EEOC Four-Fifths compliance across candidate groups per NYC LL 144.
+    """
+    try:
+        result = audit_group_selection_rates(payload.group_data)
+        return result
+    except Exception as err:
+        logger.error(f"Error in adverse impact endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit adverse impact: {str(err)}")
+
 
 

@@ -249,5 +249,47 @@ def test_verb_diversity_endpoint_empty_list():
     assert res.status_code == 422  # Pydantic min_items=1 validation error
 
 
+def test_viewport_audit_endpoint():
+    payload = {
+        "resume_text": "Architected cloud services with AWS. Reduced latency by 45% using Redis caching.",
+        "target_skills": ["AWS", "Redis"]
+    }
+    res = client.post("/api/viewport-audit", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert "viewport_precision_score" in data
+    assert "status" in data
+    assert "recommendations" in data
+
+
+def test_expand_keywords_endpoint():
+    payload = {
+        "text": "Senior Engineer experienced with K8s, AWS, and TypeScript."
+    }
+    res = client.post("/api/expand-keywords", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert "detected_terms" in data
+    assert "expansions" in data
+    assert len(data["detected_terms"]) > 0
+
+
+def test_adverse_impact_endpoint():
+    payload = {
+        "group_data": {
+            "Group_A": {"total": 100, "selected": 60},
+            "Group_B": {"total": 80, "selected": 52}
+        }
+    }
+    res = client.post("/api/adverse-impact", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert "is_compliant" in data
+    assert data["is_compliant"] is True
+    assert "benchmark_group" in data
+    assert data["status"] == "COMPLIANT_SAFE_HARBOR"
+
+
+
 
 

@@ -11,7 +11,22 @@ and the ATS Validator Architecture:
 
 import re
 from typing import Dict, List, Any, Optional
-from app.xyz_scorer import ACTION_VERBS_TAXONOMY, extract_bullet_metrics
+from app.xyz_scorer import POWER_ACTION_VERBS, MEDIUM_ACTION_VERBS, METRIC_PATTERNS
+
+ALL_ACTION_VERBS = POWER_ACTION_VERBS.union(MEDIUM_ACTION_VERBS)
+
+
+def extract_metrics_from_text(text: str) -> List[str]:
+    """
+    Extracts numerical and scale metrics from input text using standardized regex patterns.
+    """
+    detected: List[str] = []
+    for pattern in METRIC_PATTERNS:
+        for match in re.finditer(pattern, text, flags=re.IGNORECASE):
+            metric_str = match.group(0).strip()
+            if metric_str not in detected:
+                detected.append(metric_str)
+    return detected
 
 
 def audit_first_third_viewport(
@@ -36,6 +51,7 @@ def audit_first_third_viewport(
             "remainder_metrics_count": 0,
             "front_loaded_metrics_ratio": 0.0,
             "viewport_verbs_count": 0,
+            "detected_viewport_verbs": [],
             "detected_viewport_skills": [],
             "recommendations": ["Document is empty. Please provide resume text to audit."]
         }
@@ -66,8 +82,8 @@ def audit_first_third_viewport(
     remainder_text = " ".join(remainder_tokens)
 
     # 1. Metrics detection in viewport vs remainder
-    viewport_metrics = extract_bullet_metrics(viewport_text)
-    remainder_metrics = extract_bullet_metrics(remainder_text)
+    viewport_metrics = extract_metrics_from_text(viewport_text)
+    remainder_metrics = extract_metrics_from_text(remainder_text)
 
     num_viewport_metrics = len(viewport_metrics)
     num_remainder_metrics = len(remainder_metrics)
@@ -81,11 +97,10 @@ def audit_first_third_viewport(
     # 2. Action verbs in viewport
     viewport_text_lower = viewport_text.lower()
     detected_viewport_verbs: List[str] = []
-    for category_verbs in ACTION_VERBS_TAXONOMY.values():
-        for verb in category_verbs:
-            pattern = r'\b' + re.escape(verb) + r'\b'
-            if re.search(pattern, viewport_text_lower):
-                detected_viewport_verbs.append(verb)
+    for verb in ALL_ACTION_VERBS:
+        pattern = r'\b' + re.escape(verb) + r'\b'
+        if re.search(pattern, viewport_text_lower):
+            detected_viewport_verbs.append(verb.title())
 
     detected_viewport_verbs = sorted(list(set(detected_viewport_verbs)))
     num_viewport_verbs = len(detected_viewport_verbs)
@@ -99,7 +114,6 @@ def audit_first_third_viewport(
                 detected_viewport_skills.append(skill)
 
     # 4. Mathematical scoring of Viewport Precision (0-100)
-    # Target: At least 2 metrics, at least 3 strong verbs in the first third
     score = 50  # Baseline
 
     # Metric front-loading points (up to 30 pts)
@@ -110,7 +124,6 @@ def audit_first_third_viewport(
     elif num_viewport_metrics == 1:
         score += 10
     else:
-        # Zero metrics in first third
         score -= 15
 
     # Action verb points (up to 20 pts)
@@ -125,7 +138,6 @@ def audit_first_third_viewport(
 
     # Ratio bonus or penalty
     if total_metrics >= 3 and front_loaded_ratio < 0.20:
-        # Severe back-loading: candidate has metrics, but all buried at bottom
         score -= 20
 
     viewport_precision_score = max(0, min(100, score))

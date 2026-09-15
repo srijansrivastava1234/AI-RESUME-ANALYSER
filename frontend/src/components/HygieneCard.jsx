@@ -9,8 +9,11 @@ import {
   Mail, 
   Phone, 
   Globe, 
-  Link 
+  Link,
+  Eye,
+  Target
 } from 'lucide-react';
+
 
 export default function HygieneCard({ hygiene }) {
   const [expanded, setExpanded] = useState(true);
@@ -219,6 +222,53 @@ export default function HygieneCard({ hygiene }) {
               </div>
             </div>
           )}
+
+          {/* Recruiter 6-Second First-Third Viewport Precision */}
+          {hygiene.viewport && (
+            <div style={{
+              background: 'rgba(255,255,255,0.03)',
+              borderRadius: '10px',
+              padding: '0.85rem 1rem',
+              border: '1px solid var(--border-color)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem'
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <Eye style={{ width: '15px', height: '15px', color: 'var(--accent)' }} />
+                  <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                    Recruiter 6-Second First-Third Viewport
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  color: hygiene.viewport.viewport_precision_score >= 80 ? 'var(--success)' : hygiene.viewport.viewport_precision_score >= 60 ? 'var(--warning)' : '#ef4444',
+                  background: 'rgba(255,255,255,0.05)',
+                  padding: '2px 8px',
+                  borderRadius: '10px'
+                }}>
+                  {hygiene.viewport.status || 'SCANNED'}
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.5rem', fontSize: '0.78rem' }}>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Precision Score</span>
+                  <strong style={{ color: 'var(--text-main)' }}>{hygiene.viewport.viewport_precision_score}/100</strong>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Top 30% Metrics</span>
+                  <strong style={{ color: 'var(--text-main)' }}>{hygiene.viewport.viewport_metrics_count} Front-Loaded</strong>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                  <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Top 30% Verbs</span>
+                  <strong style={{ color: 'var(--text-main)' }}>{hygiene.viewport.viewport_verbs_count} Active</strong>
+                </div>
+              </div>
+            </div>
+          )}
+
 
           {/* Hygiene Recommendations */}
           {recommendations && recommendations.length > 0 && (

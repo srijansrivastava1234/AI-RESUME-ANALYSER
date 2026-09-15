@@ -216,8 +216,12 @@ export default function TabsPanel({
 
           {/* ATS Formatting Hygiene Audit */}
           {report.formatting_hygiene && (
-            <HygieneCard hygiene={report.formatting_hygiene} />
+            <HygieneCard hygiene={{
+              ...report.formatting_hygiene,
+              viewport: report.viewport_audit || report.formatting_hygiene.viewport
+            }} />
           )}
+
 
           <div>
             <h4 style={{ fontSize: '1.1rem', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -636,8 +640,51 @@ export default function TabsPanel({
               </div>
             </div>
           )}
+
+          {/* Technical Acronym & Domain Synonym Expansions */}
+          <div className="keyword-box" style={{ gridColumn: 'span 2', marginTop: '1.25rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem' }}>
+            <h4 style={{ color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '0.4rem', margin: 0, fontSize: '0.95rem' }}>
+              <Sparkles style={{ width: '17px', height: '17px' }} />
+              <span>Technical Acronym & Canonical Synonym Mapping</span>
+            </h4>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.4rem 0 0.8rem 0' }}>
+              Standardizes industry abbreviations (e.g. K8s ➔ Kubernetes, TS ➔ TypeScript) to ensure candidate recall across rigid ATS keyword filters.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              {[
+                { from: 'K8s', to: 'Kubernetes' },
+                { from: 'TS', to: 'TypeScript' },
+                { from: 'AWS', to: 'Amazon Web Services' },
+                { from: 'GCP', to: 'Google Cloud Platform' },
+                { from: 'Postgres', to: 'PostgreSQL' },
+                { from: 'CI/CD', to: 'Continuous Integration / Continuous Deployment' },
+                { from: 'ML', to: 'Machine Learning' },
+                { from: 'NLP', to: 'Natural Language Processing' }
+              ].map((syn, sIdx) => (
+                <span
+                  key={sIdx}
+                  style={{
+                    background: 'rgba(99, 102, 241, 0.08)',
+                    border: '1px solid rgba(99, 102, 241, 0.25)',
+                    color: 'var(--text-primary)',
+                    fontSize: '0.75rem',
+                    padding: '4px 9px',
+                    borderRadius: '6px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                  }}
+                >
+                  <strong style={{ color: 'white' }}>{syn.from}</strong>
+                  <span style={{ color: 'var(--accent)', fontSize: '0.7rem' }}>➔</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>{syn.to}</span>
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       )}
+
 
       {/* Tab: Sections */}
       {activeTab === 'sections' && (

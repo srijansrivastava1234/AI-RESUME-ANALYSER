@@ -4,6 +4,21 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2026-09-16
+
+### Added
+- **White-Font & Invisible Ink ATS Hack Spam Detector**: Engineered `app.hack_detector` auditing documents for zero-contrast text (`#ffffff`, `opacity: 0`), microscopic typography (`font-size <= 1px`), off-canvas containers (`left: -9999px`), and invisible zero-width Unicode injection (`\u200B-\uFEFF`) to prevent automated ATS spam disqualification.
+- **Workday & Taleo Canonical Section Header Normalizer**: Implemented `app.header_normalizer` mapping non-canonical or creative headings (e.g. "Where I've Been", "My Toolkit", "Things I Built") into enterprise ATS schemas with automated missing mandatory section alerts.
+- **Multi-Lingual Semantic Token Density & Stopword Filter**: Developed `app.token_density` supporting English, Spanish, Portuguese, French, and German stopwords to compute Type-Token Ratio (TTR) and content signal-to-noise density.
+- **Vanity Metric vs Business Outcome Disambiguator**: Formulated `app.metric_validator` calibrating Google/IBM quantifiable metric scoring to differentiate true business outcomes ($ revenue, latency, SLA) from vanity activity counts ("attended 50 meetings", "wrote 10,000 lines of code"), enforcing the canonical -20 pt vanity deduction.
+- **Standalone Security, Header & Metric Diagnostic REST APIs**: Exposed `POST /api/detect-hacks`, `POST /api/audit-headers`, `POST /api/token-density`, and `POST /api/validate-metric` in `app.main` with SlowAPI rate throttling and Pydantic validation.
+- **Real-Time Anti-Spam Security Shield & Header Alignment UI**: Added dynamic ATS Spam Shield indicators in `Header.jsx`, comprehensive contrast and legibility audit cards in `HygieneCard.jsx`, and Workday/Taleo canonical mapping chips in `TabsPanel.jsx`.
+- **Expanded Master 45 Key Technical Contributions Inventory**: Documented 10 new technical achievements (#36 to #45) in `contributions.txt` across Full XYZ bullets, 1-line resume items, LaTeX blocks, and STAR talking points.
+- **Refreshed Top 15 Technical Contributions Showcase**: Updated `contributions_top15.txt` with latest high-impact accomplishments, updated LaTeX snippets, and recruiter interview points.
+- **Scaled Automated Test Suite to 133 Tests**: Expanded test suite to 133 unit and integration tests across `test_hack_detector.py`, `test_header_normalizer.py`, `test_token_density.py`, `test_metric_validator.py`, and `test_api.py`, achieving an 88%+ test coverage threshold in pytest-cov.
+
+---
+
 ## [1.8.0] - 2026-09-15
 
 ### Added

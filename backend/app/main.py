@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List
 
-APP_VERSION = "1.8.0"
+APP_VERSION = "1.9.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 
@@ -28,6 +28,10 @@ from app.agent_prompt import generate_agent_refactor_prompt, generate_byok_expor
 from app.viewport import audit_first_third_viewport
 from app.acronyms import expand_technical_terms
 from app.adverse_impact import audit_group_selection_rates
+from app.hack_detector import detect_ats_hacks
+from app.header_normalizer import audit_section_headers
+from app.token_density import audit_token_density
+from app.metric_validator import audit_bullet_metrics
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -75,6 +79,20 @@ class AcronymExpansionRequest(BaseModel):
 
 class AdverseImpactRequest(BaseModel):
     group_data: dict = Field(..., description="Dictionary mapping group names to {'total': int, 'selected': int}")
+
+class DetectHacksRequest(BaseModel):
+    text: str = Field(..., description="Resume plain text")
+    raw_markup: Optional[str] = Field(None, description="Optional raw HTML/CSS/stream markup")
+
+class AuditHeadersRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to audit section headers")
+
+class TokenDensityRequest(BaseModel):
+    text: str = Field(..., min_length=5, description="Resume text to evaluate token density")
+    language: Optional[str] = Field(None, description="Optional language override ('en', 'es', 'pt', 'fr', 'de')")
+
+class ValidateMetricRequest(BaseModel):
+    bullet: str = Field(..., min_length=1, description="Bullet statement to audit for quantifiable business metrics")
 
 
 app = FastAPI(
@@ -490,6 +508,59 @@ def adverse_impact_endpoint(request: Request, payload: AdverseImpactRequest):
     except Exception as err:
         logger.error(f"Error in adverse impact endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit adverse impact: {str(err)}")
+
+@app.post("/api/detect-hacks")
+@limiter.limit("30/minute")
+def detect_hacks_endpoint(request: Request, payload: DetectHacksRequest):
+    """
+    Audits document for white-font stuffing, zero-opacity styles, micro-fonts, and invisible Unicode ink.
+    """
+    try:
+        result = detect_ats_hacks(payload.text, raw_markup=payload.raw_markup)
+        return result
+    except Exception as err:
+        logger.error(f"Error in detect hacks endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to detect ATS hacks: {str(err)}")
+
+@app.post("/api/audit-headers")
+@limiter.limit("30/minute")
+def audit_headers_endpoint(request: Request, payload: AuditHeadersRequest):
+    """
+    Audits resume headings for Workday, Taleo, and enterprise ATS canonical schema compliance.
+    """
+    try:
+        result = audit_section_headers(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit headers endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit section headers: {str(err)}")
+
+@app.post("/api/token-density")
+@limiter.limit("30/minute")
+def token_density_endpoint(request: Request, payload: TokenDensityRequest):
+    """
+    Audits document for information signal-to-noise ratio, multi-lingual stopwords, and Type-Token Ratio.
+    """
+    try:
+        result = audit_token_density(payload.text, force_lang=payload.language)
+        return result
+    except Exception as err:
+        logger.error(f"Error in token density endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to analyze token density: {str(err)}")
+
+@app.post("/api/validate-metric")
+@limiter.limit("30/minute")
+def validate_metric_endpoint(request: Request, payload: ValidateMetricRequest):
+    """
+    Disambiguates bullet metrics into true business outcomes vs vanity counts and technical version false-positives.
+    """
+    try:
+        result = audit_bullet_metrics(payload.bullet)
+        return result
+    except Exception as err:
+        logger.error(f"Error in validate metric endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to validate metric: {str(err)}")
+
 
 
 

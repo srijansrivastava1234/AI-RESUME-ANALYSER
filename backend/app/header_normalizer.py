@@ -194,8 +194,9 @@ def audit_section_headers(resume_text: str) -> Dict[str, Any]:
                                 "is_canonical": False,
                                 "risk_level": "High"
                             })
+                            matched_canonical = canonical
                             break
-                    if found_canonicals and canonical in found_canonicals:
+                    if matched_canonical:
                         break
 
     # Calculate missing mandatory sections

@@ -42,7 +42,7 @@ graph TD
 | **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction and normalization |
 | **Security & Limits** | SlowAPI | IP-based rate limiting and DoS prevention |
 | **Observability** | Python Logging + JSONFormatter | Structured JSON logging with `X-Request-ID` correlation |
-| **Testing** | Pytest + Pytest-Cov + HTTPX | 101 automated tests with 88%+ code coverage gate |
+| **Testing** | Pytest + Pytest-Cov + HTTPX | 133 automated tests with 88%+ code coverage gate |
 | **Frontend** | React 19 + Vite | Glassmorphic dark dashboard & comparison leaderboard |
 | **Styling** | Vanilla CSS3 (Glassmorphism) | Zero-dependency bespoke modern design system |
 | **Icons** | Lucide React | Clean, scalable icon system |
@@ -123,13 +123,16 @@ pytest tests/ -v
 
 ## 🚀 Key Highlights & Architectural Strengths
 
+- **🛡️ ATS Hack & Invisible Ink Spam Shield:** Detects white-on-white text, zero opacity, micro-fonts (<= 1px), and invisible Unicode codepoints to prevent automated disqualification.
+- **🏷️ Workday & Taleo Canonical Header Normalizer:** Maps creative section titles into enterprise schemas with automated missing mandatory section alerts.
+- **🌐 Multi-Lingual Token Density Engine:** Stopword removal across EN/ES/PT/FR/DE and Type-Token Ratio (TTR) monitoring to eliminate keyword stuffing.
+- **⚖️ Vanity Metric vs Business Outcome Disambiguator:** Evaluates Google/IBM metrics, penalizing arbitrary task counts (-20 pts) while rewarding true business impact.
 - **⚡ Sub-1.5s Analysis Pipeline:** Optimized async backend parsing across PDF, DOCX, and TXT formats.
 - **🎯 30% Token Reduction:** Smart preprocessing and regex sanitization reducing LLM inference overhead.
 - **🛡️ 100% Availability Fallback:** Secondary heuristic scoring engine if API rate limits or network issues occur.
 - **🏛️ 4-Pillar ATS Compliance:** Deterministic scoring across Keywords (40%), XYZ Impact (30%), Structure (15%), Density (15%) with A+ to D letter grades.
 - **⚖️ Regulatory Safe Harbor:** Automated compliance certification for EU AI Act (Art. 86 Right to Explanation) and NYC LL 144 AEDT bias rules.
 - **🤖 Agent-Native BYOK Synthesis:** Zero-hallucination refactoring prompt generator for Claude 3.5 Sonnet, GPT-4o, and Cursor.
-- **🛡️ Metric Disambiguation Guards:** Regex filters preventing software versions (Python 3.11) and ports (8080) from falsely inflating scores.
 - **👥 Multi-Resume Comparison:** Asynchronous batch evaluator ranking up to 5 candidate resumes against target job descriptions.
 - **📐 Google/IBM XYZ Scorer:** Deterministic mathematical scoring engine with seniority calibration.
 - **🧪 Interactive Impact Lab:** Real-time bullet playground with live metric feedback and AI rewrite.

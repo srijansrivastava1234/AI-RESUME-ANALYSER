@@ -290,6 +290,72 @@ def test_adverse_impact_endpoint():
     assert data["status"] == "COMPLIANT_SAFE_HARBOR"
 
 
+def test_detect_hacks_endpoint_clean():
+    payload = {
+        "text": "Jane Doe. Experienced Software Engineer in Python and Docker."
+    }
+    res = client.post("/api/detect-hacks", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["hack_risk_score"] == 100
+    assert data["disqualification_risk"] == "None"
+    assert data["clean_text_certified"] is True
+
+
+def test_detect_hacks_endpoint_spam():
+    payload = {
+        "text": "Jane Doe",
+        "raw_markup": "<div style='color: #ffffff; opacity: 0;'>hidden keyword dump</div>"
+    }
+    res = client.post("/api/detect-hacks", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["is_flagged"] is True
+    assert data["clean_text_certified"] is False
+    assert len(data["detected_traps"]) > 0
+
+
+def test_audit_headers_endpoint():
+    payload = {
+        "resume_text": "Professional Experience\nSenior Dev\nEducation\nBS CS\nTechnical Skills\nPython"
+    }
+    res = client.post("/api/audit-headers", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["canonical_score"] == 100
+    assert "found_canonicals" in data
+    assert "Skills" in data["found_canonicals"]
+
+
+def test_token_density_endpoint():
+    payload = {
+        "text": "Architected event-driven microservices using Python and FastAPI. Reduced latency by 45%."
+    }
+    res = client.post("/api/token-density", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert "signal_to_noise_ratio" in data
+    assert "type_token_ratio" in data
+    assert data["verdict"] == "Optimal Technical Density"
+
+
+def test_validate_metric_endpoint():
+    # True business outcome
+    res_outcome = client.post("/api/validate-metric", json={"bullet": "Cut infrastructure costs by $120K annually."})
+    assert res_outcome.status_code == 200
+    data_outcome = res_outcome.json()
+    assert data_outcome["has_business_outcome"] is True
+    assert data_outcome["vanity_penalty"] == 0
+
+    # Vanity activity
+    res_vanity = client.post("/api/validate-metric", json={"bullet": "Wrote 8,000 lines of code across features."})
+    assert res_vanity.status_code == 200
+    data_vanity = res_vanity.json()
+    assert data_vanity["has_vanity_metric"] is True
+    assert data_vanity["vanity_penalty"] == 20
+
+
+
 
 
 

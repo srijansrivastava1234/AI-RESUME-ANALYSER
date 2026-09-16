@@ -4,9 +4,29 @@ import { Sparkles, HelpCircle } from 'lucide-react';
 export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, appMode = 'audit', setAppMode }) {
   return (
     <header className="app-header">
-      <div className="logo-section">
+      <div className="logo-section" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <Sparkles className="upload-icon" style={{ margin: 0, width: '28px', height: '28px' }} />
         <h1><span className="text-gradient">ATS Resume Analyser AI</span></h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span style={{
+            fontSize: '0.68rem',
+            padding: '2px 7px',
+            borderRadius: '10px',
+            background: 'rgba(99, 102, 241, 0.15)',
+            color: 'var(--primary)',
+            fontWeight: 700,
+            border: '1px solid rgba(99, 102, 241, 0.3)'
+          }}>v1.9.0</span>
+          <span style={{
+            fontSize: '0.68rem',
+            padding: '2px 7px',
+            borderRadius: '10px',
+            background: 'rgba(16, 185, 129, 0.15)',
+            color: 'var(--success)',
+            fontWeight: 700,
+            border: '1px solid rgba(16, 185, 129, 0.3)'
+          }}>Spam Shield Active</span>
+        </div>
       </div>
 
       {setAppMode && (

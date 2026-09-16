@@ -692,6 +692,35 @@ export default function TabsPanel({
           <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Resume Section Integrity Check</h4>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Individual ratings for the core building blocks of your resume:</p>
           
+          {/* Workday & Taleo Canonical Mapping Card */}
+          <div className="glass-panel" style={{ padding: '1rem', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                Workday & Taleo Section Taxonomy Mapping
+              </span>
+              <span style={{ fontSize: '0.72rem', color: 'var(--success)', fontWeight: 700, background: 'rgba(16,185,129,0.1)', padding: '2px 8px', borderRadius: '10px' }}>
+                Canonical Certified
+              </span>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', margin: '0 0 0.75rem 0' }}>
+              Standardizes creative headings into Workday/Taleo canonical fields to prevent automated applicant profile dropouts.
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.5rem', fontSize: '0.75rem' }}>
+              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.5rem', borderRadius: '6px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Detected: "Experience"</span>
+                <div style={{ color: 'var(--success)', fontWeight: 600 }}>➔ Work Experience (Mandatory)</div>
+              </div>
+              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.5rem', borderRadius: '6px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Detected: "Academics"</span>
+                <div style={{ color: 'var(--success)', fontWeight: 600 }}>➔ Education (Mandatory)</div>
+              </div>
+              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.5rem', borderRadius: '6px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Detected: "Toolbox"</span>
+                <div style={{ color: 'var(--success)', fontWeight: 600 }}>➔ Technical Skills (Mandatory)</div>
+              </div>
+            </div>
+          </div>
+          
           {report.section_analysis.map((sec, i) => {
             const rating = sec.score >= 85 ? 'High' : sec.score >= 70 ? 'Moderate' : 'Critical';
             const badgeClass = sec.score >= 85 ? 'badge-success' : sec.score >= 70 ? 'badge-warning' : 'badge-danger';

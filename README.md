@@ -42,7 +42,7 @@ graph TD
 | **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction and normalization |
 | **Security & Limits** | SlowAPI | IP-based rate limiting and DoS prevention |
 | **Observability** | Python Logging + JSONFormatter | Structured JSON logging with `X-Request-ID` correlation |
-| **Testing** | Pytest + Pytest-Cov + HTTPX | 133 automated tests with 88%+ code coverage gate |
+| **Testing** | Pytest + Pytest-Cov + HTTPX | 151 automated tests with 89% code coverage gate |
 | **Frontend** | React 19 + Vite | Glassmorphic dark dashboard & comparison leaderboard |
 | **Styling** | Vanilla CSS3 (Glassmorphism) | Zero-dependency bespoke modern design system |
 | **Icons** | Lucide React | Clean, scalable icon system |
@@ -189,6 +189,8 @@ If you are showcasing this project on your resume or portfolio, here are 25 impa
 | `/api/compliance-audit` | `POST` | 20 / min | Execute 4-pillar compliance audit, letter grading, and regulatory safe harbor check |
 | `/api/agent-prompt` | `POST` | 30 / min | Synthesize Agent-Native BYOK refactoring prompt for Claude 3.5, GPT-4o, and Cursor |
 | `/api/verb-diversity` | `POST` | 30 / min | Evaluate action verb variety, repetition penalties, and diversity score across bullet points |
+| `/api/seniority-profile` | `POST` | 30 / min | Calibrate accomplishment ratio and strategic narrative against Junior to Executive seniority targets |
+| `/api/redact-pii` | `POST` | 30 / min | Sanitize candidate PII and age-proxy graduation years for EEOC & NYC LL 144 blind review |
 | `/api/health` | `GET` | Unlimited | Health check endpoint returning supported formats and service status |
 
 ---

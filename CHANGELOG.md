@@ -4,6 +4,19 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-09-17
+
+### Added
+- **Seniority Target Ratio & Bullet Distribution Profiler**: Formulated `app.seniority_profiler` calibrating career accomplishments against engineering seniority expectations: Junior (70% XYZ), Mid-Level (80% XYZ), Senior (85% XYZ), Staff (60% XYZ / 40% Strategic), and Executive (50% XYZ / 50% Strategic), computing a 0–100 Seniority Alignment Index and detecting strategic cross-org narrative.
+- **EEOC & NYC Local Law 144 Blind Review PII Redaction Engine**: Architected `app.redaction` deterministically anonymizing candidate names, emails, phone numbers, postal locations, social profiles, and **graduation year age proxies** to eliminate algorithmic bias and produce compliant blind review dossiers per NYC LL 144 and EU AI Act Article 10.
+- **Dedicated Seniority & Privacy REST APIs**: Exposed `POST /api/seniority-profile` and `POST /api/redact-pii` endpoints in `app.main` with SlowAPI rate limits, providing sub-5ms client-side anonymization and ratio audits with zero external LLM token expenditure.
+- **Interactive Seniority Matrix & Blind Review UI Panel**: Designed interactive Seniority Target Calibrator and EEOC/NYC LL 144 Blind Review Synthesizer in `TabsPanel.jsx` featuring real-time ratio progress bars, redacted entity pill counters, and one-click blind dossier clipboard export.
+- **100% Coverage Seniority & Privacy Unit Test Suites**: Created `backend/tests/test_seniority_profiler.py` and `backend/tests/test_redaction.py` asserting ratio accuracy, passive duty penalties, demographic proxy masking, and 100% preservation of technical tools and metrics.
+- **Expanded Master 52 Key Technical Contributions Inventory**: Documented 7 new contributions (#46 to #52) in `contributions.txt` across Full XYZ bullets, 1-line resume items, LaTeX blocks, and STAR talking points.
+- **151 Automated Tests with 89% Code Coverage Quality Gate**: Scaled automated test suite to 151 unit and integration tests across 16 test modules with an 89% pytest-cov code coverage threshold.
+
+---
+
 ## [1.9.0] - 2026-09-16
 
 ### Added

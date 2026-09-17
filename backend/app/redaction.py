@@ -9,7 +9,7 @@ GENERIC_URL_REGEX = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
 
 # Postal address patterns (e.g., "123 Main St", "San Francisco, CA 94105", "NY 10001")
 ZIP_CODE_REGEX = r'\b[A-Z]{2}\s+\d{5}(?:-\d{4})?\b'
-STREET_ADDRESS_REGEX = r'\b\d{1,5}\s+[A-Za-z0-9\.\s]+(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Drive|Dr|Lane|Ln|Way|Court|Ct)\b'
+STREET_ADDRESS_REGEX = r'\b\d{1,5}\s+(?:[A-Z][A-Za-z0-9\.]*\s+)+(?:Street|St\.?|Avenue|Ave\.?|Road|Rd\.?|Boulevard|Blvd\.?|Drive|Dr\.?|Lane|Ln\.?|Way|Court|Ct\.?)\b'
 
 # Graduation year and age-proxy detection patterns
 GRADUATION_YEAR_PATTERNS = [
@@ -86,10 +86,10 @@ def anonymize_resume_for_blind_audit(text: str) -> Dict[str, Any]:
 
     # 4. Redact Street Addresses & Zip Codes
     zips = re.findall(ZIP_CODE_REGEX, sanitized)
-    streets = re.findall(STREET_ADDRESS_REGEX, sanitized, flags=re.IGNORECASE)
+    streets = re.findall(STREET_ADDRESS_REGEX, sanitized)
     redaction_counts["postal_locations"] = len(zips) + len(streets)
 
-    sanitized = re.sub(STREET_ADDRESS_REGEX, "[STREET ADDRESS REDACTED]", sanitized, flags=re.IGNORECASE)
+    sanitized = re.sub(STREET_ADDRESS_REGEX, "[STREET ADDRESS REDACTED]", sanitized)
     sanitized = re.sub(ZIP_CODE_REGEX, "[ZIP CODE REDACTED]", sanitized)
 
     # 5. Redact Graduation Years (Age Proxy Masking)

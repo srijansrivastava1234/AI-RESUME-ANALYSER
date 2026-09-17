@@ -97,9 +97,13 @@ def audit_seniority_distribution(
 
     for b in clean_bullets:
         score_data = score_resume_bullet(b, seniority=clean_tier)
-        has_metric = score_data.get("components", {}).get("quantifiable_metric", {}).get("detected", False)
+        detected_metrics = score_data.get("detected_metrics", [])
+        has_metric = len(detected_metrics) > 0
         penalties = score_data.get("penalties", [])
-        is_duty = any("passive duty" in p.get("reason", "").lower() for p in penalties)
+        is_duty = any(
+            p.get("name") == "Passive Duty Statement" or "passive" in p.get("reason", "").lower()
+            for p in penalties
+        )
 
         # Check strategic narrative indicators
         words = set(re.findall(r'\b[a-zA-Z\-]+\b', b.lower()))
@@ -109,6 +113,10 @@ def audit_seniority_distribution(
         if is_duty:
             duty_count += 1
             classification = "Passive Duty Phrasing"
+        elif has_metric and is_strategic:
+            xyz_count += 1
+            strategic_count += 1
+            classification = "Strategic Quantified Impact"
         elif has_metric:
             xyz_count += 1
             classification = "Quantified X-Y-Z Impact"
@@ -120,9 +128,10 @@ def audit_seniority_distribution(
 
         bullet_breakdowns.append({
             "bullet": b,
-            "score": score_data.get("bullet_score", 0),
+            "score": score_data.get("score", 0),
             "classification": classification,
             "has_metric": has_metric,
+            "detected_metrics": detected_metrics,
             "is_duty": is_duty,
             "is_strategic": is_strategic,
             "matched_strategic_terms": sorted(list(matched_strategic))

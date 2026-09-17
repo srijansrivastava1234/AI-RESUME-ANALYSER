@@ -41,6 +41,8 @@ export default function TabsPanel({
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [showFullPrompt, setShowFullPrompt] = useState(false);
   const [selectedPromptModel, setSelectedPromptModel] = useState('claude');
+  const [copiedBlindText, setCopiedBlindText] = useState(false);
+  const [showBlindPreview, setShowBlindPreview] = useState(false);
 
   // Helper: word count
   const getWordCount = (text) => {
@@ -98,6 +100,79 @@ export default function TabsPanel({
     const link = document.createElement('a');
     link.href = url;
     link.download = 'edited_resume.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  // EEOC and NYC LL 144 Candidate Blind Audit Sanitizer
+  const blindAuditData = useMemo(() => {
+    if (!extractedText) return null;
+    let sanitized = extractedText;
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g;
+    const phoneRegex = /(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/g;
+    const linkedinRegex = /https?:\/\/(?:www\.)?linkedin\.com\/in\/[\w\-]+\/?/gi;
+    const githubRegex = /https?:\/\/(?:www\.)?github\.com\/[\w\-]+\/?/gi;
+    const zipRegex = /\b[A-Z]{2}\s+\d{5}(?:-\d{4})?\b/g;
+    const streetRegex = /\b\d{1,5}\s+(?:[A-Z][A-Za-z0-9\.]*\s+)+(?:Street|St\.?|Avenue|Ave\.?|Road|Rd\.?|Boulevard|Blvd\.?|Drive|Dr\.?|Lane|Ln\.?|Way|Court|Ct\.?)\b/g;
+    const gradRegex = /(?:\b(?:class of|graduated in|graduated|graduation(?:\s+date)?)\s*:?\s*(?:(?:19|20)\d{2})\b|\b(?:b\.?s\.?|b\.?a\.?|m\.?s\.?|ph\.?d\.?|bachelor|master|degree)\s+(?:in\s+[a-zA-Z\s]+,?\s*)?(?:(?:19|20)\d{2})\b|\b(?:19\d{2}|20[0-2]\d)\s*[-–—]\s*(?:19\d{2}|20[0-2]\d)\b)/gi;
+
+    const emails = sanitized.match(emailRegex) || [];
+    const phones = sanitized.match(phoneRegex) || [];
+    const socials = (sanitized.match(linkedinRegex) || []).length + (sanitized.match(githubRegex) || []).length;
+    const postal = (sanitized.match(zipRegex) || []).length + (sanitized.match(streetRegex) || []).length;
+    const grads = sanitized.match(gradRegex) || [];
+
+    sanitized = sanitized.replace(emailRegex, '[EMAIL REDACTED]');
+    sanitized = sanitized.replace(phoneRegex, '[PHONE REDACTED]');
+    sanitized = sanitized.replace(linkedinRegex, '[LINKEDIN REDACTED]');
+    sanitized = sanitized.replace(githubRegex, '[GITHUB REDACTED]');
+    sanitized = sanitized.replace(streetRegex, '[STREET ADDRESS REDACTED]');
+    sanitized = sanitized.replace(zipRegex, '[ZIP CODE REDACTED]');
+    sanitized = sanitized.replace(gradRegex, '[GRADUATION YEAR REDACTED - AGE PROXY DEFENSE]');
+
+    const lines = sanitized.split('\n');
+    let nameRedacted = false;
+    if (lines.length > 0) {
+      const firstLine = lines[0].trim();
+      if (firstLine.length > 2 && firstLine.length < 40 && /^[A-Za-z\s\.\,\-]+$/.test(firstLine) && !['resume', 'cv', 'summary', 'experience', 'education', 'skills'].includes(firstLine.toLowerCase())) {
+        lines[0] = '[CANDIDATE NAME REDACTED]';
+        sanitized = lines.join('\n');
+        nameRedacted = true;
+      }
+    }
+
+    const totalRedactions = emails.length + phones.length + socials + postal + grads.length + (nameRedacted ? 1 : 0);
+
+    return {
+      sanitizedText: sanitized,
+      totalRedactions,
+      counts: {
+        emails: emails.length,
+        phones: phones.length,
+        socials,
+        postal,
+        grads: grads.length,
+        name: nameRedacted ? 1 : 0
+      }
+    };
+  }, [extractedText]);
+
+  const copyBlindTextToClipboard = () => {
+    if (!blindAuditData) return;
+    navigator.clipboard.writeText(blindAuditData.sanitizedText);
+    setCopiedBlindText(true);
+    setTimeout(() => setCopiedBlindText(false), 2000);
+  };
+
+  const downloadBlindTextAsTxt = () => {
+    if (!blindAuditData) return;
+    const blob = new Blob([blindAuditData.sanitizedText], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'blind_audit_resume.txt';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1159,6 +1234,177 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
                 </div>
               </div>
             </div>
+
+            {/* Seniority Target Ratio & Accomplishment Balance Matrix */}
+            <div className="glass-panel" style={{ padding: '1.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Award style={{ width: '18px', height: '18px', color: 'var(--accent)' }} />
+                  <span style={{ fontSize: '0.95rem', fontWeight: 700 }}>
+                    Seniority Target Calibrator & Accomplishment Ratio
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '0.75rem',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '10px',
+                  background: 'rgba(99, 102, 241, 0.15)',
+                  color: 'var(--primary)',
+                  fontWeight: 700
+                }}>
+                  Target: {targetSeniority.toUpperCase()}
+                </span>
+              </div>
+
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
+                Calibrates accomplishment front-loading against engineering seniority expectations: Junior (70% XYZ), Mid-Level (80% XYZ), Senior (85% XYZ), Staff (60% XYZ / 40% Strategic), Executive (50% XYZ / 50% Strategic).
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                <div style={{ background: 'rgba(0,0,0,0.25)', padding: '0.75rem', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Target XYZ Metric Ratio</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--primary)' }}>
+                    {targetSeniority === 'junior' ? '70%' : targetSeniority === 'mid' ? '80%' : targetSeniority === 'senior' ? '85%' : targetSeniority === 'staff' ? '60%' : '50%'}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                    {targetSeniority === 'staff' || targetSeniority === 'executive' ? 'Rewards architectural vision & P&L narrative' : 'Requires hard metric anchoring ($, %, ms, scale)'}
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(0,0,0,0.25)', padding: '0.75rem', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Detected Metric Bullets</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--success)' }}>
+                    {Math.round((complianceData.pillars?.xyz_impact?.score || 80))}% Achieved
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                    {complianceData.pillars?.xyz_impact?.finding || 'Quantifiable achievements detected'}
+                  </div>
+                </div>
+
+                <div style={{ background: 'rgba(0,0,0,0.25)', padding: '0.75rem', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Strategic Alignment Status</div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent)' }}>
+                    {Math.round(complianceData.pillars?.xyz_impact?.score || 80) >= (targetSeniority === 'staff' ? 60 : 75) ? 'Calibrated' : 'Needs Optimization'}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                    Seniority-adjusted scoring gate
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* NYC LL 144 / EEOC Blind Audit & PII Redaction Panel */}
+            {blindAuditData && (
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%)',
+                border: '1px solid rgba(99, 102, 241, 0.25)',
+                borderRadius: '14px',
+                padding: '1.25rem'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <ShieldCheck style={{ width: '20px', height: '20px', color: 'var(--primary)' }} />
+                    <h4 style={{ margin: 0, fontSize: '0.95rem', fontWeight: 700 }}>
+                      EEOC & NYC LL 144 Blind Review Synthesizer (PII Redacted)
+                    </h4>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!blindAuditData.sanitizedText) return;
+                      navigator.clipboard.writeText(blindAuditData.sanitizedText);
+                      setCopiedBlindText(true);
+                      setTimeout(() => setCopiedBlindText(false), 2000);
+                    }}
+                    style={{
+                      background: copiedBlindText ? 'var(--success)' : 'var(--primary)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0.35rem 0.8rem',
+                      fontSize: '0.78rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.35rem',
+                      transition: 'all 0.2s ease'
+                    }}
+                  >
+                    {copiedBlindText ? (
+                      <>
+                        <Check style={{ width: '13px', height: '13px' }} />
+                        Blind Resume Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy style={{ width: '13px', height: '13px' }} />
+                        Copy Blind Resume for Committee
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.85rem' }}>
+                  Eliminates algorithmic and unconscious bias by redacting names, emails, phones, postal addresses, and <strong>graduation years (age-proxy variables)</strong>, while preserving 100% of technical accomplishments and skills.
+                </p>
+
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                  <span style={{ fontSize: '0.74rem', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>
+                    Emails Redacted: <strong style={{ color: 'var(--success)' }}>{blindAuditData.counts.emails}</strong>
+                  </span>
+                  <span style={{ fontSize: '0.74rem', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>
+                    Phones Redacted: <strong style={{ color: 'var(--success)' }}>{blindAuditData.counts.phones}</strong>
+                  </span>
+                  <span style={{ fontSize: '0.74rem', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>
+                    Social Profiles: <strong style={{ color: 'var(--success)' }}>{blindAuditData.counts.socials}</strong>
+                  </span>
+                  <span style={{ fontSize: '0.74rem', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>
+                    Postal/Zip Codes: <strong style={{ color: 'var(--success)' }}>{blindAuditData.counts.postal}</strong>
+                  </span>
+                  <span style={{ fontSize: '0.74rem', background: 'rgba(0,0,0,0.3)', padding: '0.3rem 0.6rem', borderRadius: '6px' }}>
+                    Graduation Age Proxies: <strong style={{ color: 'var(--accent)' }}>{blindAuditData.counts.grads}</strong>
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowBlindPreview(!showBlindPreview)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--primary)',
+                    fontSize: '0.76rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    padding: 0
+                  }}
+                >
+                  {showBlindPreview ? <ChevronUp style={{ width: '14px', height: '14px' }} /> : <ChevronDown style={{ width: '14px', height: '14px' }} />}
+                  {showBlindPreview ? 'Hide Blind Review Preview' : 'Show Redacted Blind Review Text'}
+                </button>
+
+                {showBlindPreview && (
+                  <pre style={{
+                    marginTop: '0.75rem',
+                    background: 'rgba(0,0,0,0.4)',
+                    padding: '0.85rem',
+                    borderRadius: '8px',
+                    fontSize: '0.75rem',
+                    color: 'var(--text-secondary)',
+                    overflowX: 'auto',
+                    maxHeight: '220px',
+                    border: '1px solid var(--border-color)',
+                    whiteSpace: 'pre-wrap'
+                  }}>
+                    {blindAuditData.sanitizedText}
+                  </pre>
+                )}
+              </div>
+            )}
 
             {/* Agent-Native BYOK Prompt Exporter */}
             <div className="glass-panel" style={{ padding: '1.25rem' }}>

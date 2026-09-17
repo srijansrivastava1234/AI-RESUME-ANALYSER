@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List
 
-APP_VERSION = "1.9.0"
+APP_VERSION = "2.0.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 
@@ -32,6 +32,8 @@ from app.hack_detector import detect_ats_hacks
 from app.header_normalizer import audit_section_headers
 from app.token_density import audit_token_density
 from app.metric_validator import audit_bullet_metrics
+from app.seniority_profiler import audit_seniority_distribution
+from app.redaction import anonymize_resume_for_blind_audit
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -93,6 +95,13 @@ class TokenDensityRequest(BaseModel):
 
 class ValidateMetricRequest(BaseModel):
     bullet: str = Field(..., min_length=1, description="Bullet statement to audit for quantifiable business metrics")
+
+class SeniorityProfileRequest(BaseModel):
+    bullets: List[str] = Field(..., description="List of resume achievement bullet points")
+    target_tier: Optional[str] = Field("senior", description="Target seniority tier ('junior', 'mid', 'senior', 'staff', 'executive')")
+
+class RedactPIIRequest(BaseModel):
+    text: str = Field(..., min_length=1, description="Resume text to anonymize for blind review")
 
 
 app = FastAPI(
@@ -560,6 +569,32 @@ def validate_metric_endpoint(request: Request, payload: ValidateMetricRequest):
     except Exception as err:
         logger.error(f"Error in validate metric endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to validate metric: {str(err)}")
+
+@app.post("/api/seniority-profile")
+@limiter.limit("30/minute")
+def seniority_profile_endpoint(request: Request, payload: SeniorityProfileRequest):
+    """
+    Audits resume accomplishment ratio against target seniority tier expectations (Junior to Executive).
+    """
+    try:
+        result = audit_seniority_distribution(payload.bullets, target_tier=payload.target_tier or "senior")
+        return result
+    except Exception as err:
+        logger.error(f"Error in seniority profile endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit seniority distribution: {str(err)}")
+
+@app.post("/api/redact-pii")
+@limiter.limit("30/minute")
+def redact_pii_endpoint(request: Request, payload: RedactPIIRequest):
+    """
+    Sanitizes candidate resume by redacting PII, contact info, and age proxies for EEOC / NYC LL 144 blind review.
+    """
+    try:
+        result = anonymize_resume_for_blind_audit(payload.text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in redact PII endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to redact candidate PII: {str(err)}")
 
 
 

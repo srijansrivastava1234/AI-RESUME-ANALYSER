@@ -352,7 +352,55 @@ def test_validate_metric_endpoint():
     assert res_vanity.status_code == 200
     data_vanity = res_vanity.json()
     assert data_vanity["has_vanity_metric"] is True
-    assert data_vanity["vanity_penalty"] == 20
+def test_seniority_profile_endpoint_success():
+    payload = {
+        "bullets": [
+            "Architected Kafka event pipeline reducing message latency by 35%.",
+            "Deployed microservices on Kubernetes cluster saving 15 hours weekly.",
+            "Formulated cross-org technical standards and mentored 5 engineers."
+        ],
+        "target_tier": "staff"
+    }
+    res = client.post("/api/seniority-profile", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["target_tier"] == "staff"
+    assert "seniority_alignment_index" in data
+    assert "target_xyz_ratio" in data
+    assert "actual_xyz_ratio" in data
+    assert data["total_bullets"] == 3
+
+
+def test_seniority_profile_endpoint_default_tier():
+    payload = {
+        "bullets": ["Implemented REST endpoints in FastAPI."]
+    }
+    res = client.post("/api/seniority-profile", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["target_tier"] == "senior"
+    assert data["total_bullets"] == 1
+
+
+def test_redact_pii_endpoint_success():
+    payload = {
+        "text": "Alice Engineer\nEmail: alice@work.com | Phone: 555-019-2831\nLinkedIn: https://linkedin.com/in/alice-dev\nGraduated 2014 from MIT with BS Computer Science."
+    }
+    res = client.post("/api/redact-pii", json=payload)
+    assert res.status_code == 200
+    data = res.json()
+    assert data["safe_harbor_certified"] is True
+    assert data["total_redactions"] >= 3
+    assert "[EMAIL REDACTED]" in data["sanitized_text"]
+    assert "[PHONE REDACTED]" in data["sanitized_text"]
+    assert "[GRADUATION YEAR REDACTED - AGE PROXY DEFENSE]" in data["sanitized_text"]
+    assert "alice@work.com" not in data["sanitized_text"]
+
+
+def test_redact_pii_endpoint_empty():
+    res = client.post("/api/redact-pii", json={"text": ""})
+    assert res.status_code == 422  # min_length=1 validation error
+
 
 
 

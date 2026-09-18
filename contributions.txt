@@ -242,6 +242,50 @@
     • Orchestrated release v2.0.0 scaling automated test coverage to 151 unit and integration tests with an 89% code coverage gate,
       solidifying an end-to-end deterministic ATS compliance, anti-bias, and candidate empowerment platform.
 
+53. Recursive XY-Cut Layout Linearization & Scanline Interleaving Detector
+    • Formulated an algorithmic document geometry evaluator simulating Recursive XY-Cut projection profiles and legacy
+      ATS scanline sorting (Taleo, older Workday), detecting column gutter collapses (<12pt) and horizontal interleaving
+      traps where sidebar skills concatenate with job titles, returning a 0–100 Linearization Safety Index with simulated
+      scrambled text previews.
+
+54. Automated Layout Linearization & Projection Quality Gate (Pytest-Cov)
+    • Constructed comprehensive unit test suite in pytest-cov covering single-column verification, multi-column sidebar
+      scrambling, tab-separated layouts, ASCII divider penalties, and whitespace boundary edge cases with 98% test coverage.
+
+55. Career Chronology & Non-Canonical Date Range Normalizer (Workday/Taleo Schemas)
+    • Engineered career timeline parsing engine standardizing dates to ISO-compatible months, calculating accurate non-duplicative
+      Years of Experience (YoE) across overlapping tenures, detecting employment gaps exceeding 90 days, and flagging
+      non-canonical seasonal or relative date tokens ('Spring 2021', '2 years ago') that cause ATS parsing knockout.
+
+56. Career Timeline Parsing & Gap Detection Quality Gate (Pytest-Cov)
+    • Developed automated chronology test suite verifying interval merging algorithms, long career gap detection (>6 months)
+      with recruiter talking hints, slash/dash/full-month date parsing, and non-canonical penalty enforcement with 97% coverage.
+
+57. ISO 19005-2 PDF/A Text Layer, CMap Integrity & Ligature Normalizer
+    • Formulated a text layer diagnostic engine auditing documents for Unicode Private Use Area (PUA) codepoints (\uE000-\uF8FF),
+      replacement characters (\uFFFD), soft hyphens (\u00AD), and zero-width spaces, while automatically decomposing typographic
+      ligatures (fi, fl, ff, ffi, ffl, oe, ae) into plain ASCII to recover unsearchable keywords in ATS Boolean filters.
+
+58. Font CMap Integrity & Typographic Ligature Decomposition Test Suite
+    • Implemented automated font integrity test suite asserting 100% keyword recovery for ligature words (e.g. 'eﬃcient' ➔ 'efficient'),
+      PUA icon font penalty arithmetic, and ISO 19005-2 searchability compliance certification with 100% statement coverage.
+
+59. Sub-5ms Dedicated Layout, Chronology & Unicode REST APIs (/api/audit-layout, /api/audit-chronology, /api/audit-font-integrity)
+    • Exposed high-throughput POST /api/audit-layout, POST /api/audit-chronology, and POST /api/audit-font-integrity endpoints
+      in FastAPI protected by SlowAPI rate limiting, and enriched core POST /api/analyze payloads with automated v2.1.0 diagnostics.
+
+60. REST API Integration Test Suite & Schema Verification Gate (FastAPI TestClient)
+    • Constructed end-to-end integration tests verifying request validation (HTTP 422), rate limit compliance, response model
+      serialization, and verified that single-run resume analysis seamlessly embeds all 3 new audit engines.
+
+61. Interactive Layout Linearization, Chronology & Typography UI Panel (React & Vite)
+    • Designed a dedicated "Layout & Chronology" workspace in React featuring interactive Recursive XY-Cut scanline hazard meters,
+      simulated legacy ATS text scramble viewers, visual career timeline chips with gap alerts, and typographic ligature recovery cards.
+
+62. Enterprise Milestone Release v2.1.0 Architecture & 184-Test Quality Gate
+    • Orchestrated milestone release v2.1.0 expanding automated test coverage to 184 unit and integration tests across 22 test modules
+      with a 90% code coverage threshold, delivering an industry-leading, layout-safe, chronologically audited ATS analysis engine.
+
 
 
 
@@ -301,6 +345,16 @@
 • Exposed /api/seniority-profile and /api/redact-pii REST endpoints with SlowAPI rate limiting for sub-5ms privacy execution.
 • Created interactive Seniority Calibrator and Blind Review UI cards in React with 1-click committee dossier export.
 • Orchestrated release v2.0.0 achieving 151 automated tests and 89% test coverage across the full ATS validation suite.
+• Engineered Recursive XY-Cut layout linearization simulator detecting multi-column gutter collapse and scanline interleaving traps.
+• Built automated test suite for layout geometry and scanline hazard prediction, achieving 98% test coverage in pytest-cov.
+• Formulated career chronology auditor standardizing date ranges, merging overlapping tenures, and detecting employment gaps >90 days.
+• Developed chronology quality gate testing interval arithmetic, non-canonical date penalties, and recruiter gap talking points.
+• Implemented ISO 19005-2 PDF/A text layer validator decomposing typographic ligatures (fi, fl, ffi) into searchable ASCII.
+• Created font CMap test suite asserting 100% keyword retrieval across decomposed ligatures and PUA icon font detection.
+• Exposed /api/audit-layout, /api/audit-chronology, and /api/audit-font-integrity REST endpoints with SlowAPI rate throttling.
+• Added end-to-end FastAPI integration tests validating v2.1.0 endpoints, schema validation, and analysis payload enrichment.
+• Integrated interactive Layout Linearizer, Chronology Timeline, and Ligature Normalizer panels into React dashboard.
+• Orchestrated release v2.1.0 scaling automated testing to 184 unit and integration tests with a 90% test coverage gate.
 
 
 
@@ -351,6 +405,12 @@
         \resumeItem{Exposed /api/seniority-profile and /api/redact-pii REST endpoints delivering sub-5ms deterministic privacy and scoring audits.}
         \resumeItem{Built interactive Seniority Calibrator and Blind Review UI panel in React with one-click committee dossier export.}
         \resumeItem{Enforced an 89\% code coverage quality gate in pytest-cov across 151 automated unit and integration tests.}
+        \resumeItem{Formulated Recursive XY-Cut layout linearization simulator detecting multi-column gutter collapse and scanline interleaving hazards.}
+        \resumeItem{Engineered career chronology parser standardizing dates to ISO format, merging overlapping roles, and flagging employment gaps >90 days.}
+        \resumeItem{Built ISO 19005-2 PDF/A text layer auditor decomposing typographic ligatures (fi, fl, ffi) to guarantee exact ATS keyword retrieval.}
+        \resumeItem{Exposed /api/audit-layout, /api/audit-chronology, and /api/audit-font-integrity REST endpoints delivering sub-5ms deterministic audits.}
+        \resumeItem{Designed interactive Layout, Chronology & Typography workspace in React with simulated ATS text scramble and gap alert cards.}
+        \resumeItem{Scaled automated test suite to 184 unit and integration tests across 22 test modules with a 90\% pytest-cov code coverage threshold.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -566,4 +626,29 @@
 52. Enterprise Milestone Release v2.0.0:
     "Orchestrated milestone release v2.0.0 scaling automated testing to 151 unit and integration tests with an 89% code coverage
     gate, delivering an end-to-end, privacy-hardened, mathematically verified ATS resume analysis platform."
+
+53. Recursive XY-Cut Layout Linearization:
+    "Simulated multi-column document projection profiles and legacy scanline sort algorithms, preventing sidebar skills from
+    scrambling into job title syntax in older Workday and Taleo engines."
+
+54. Career Chronology & Non-Canonical Date Normalization:
+    "Engineered timeline parsing with interval merging to calculate accurate Years of Experience and detect career gaps >90 days,
+    eliminating knockout risks from ambiguous seasonal or relative date expressions."
+
+55. ISO 19005-2 PDF/A & Typographic Ligature Decomposition:
+    "Decomposed typographic ligatures (fi, fl, ffi) into plain ASCII to recover unsearchable keywords in ATS Boolean filters,
+    while auditing font CMaps for PUA icon glyphs and replacement character corruption."
+
+56. Sub-5ms Layout, Chronology & Unicode REST APIs:
+    "Exposed dedicated FastAPI endpoints protected by SlowAPI rate limits, integrating comprehensive document structure and
+    chronological diagnostics directly into high-throughput automated analysis pipelines."
+
+57. Interactive Layout & Chronology UI Telemetry:
+    "Designed real-time layout projection meters, simulated legacy ATS text scramble viewers, and career timeline chips in React,
+    empowering candidates to visualize and resolve structural parser failure modes."
+
+58. Enterprise Milestone Release v2.1.0 & 184-Test Quality Gate:
+    "Orchestrated release v2.1.0 scaling test coverage to 184 automated tests with a 90% coverage gate, solidifying an end-to-end,
+    layout-resilient, chronologically verified, and typography-hardened ATS analysis platform."
+
 

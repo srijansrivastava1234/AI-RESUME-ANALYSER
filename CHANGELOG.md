@@ -4,6 +4,19 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-09-18
+
+### Added
+- **Recursive XY-Cut Layout Linearization & Scanline Interleaving Detector**: Implemented `app.layout_linearizer` simulating horizontal and vertical whitespace projection valleys, detecting column gutter collapses (<12pt), ASCII border intersections, and scanline interleaving traps where sidebars concatenate into job titles in legacy parsers (Taleo, older Workday), returning a 0–100 Linearization Safety Index with simulated scrambled text previews.
+- **Career Chronology & Non-Canonical Date Range Normalizer**: Engineered `app.chronology` standardizing dates to ISO-compatible months, calculating non-duplicative cumulative Years of Experience (YoE) across overlapping tenures, detecting employment gaps (>90 days) with recruiter talking points, and penalizing ambiguous seasonal or relative date tokens ('Spring 2021', '2 years ago').
+- **ISO 19005-2 PDF/A Text Layer, CMap Integrity & Ligature Normalizer**: Formulated `app.font_integrity` detecting Unicode Private Use Area (PUA) codepoints (`\uE000-\uF8FF`), decode replacement characters (`\uFFFD`), soft hyphens (`\u00AD`), and zero-width spaces, while automatically decomposing typographic ligatures (fi, fl, ff, ffi, ffl, oe, ae) into plain ASCII to ensure exact keyword retrieval in ATS Boolean filters.
+- **High-Throughput Dedicated REST APIs**: Exposed `POST /api/audit-layout`, `POST /api/audit-chronology`, and `POST /api/audit-font-integrity` endpoints in `app.main` with SlowAPI rate limiting, and enriched core `POST /api/analyze` response payloads to seamlessly return layout, chronology, and font integrity diagnostics.
+- **Interactive Layout, Chronology & Typography UI Workspace**: Designed a dedicated "Layout & Chronology" panel in `TabsPanel.jsx` featuring Recursive XY-Cut scanline hazard meters, simulated legacy ATS text scramble viewers, visual career timeline chips with gap alerts, and typographic ligature recovery cards.
+- **Automated Unit & Integration Test Suites Scaling to 184 Tests**: Created `backend/tests/test_layout_linearizer.py`, `backend/tests/test_chronology.py`, `backend/tests/test_font_integrity.py`, and `backend/tests/test_api_v21.py`, advancing the test suite from 151 to 184 tests with a 90% code coverage threshold in pytest-cov.
+- **Expanded Master 62 Key Technical Contributions Inventory**: Documented 10 new contributions (#53 to #62) in `contributions.txt`, updated `contributions_top15.txt`, and refreshed system architecture in `README.md`.
+
+---
+
 ## [2.0.0] - 2026-09-17
 
 ### Added

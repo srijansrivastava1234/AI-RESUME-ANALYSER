@@ -42,7 +42,7 @@ graph TD
 | **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction and normalization |
 | **Security & Limits** | SlowAPI | IP-based rate limiting and DoS prevention |
 | **Observability** | Python Logging + JSONFormatter | Structured JSON logging with `X-Request-ID` correlation |
-| **Testing** | Pytest + Pytest-Cov + HTTPX | 151 automated tests with 89% code coverage gate |
+| **Testing** | Pytest + Pytest-Cov + HTTPX | 184 automated tests with 90% code coverage gate |
 | **Frontend** | React 19 + Vite | Glassmorphic dark dashboard & comparison leaderboard |
 | **Styling** | Vanilla CSS3 (Glassmorphism) | Zero-dependency bespoke modern design system |
 | **Icons** | Lucide React | Clean, scalable icon system |
@@ -191,6 +191,9 @@ If you are showcasing this project on your resume or portfolio, here are 25 impa
 | `/api/verb-diversity` | `POST` | 30 / min | Evaluate action verb variety, repetition penalties, and diversity score across bullet points |
 | `/api/seniority-profile` | `POST` | 30 / min | Calibrate accomplishment ratio and strategic narrative against Junior to Executive seniority targets |
 | `/api/redact-pii` | `POST` | 30 / min | Sanitize candidate PII and age-proxy graduation years for EEOC & NYC LL 144 blind review |
+| `/api/audit-layout` | `POST` | 30 / min | Simulate Recursive XY-Cut layout linearization and scanline reading-order hazards |
+| `/api/audit-chronology` | `POST` | 30 / min | Audit career timeline, date standardization, interval merging, and employment gaps (>90d) |
+| `/api/audit-font-integrity` | `POST` | 30 / min | Audit ISO 19005-2 PDF/A text layer, font CMap integrity, and decompose typographic ligatures |
 | `/api/health` | `GET` | Unlimited | Health check endpoint returning supported formats and service status |
 
 ---

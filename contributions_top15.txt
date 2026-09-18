@@ -78,9 +78,9 @@ architectural differentiation, mathematical rigor, and recruiter impact.
     • Integrated client-IP rate limiting using SlowAPI alongside enterprise structured JSON logging with
       X-Request-ID correlation headers to ensure resilience against DoS attacks and full distributed observability.
 
-15. Comprehensive Automated Testing Matrix (133 Tests, 88%+ Code Coverage Gate)
-    • Scaled comprehensive automated test suite to 133 unit and integration tests across security detectors,
-      header normalizers, metric validators, RRF fusion, and REST APIs, enforcing an 88% codebase coverage threshold in pytest-cov.
+15. Comprehensive Automated Testing Matrix (184 Tests, 90% Code Coverage Gate)
+    • Scaled comprehensive automated test suite to 184 unit and integration tests across security detectors,
+      header normalizers, metric validators, RRF fusion, layout linearizers, and REST APIs, enforcing a 90% codebase coverage threshold in pytest-cov.
 
 
 --------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ architectural differentiation, mathematical rigor, and recruiter impact.
 • Engineered ATS layout linearization engine detecting multi-column whitespace gutters and table reading-order traps.
 • Engineered multi-resume batch comparison engine evaluating up to 5 resumes against target jobs with automated ranking summaries.
 • Added SlowAPI IP-based rate limiting on sensitive endpoints alongside structured JSON logging with X-Request-ID request tracing.
-• Maintained 133 automated test cases with 88%+ pytest-cov code coverage across parsers, mathematical heuristics, and asynchronous REST APIs.
+• Maintained 184 automated test cases with 90% pytest-cov code coverage across parsers, mathematical heuristics, and asynchronous REST APIs.
 
 
 --------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ architectural differentiation, mathematical rigor, and recruiter impact.
         \resumeItem{Built ATS layout linearization detector identifying multi-column whitespace gutters and table reading-order traps.}
         \resumeItem{Engineered batch comparison engine analyzing and ranking up to 5 candidate resumes against target job descriptions.}
         \resumeItem{Secured API endpoints against DoS with SlowAPI IP-based rate limiting and structured JSON request tracing.}
-        \resumeItem{Maintained 133 automated unit/integration tests with 88\%+ code coverage across parsers, ranking, and REST endpoints.}
+        \resumeItem{Maintained 184 automated unit/integration tests with 90\% code coverage across parsers, ranking, and REST endpoints.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 

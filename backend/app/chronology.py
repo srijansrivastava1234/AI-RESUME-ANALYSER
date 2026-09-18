@@ -23,11 +23,11 @@ CURRENT_MONTH = 9
 DATE_RANGE_REGEX = re.compile(
     r'(?P<start>(?:(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|'
     r'Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?'
-    r'\s+)?\d{4}(?:[-/.](?:0?[1-9]|1[0-2]))?)'
+    r'\s+)?(?:\d{1,2}[-/.])?\d{4}(?:[-/.](?:0?[1-9]|1[0-2]))?)'
     r'\s*(?:[-–—]|to)\s*'
     r'(?P<end>(?:(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|'
     r'Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?'
-    r'\s+)?\d{4}(?:[-/.](?:0?[1-9]|1[0-2]))?|present|current|now)',
+    r'\s+)?(?:\d{1,2}[-/.])?\d{4}(?:[-/.](?:0?[1-9]|1[0-2]))?|present|current|now)',
     re.IGNORECASE
 )
 
@@ -39,7 +39,7 @@ NON_CANONICAL_PATTERNS = [
 
 def _parse_date_token(token: str, default_to_current: bool = False) -> Tuple[int, int]:
     """
-    Parses a single date string (e.g., 'Jan 2021', '2020-03', '2019', 'Present') into (year, month).
+    Parses a single date string (e.g., 'Jan 2021', '2020-03', '04/2021', '2019', 'Present') into (year, month).
     """
     clean = token.strip().lower()
     if clean in ("present", "current", "now"):
@@ -52,16 +52,16 @@ def _parse_date_token(token: str, default_to_current: bool = False) -> Tuple[int
         month = MONTH_MAP.get(m_str[:3], 1)
         return int(y_str), month
 
+    # Check for MM/YYYY or MM-YYYY
+    my_match = re.match(r'(0?[1-9]|1[0-2])[-/.](\d{4})', clean)
+    if my_match:
+        m_str, y_str = my_match.groups()
+        return int(y_str), int(m_str)
+
     # Check for YYYY-MM or YYYY/MM
     ym_match = re.match(r'(\d{4})[-/.](0?[1-9]|1[0-2])', clean)
     if ym_match:
         y_str, m_str = ym_match.groups()
-        return int(y_str), int(m_str)
-
-    # Check for MM/YYYY
-    my_match = re.match(r'(0?[1-9]|1[0-2])[-/.](\d{4})', clean)
-    if my_match:
-        m_str, y_str = my_match.groups()
         return int(y_str), int(m_str)
 
     # Check for YYYY alone
@@ -82,12 +82,12 @@ def _merge_intervals(intervals: List[Tuple[int, int, int, int]]) -> List[Tuple[i
     if not intervals:
         return []
 
-    # Convert to continuous month offsets from year 1990
+    # Convert to continuous 0-based month offsets from year 1990
     def to_offset(y: int, m: int) -> int:
-        return (y - 1990) * 12 + m
+        return (y - 1990) * 12 + (m - 1)
 
     def from_offset(off: int) -> Tuple[int, int]:
-        return 1990 + (off // 12), (off % 12) or 12
+        return 1990 + (off // 12), (off % 12) + 1
 
     offset_intervals = []
     for sy, sm, ey, em in intervals:

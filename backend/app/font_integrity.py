@@ -17,7 +17,7 @@ LIGATURE_MAP = {
 
 LIGATURE_REGEX = re.compile(r'[\uFB00-\uFB06\u0152\u0153\u00C6\u00E6]')
 
-PUA_REGEX = re.compile(r'[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u{100000}-\u{10FFFD}]', re.UNICODE)
+PUA_REGEX = re.compile(r'[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\U00100000-\U0010FFFD]')
 REPLACEMENT_REGEX = re.compile(r'\uFFFD')
 ZERO_WIDTH_REGEX = re.compile(r'[\u200B\u200C\u200D\uFEFF]')
 SOFT_HYPHEN_REGEX = re.compile(r'\u00AD')

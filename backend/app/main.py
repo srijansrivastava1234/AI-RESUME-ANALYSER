@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List
 
-APP_VERSION = "2.0.0"
+APP_VERSION = "2.1.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 
@@ -34,6 +34,9 @@ from app.token_density import audit_token_density
 from app.metric_validator import audit_bullet_metrics
 from app.seniority_profiler import audit_seniority_distribution
 from app.redaction import anonymize_resume_for_blind_audit
+from app.layout_linearizer import simulate_recursive_xy_cut
+from app.chronology import audit_career_chronology
+from app.font_integrity import audit_font_cmap_integrity
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -102,6 +105,15 @@ class SeniorityProfileRequest(BaseModel):
 
 class RedactPIIRequest(BaseModel):
     text: str = Field(..., min_length=1, description="Resume text to anonymize for blind review")
+
+class LayoutAuditRequest(BaseModel):
+    text: str = Field(..., min_length=1, description="The resume text to audit for layout linearization and XY-cut hazards")
+
+class ChronologyAuditRequest(BaseModel):
+    text: str = Field(..., min_length=1, description="The resume text to audit for career chronology and employment gaps")
+
+class FontIntegrityRequest(BaseModel):
+    text: str = Field(..., min_length=1, description="The resume text to audit for ISO 19005-2 PDF/A text layer and ligature health")
 
 
 app = FastAPI(
@@ -253,6 +265,9 @@ async def analyze_resume_endpoint(
         )
         analysis_report["compliance_audit"] = compliance_audit
         analysis_report["byok_agent_prompt"] = byok_prompt
+        analysis_report["layout_linearization"] = simulate_recursive_xy_cut(extracted_text)
+        analysis_report["career_chronology"] = audit_career_chronology(extracted_text)
+        analysis_report["font_integrity"] = audit_font_cmap_integrity(extracted_text)
         
         total_duration = time.time() - start_time
         logger.info(f"[{request_id}] Analysis completed in {analysis_duration:.3f}s. Total time: {total_duration:.3f}s")
@@ -595,6 +610,46 @@ def redact_pii_endpoint(request: Request, payload: RedactPIIRequest):
     except Exception as err:
         logger.error(f"Error in redact PII endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to redact candidate PII: {str(err)}")
+
+@app.post("/api/audit-layout")
+@limiter.limit("30/minute")
+def audit_layout_endpoint(request: Request, payload: LayoutAuditRequest):
+    """
+    Simulates the Recursive XY-Cut algorithm and legacy ATS scanline sorting to audit multi-column risks.
+    """
+    try:
+        result = simulate_recursive_xy_cut(payload.text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit layout endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit layout linearization: {str(err)}")
+
+@app.post("/api/audit-chronology")
+@limiter.limit("30/minute")
+def audit_chronology_endpoint(request: Request, payload: ChronologyAuditRequest):
+    """
+    Audits resume career timeline, standardizes date ranges, detects employment gaps, and counts YoE.
+    """
+    try:
+        result = audit_career_chronology(payload.text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit chronology endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit career chronology: {str(err)}")
+
+@app.post("/api/audit-font-integrity")
+@limiter.limit("30/minute")
+def audit_font_integrity_endpoint(request: Request, payload: FontIntegrityRequest):
+    """
+    Audits document for ISO 19005-2 PDF/A text layer compliance, PUA glyphs, and decomposes typographic ligatures.
+    """
+    try:
+        result = audit_font_cmap_integrity(payload.text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit font integrity endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit font integrity: {str(err)}")
+
 
 
 

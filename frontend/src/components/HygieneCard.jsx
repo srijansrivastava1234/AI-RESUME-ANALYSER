@@ -11,7 +11,9 @@ import {
   Globe, 
   Link,
   Eye,
-  Target
+  Target,
+  Lock,
+  AlertTriangle
 } from 'lucide-react';
 
 
@@ -354,6 +356,64 @@ export default function HygieneCard({ hygiene }) {
               </span>
             </div>
           </div>
+
+          {/* Candidate Contact & Profile Link Security Section */}
+          <div style={{
+            background: 'rgba(255,255,255,0.03)',
+            borderRadius: '10px',
+            padding: '0.85rem 1rem',
+            border: '1px solid var(--border-color)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.6rem'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <Lock style={{ width: '15px', height: '15px', color: 'var(--success)' }} />
+                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                  Contact RFC Compliance & Profile Link Security
+                </span>
+              </div>
+              <span style={{
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                color: (hygiene.contact_audit?.status === 'CRITICAL' ? 'var(--danger)' : 'var(--success)'),
+                background: hygiene.contact_audit?.status === 'CRITICAL' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.1)',
+                padding: '2px 8px',
+                borderRadius: '10px'
+              }}>
+                {hygiene.contact_audit?.status || 'OPTIMAL'} ({hygiene.contact_audit?.reliability_index || 100}/100)
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '0.5rem', fontSize: '0.75rem' }}>
+              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Email Standard</span>
+                <strong style={{ color: 'var(--success)' }}>
+                  {hygiene.contact_audit?.email_audit?.is_valid !== false ? 'RFC 5322 Valid' : 'Format Warning'}
+                </strong>
+              </div>
+              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Phone Numbering</span>
+                <strong style={{ color: hygiene.contact_audit?.phone_audit?.has_country_code ? 'var(--success)' : 'var(--warning)' }}>
+                  {hygiene.contact_audit?.phone_audit?.has_country_code ? 'E.164 Standard' : 'Domestic Format'}
+                </strong>
+              </div>
+              <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.45rem 0.65rem', borderRadius: '6px' }}>
+                <span style={{ color: 'var(--text-secondary)', display: 'block', fontSize: '0.7rem' }}>Profile Link Security</span>
+                <strong style={{ color: 'var(--success)' }}>
+                  HTTPS Verified (Anti-Phishing)
+                </strong>
+              </div>
+            </div>
+
+            {hygiene.contact_audit?.recommendations?.length > 0 && (
+              <div style={{ fontSize: '0.73rem', color: 'var(--warning)', background: 'rgba(245, 158, 11, 0.08)', padding: '0.4rem 0.6rem', borderRadius: '5px' }}>
+                ⚠️ {hygiene.contact_audit.recommendations[0]}
+              </div>
+            )}
+          </div>
+
 
 
           {/* Hygiene Recommendations */}

@@ -1,7 +1,7 @@
 ================================================================================
            TOP 15 CURATED TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
-Curated from the 45-point master inventory to maximize technical depth,
+Curated from the 77-point master inventory to maximize technical depth,
 architectural differentiation, mathematical rigor, and recruiter impact.
 
 --------------------------------------------------------------------------------
@@ -19,68 +19,65 @@ architectural differentiation, mathematical rigor, and recruiter impact.
      Parseability (15%), and Reading Density (15%), mapping composite scores to executive letter
      grades (A+ to D) with percentile benchmarking.
 
-3. Reciprocal Rank Fusion (RRF) Multi-Metric Candidate Scoring Engine
-   • Formulated and deployed Reciprocal Rank Fusion (RRF_score(d) = sum [1 / (60 + r_m(d))]) consolidating
-     disparate candidate evaluation dimensions (lexical keyword recall, Google/IBM XYZ impact, formatting hygiene,
-     and readability) into a mathematically normalized, outlier-resistant candidate ranking leaderboard.
+3. Okapi BM25+ Lexical Retrieval & Term Saturation Engine
+   • Formulated and implemented Okapi BM25+ (k1=1.2, b=0.75, delta=1.0) calibrated for ATS resume
+     keyword recall, calculating Robertson-Spärck Jones IDF, modeling asymptotic term frequency
+     saturation to penalize keyword stuffing, and enforcing length normalization against a 450-token baseline.
 
-4. Recruiter 6-Second First-Third (Upper 30% Viewport) Precision Scanner
-   • Architected an eye-tracking viewport analyzer segmenting resumes at the 30% token boundary to quantify
-     front-loaded measurable business outcomes, active leadership verbs, and key technical skills within
-     the human recruiter's initial 6.0-7.4s visual scan window.
+4. Recursive XY-Cut Layout Linearization & Scanline Interleaving Detector
+   • Engineered layout linearization simulating horizontal and vertical whitespace projection valleys,
+     detecting column gutter collapses (<12pt), ASCII table intersections, and legacy scanline interleaving
+     hazards where sidebars concatenate into job titles in older Workday and Taleo engines.
 
-5. Technical Acronym & Domain Synonym Expansion Graph
-   • Engineered an ontology-backed bidirectional synonym resolution engine mapping industry abbreviations
-     (e.g., K8s <-> Kubernetes, TS <-> TypeScript, AWS <-> Amazon Web Services, Postgres <-> PostgreSQL)
-     to eliminate candidate knockout caused by rigid ATS exact-string matching filters.
+5. ISO 19005-2 PDF/A Text Layer, CMap Integrity & Ligature Normalizer
+   • Architected text layer diagnostic engine detecting Unicode Private Use Area (PUA) codepoints (\uE000-\uF8FF),
+     replacement characters (\uFFFD), soft hyphens, and decomposing typographic ligatures (fi, fl, ffi)
+     into plain ASCII to recover unsearchable keywords in ATS Boolean filters.
 
-6. Adverse Impact & EEOC Four-Fifths Safe Harbor Auditor (NYC LL 144)
-   • Implemented automated algorithmic disparity auditing verifying the EEOC Four-Fifths selection rate ratio
-     (Impact Ratio >= 0.80) and certifying 100% deterministic rule arithmetic free of protected demographic proxy attributes.
+6. Career Chronology & Non-Canonical Date Range Normalizer
+   • Formulated career timeline parsing standardizing dates to ISO-compatible months, calculating accurate
+     non-duplicative Years of Experience across overlapping tenures, and detecting employment gaps (>90 days).
 
-7. Generative AI Orchestration & Strict Schema Enforcement (Google Gemini 1.5 Flash)
-   • Integrated Google Gemini 1.5 Flash utilizing strict structured JSON schema generation to
-     deliver deterministic ATS compatibility scoring, keyword gap classification, and granular
-     section-by-section diagnostic feedback.
+7. EEOC & NYC Local Law 144 Blind Review PII Redactor
+   • Engineered deterministic PII anonymization redacting emails, phone numbers, names, locations, and
+     graduation year age discrimination proxies to eliminate algorithmic bias under NYC LL 144 and EU AI Act Article 10.
 
-8. Deterministic Google/IBM X-Y-Z Mathematical Scoring Engine
-   • Formulated and implemented a mathematically auditable bullet-point evaluation algorithm
-     deconstructing statements into S_bullet = (0.25*S_X + 0.45*S_Y + 0.30*S_Z) - P, enforcing
-     penalties for passive duty phrasing (-40 pts), verbosity (-25 pts), and lack of measurable scope
-     with seniority calibration across Junior to Staff levels.
+8. Hard vs Soft Skills Taxonomy Classifier & Buzzword Dilution Defense
+   • Built ontological skill classifier separating hard technical proficiencies from subjective soft buzzwords,
+     enforcing a Hard-to-Soft Ratio (R_skill) to penalize buzzword dilution exceeding 30% and verifying bullet substantiation.
 
-9. Regulatory Safe Harbor Verification (EU AI Act & NYC Local Law 144)
-   • Architected automated regulatory compliance auditing certifying 100% deterministic rule arithmetic
-     per EU AI Act (Regulation (EU) 2024/1689 Annex III High-Risk recruitment & Article 86 Right to Explanation),
-     eliminating demographic proxy variables to guarantee AEDT bias safe harbor under NYC Local Law 144.
+9. Candidate Contact RFC 5322, E.164 & HTTPS Profile Link Security Auditor
+   • Engineered candidate contact coordinate validation screening against RFC 5322 email specifications,
+     standardizing international phone numbers to ITU-T E.164, and auditing external profile links for HTTPS encryption.
 
-10. Metric False-Positive Disambiguation & Binary Impact Detection
-    • Engineered precision regex guards filtering out software version strings (Python 3.11), network ports
-      (Port 8080), and RFC/ISO standards from falsely inflating candidate metric scores, while recognizing
-      binary achievements (e.g., zero downtime, patent granted).
+10. Reciprocal Rank Fusion (RRF) Multi-Metric Candidate Scoring Engine
+    • Formulated and deployed Reciprocal Rank Fusion (RRF_score(d) = sum [1 / (60 + r_m(d))]) consolidating
+      disparate candidate evaluation dimensions (lexical recall, XYZ impact, hygiene, readability) into a
+      mathematically normalized, outlier-resistant candidate ranking leaderboard.
 
-11. Agent-Native Bring-Your-Own-Key (BYOK) Prompt Synthesis Engine
-    • Designed an Agent-Native prompt synthesis module translating ATS diagnostic deficiencies, missing competencies,
-      and passive duty statements into executable, anti-hallucination prompts formatted for frontier external LLMs
-      (Claude 3.5 Sonnet, GPT-4o, Cursor) adhering to candidate BYOK data governance.
+11. Recruiter 6-Second First-Third (Upper 30% Viewport) Precision Scanner
+    • Architected an eye-tracking viewport analyzer segmenting resumes at the 30% token boundary to quantify
+      front-loaded measurable business outcomes, active leadership verbs, and key technical skills within
+      the human recruiter's initial 6.0-7.4s visual scan window.
 
-12. ATS Layout Linearization & Multi-Column Gutter Collision Detector
-    • Engineered document linearization and layout security auditing in the ingestion parser, detecting
-      wide tab/space gutters and ASCII table borders to prevent reading-order collapse in Workday,
-      Taleo, and Ashby ATS pipelines.
+12. Deterministic Google/IBM X-Y-Z Mathematical Scoring Engine
+    • Formulated and implemented a mathematically auditable bullet-point evaluation algorithm
+      deconstructing statements into S_bullet = (0.25*S_X + 0.45*S_Y + 0.30*S_Z) - P, enforcing
+      penalties for passive duty phrasing (-40 pts), verbosity (-25 pts), and lack of measurable scope.
 
-13. Multi-Resume Batch Comparison & Candidate Ranking Engine
-    • Engineered an asynchronous multi-resume comparator evaluating up to 5 resumes concurrently
-      against a single job description, calculating ATS score differentials, keyword coverage,
-      and generating an automated winner summary.
+13. Regulatory Safe Harbor Verification (EU AI Act & NYC Local Law 144)
+    • Architected automated regulatory compliance auditing certifying 100% deterministic rule arithmetic
+      per EU AI Act (Regulation (EU) 2024/1689 Annex III High-Risk recruitment & Article 86 Right to Explanation),
+      eliminating demographic proxy variables to guarantee AEDT bias safe harbor under NYC Local Law 144.
 
-14. Defensive API Rate Limiting & Structured Observability (SlowAPI & JSON Tracing)
-    • Integrated client-IP rate limiting using SlowAPI alongside enterprise structured JSON logging with
-      X-Request-ID correlation headers to ensure resilience against DoS attacks and full distributed observability.
+14. Technical Acronym & Domain Synonym Expansion Graph
+    • Engineered an ontology-backed bidirectional synonym resolution engine mapping industry abbreviations
+      (e.g., K8s <-> Kubernetes, TS <-> TypeScript, AWS <-> Amazon Web Services, Postgres <-> PostgreSQL)
+      to eliminate candidate knockout caused by rigid ATS exact-string matching filters.
 
-15. Comprehensive Automated Testing Matrix (184 Tests, 90% Code Coverage Gate)
-    • Scaled comprehensive automated test suite to 184 unit and integration tests across security detectors,
-      header normalizers, metric validators, RRF fusion, layout linearizers, and REST APIs, enforcing a 90% codebase coverage threshold in pytest-cov.
+15. Comprehensive Automated Testing Matrix (210+ Tests, 90%+ Code Coverage Gate)
+    • Scaled automated test suite to 210+ unit and integration tests across 26 test modules, enforcing
+      a 90%+ codebase coverage threshold in pytest-cov across parsers, ranking heuristics, and asynchronous REST APIs.
 
 
 --------------------------------------------------------------------------------
@@ -89,19 +86,19 @@ architectural differentiation, mathematical rigor, and recruiter impact.
 
 • Architected full-stack ATS audit engine using FastAPI and React 19, enabling multi-format resume parsing and analysis in <1.5s.
 • Formulated deterministic 4-pillar ATS compliance algorithm (Keywords 40%, XYZ 30%, Structure 15%, Density 15%) with A+ to D letter grades.
-• Implemented Reciprocal Rank Fusion (RRF) candidate scoring engine consolidating multi-system evaluations into normalized leaderboards.
+• Implemented Okapi BM25+ lexical ranking engine with Robertson-Spärck Jones IDF and length normalization against keyword stuffing.
+• Simulated Recursive XY-Cut layout linearization detecting multi-column gutter collapse (<12pt) and scanline interleaving hazards.
+• Built ISO 19005-2 PDF/A text layer auditor decomposing typographic ligatures (fi, fl, ffi) to guarantee exact ATS keyword retrieval.
+• Engineered career chronology parser standardizing dates to ISO format, merging overlapping tenures, and detecting gaps >90 days.
+• Developed EEOC and NYC LL 144 blind review PII redactor masking candidate contact info and graduation year age proxies.
+• Built hard vs soft skill classifier computing Hard-to-Soft Ratios and penalizing >30% soft buzzword dilution with bullet substantiation.
+• Engineered candidate contact auditor validating RFC 5322 email syntax, ITU-T E.164 phone numbering, and HTTPS link security.
+• Deployed Reciprocal Rank Fusion (RRF) candidate ranking engine consolidating multi-system evaluations into normalized leaderboards.
 • Built recruiter 6-second first-third viewport precision scanner quantifying accomplishment front-loading in upper 30% viewport.
-• Engineered bidirectional technical acronym and domain synonym graph (K8s <-> Kubernetes, TS <-> TypeScript) eliminating false knockouts.
-• Developed adverse impact and EEOC Four-Fifths selection rate compliance engine certifying algorithmic safe harbor per NYC Local Law 144.
-• Integrated Google Gemini 1.5 Flash with strict JSON schema enforcement to generate deterministic ATS scores and keyword gap audits.
 • Formulated deterministic Google/IBM XYZ mathematical scoring equation auditing action verbs, metrics, and tooling with seniority calibration.
 • Architected regulatory safe harbor audit verifying EU AI Act Article 86 Right to Explanation and NYC LL 144 AEDT bias safeguards.
-• Engineered false-positive regex guards preventing software versions (Python 3.11) and ports (8080) from falsely inflating metric scores.
-• Built Agent-Native BYOK prompt synthesis engine generating structured, anti-hallucination refactoring prompts for Claude 3.5 and GPT-4o.
-• Engineered ATS layout linearization engine detecting multi-column whitespace gutters and table reading-order traps.
-• Engineered multi-resume batch comparison engine evaluating up to 5 resumes against target jobs with automated ranking summaries.
-• Added SlowAPI IP-based rate limiting on sensitive endpoints alongside structured JSON logging with X-Request-ID request tracing.
-• Maintained 184 automated test cases with 90% pytest-cov code coverage across parsers, mathematical heuristics, and asynchronous REST APIs.
+• Engineered bidirectional technical acronym and domain synonym graph (K8s <-> Kubernetes) eliminating false ATS knockouts.
+• Maintained 210+ automated test cases with 90%+ pytest-cov code coverage across parsers, mathematical heuristics, and REST APIs.
 
 
 --------------------------------------------------------------------------------
@@ -114,19 +111,19 @@ architectural differentiation, mathematical rigor, and recruiter impact.
       \resumeItemListStart
         \resumeItem{Architected full-stack resume analysis platform with FastAPI and React 19, achieving sub-1.5s end-to-end processing.}
         \resumeItem{Formulated deterministic 4-pillar ATS compliance framework (Keywords 40\%, XYZ 30\%, Structure 15\%, Density 15\%) with letter grades.}
+        \resumeItem{Implemented Okapi BM25+ lexical ranking with Robertson-Spärck Jones IDF and document length normalization against keyword stuffing.}
+        \resumeItem{Simulated Recursive XY-Cut layout linearization detecting multi-column gutter collapse and scanline interleaving hazards.}
+        \resumeItem{Built ISO 19005-2 PDF/A text layer auditor decomposing typographic ligatures (fi, fl, ffi) to guarantee exact ATS keyword retrieval.}
+        \resumeItem{Engineered career chronology parser standardizing dates to ISO format, merging overlapping roles, and flagging employment gaps >90 days.}
+        \resumeItem{Engineered EEOC and NYC LL 144 blind review PII redactor masking candidate contact data and graduation year age proxies.}
+        \resumeItem{Built hard vs soft skill taxonomy classifier computing Hard-to-Soft Ratios and penalizing >30\% soft buzzword dilution.}
+        \resumeItem{Engineered candidate contact auditor validating RFC 5322 email syntax, ITU-T E.164 phone numbering, and HTTPS link encryption.}
         \resumeItem{Deployed Reciprocal Rank Fusion (RRF) candidate ranking engine consolidating multi-system evaluations into normalized leaderboards.}
         \resumeItem{Built recruiter 6-second first-third viewport precision scanner quantifying accomplishment front-loading in upper 30\% viewport.}
-        \resumeItem{Engineered bidirectional technical acronym and synonym resolution graph (K8s $\leftrightarrow$ Kubernetes) eliminating false knockouts.}
-        \resumeItem{Implemented EEOC Four-Fifths selection rate disparity auditor verifying algorithmic safe harbor compliance per NYC LL 144.}
-        \resumeItem{Integrated Google Gemini 1.5 Flash via structured JSON schema enforcement for deterministic ATS scoring and gap analysis.}
         \resumeItem{Engineered deterministic Google/IBM XYZ mathematical scoring algorithm with seniority-calibrated weighting equations.}
         \resumeItem{Architected regulatory safe harbor engine verifying EU AI Act Art. 86 transparency and NYC LL 144 bias mitigation.}
-        \resumeItem{Engineered false-positive regex guards eliminating version numbers and network ports from metric inflation.}
-        \resumeItem{Designed Agent-Native BYOK prompt synthesis pipeline generating structured refactoring prompts for Claude and GPT-4o.}
-        \resumeItem{Built ATS layout linearization detector identifying multi-column whitespace gutters and table reading-order traps.}
-        \resumeItem{Engineered batch comparison engine analyzing and ranking up to 5 candidate resumes against target job descriptions.}
-        \resumeItem{Secured API endpoints against DoS with SlowAPI IP-based rate limiting and structured JSON request tracing.}
-        \resumeItem{Maintained 184 automated unit/integration tests with 90\% code coverage across parsers, ranking, and REST endpoints.}
+        \resumeItem{Engineered bidirectional technical acronym and synonym resolution graph (K8s $\leftrightarrow$ Kubernetes) eliminating false knockouts.}
+        \resumeItem{Maintained 210+ automated unit/integration tests with 90\%+ code coverage across parsers, ranking, and REST endpoints.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -139,58 +136,58 @@ architectural differentiation, mathematical rigor, and recruiter impact.
    "Designed an asynchronous FastAPI backend paired with React 19 and Vite to provide real-time, non-blocking
    resume audits in under 1.5 seconds with live health monitoring."
 
-2. 4-Pillar ATS Compliance Scoring:
-   "Architected an auditable 4-pillar compliance framework weighting Keywords (40%), Google/IBM XYZ Impact (30%),
-   Structural Parseability (15%), and Reading Density (15%), computing executive letter grades from A+ to D."
+2. 4-Pillar Compliance Scoring:
+   "Architected a mathematically auditable scoring engine evaluating resumes across Keywords, XYZ Impact,
+   Layout Parseability, and Word Budget, generating A+ to D executive grades."
 
-3. Reciprocal Rank Fusion (RRF) Engine:
-   "Implemented canonical Reciprocal Rank Fusion (k=60) to combine disparate ranking metrics (lexical keyword recall,
-   XYZ score, hygiene, and readability) into a single mathematically robust composite rank free of score scale distortion."
+3. Okapi BM25+ Lexical Retrieval:
+   "Integrated Okapi BM25+ with Robertson-Spärck Jones IDF and length normalization, preventing keyword stuffing
+   abuse via asymptotic frequency saturation while preserving floor relevance via delta."
 
-4. Recruiter 6-Second Viewport Scanner:
-   "Modeled the recruiter 6-to-7.4 second visual scan pattern by auditing whether top achievements and active verbs
-   are front-loaded into the upper 30% of page 1, diagnosing buried accomplishments before submission."
+4. Recursive XY-Cut Layout Linearization:
+   "Simulated multi-column document projection profiles and legacy scanline sort algorithms, preventing sidebar skills from
+   scrambling into job title syntax in older Workday and Taleo engines."
 
-5. Technical Acronym & Domain Synonym Graph:
-   "Engineered a bidirectional technical ontology graph resolving industry abbreviations (K8s <-> Kubernetes, TS <-> TypeScript)
-   to eliminate false negative knockouts when candidate resumes and job postings use alternate technical aliases."
+5. ISO 19005-2 PDF/A & Font CMap Integrity:
+   "Engineered font inspection detecting Unicode Private Use Area (PUA) codepoints and decomposing typographic ligatures
+   (fi, fl, ffi) to guarantee exact ASCII matching in ATS Boolean queries."
 
-6. Adverse Impact & EEOC Four-Fifths Safe Harbor:
-   "Architected an automated compliance auditor verifying EEOC Four-Fifths selection rate ratios (IR >= 0.80)
-   and certifying 100% deterministic rule arithmetic under NYC Local Law 144 AEDT bias audit standards."
+6. Career Chronology & Gap Detection:
+   "Engineered timeline interval merging to calculate accurate Years of Experience and detect career gaps >90 days,
+   eliminating knockout risks from ambiguous seasonal or relative date expressions."
 
-7. Generative AI Orchestration:
-   "Leveraged Gemini 1.5 Flash with strict JSON schema definitions, guaranteeing 100% type-safe, deterministic
-   responses for frontend scorecards and matrices."
+7. EEOC & NYC LL 144 Blind Review Redaction:
+   "Engineered deterministic PII sanitization redacting emails, phone numbers, names, locations, and graduation years
+   (age discrimination proxies) to produce unbiased blind dossiers certified under NYC LL 144."
 
-8. Google/IBM XYZ Mathematical Scoring:
-   "Formulated an algorithmic bullet-point evaluation engine implementing S_bullet = (0.25*S_X + 0.45*S_Y + 0.30*S_Z) - P,
-   penalizing passive duty phrases and missing metrics while calibrating expectations by seniority tier."
+8. Hard vs Soft Skill Taxonomy Segregation:
+   "Constructed an ontological skill classifier separating verifiable technical proficiencies from subjective soft buzzwords,
+   enforcing a Hard-to-Soft Ratio to penalize buzzword dilution exceeding 30%."
 
-9. Regulatory Safe Harbor & Governance:
-   "Implemented automated regulatory verification ensuring compliance with EU AI Act High-Risk recruitment transparency
-   (Article 86 Right to Explanation) and NYC Local Law 144 AEDT bias safe harbors by excluding demographic proxy variables."
+9. Contact Ingestion & Security Validation:
+   "Engineered contact coordinate verification against RFC 5322 email specs, ITU-T E.164 phone numbering, and HTTPS profile
+   encryption, screening out disposable inboxes and phishing shorteners."
 
-10. Metric False-Positive Disambiguation:
-    "Constructed defensive regex guards ensuring software versions like 'Python 3.11' and ports like 'Port 8080'
-    do not falsely register as impact metrics, while capturing true-positive binary accomplishments like 'zero downtime'."
+10. Reciprocal Rank Fusion (RRF):
+    "Formulated Reciprocal Rank Fusion (k=60) combining keyword recall, XYZ scoring, hygiene, and readability
+    into scale-invariant candidate leaderboards."
 
-11. Agent-Native BYOK Prompt Synthesis:
-    "Created an Agent-Native prompt synthesizer that transforms candidate gap audits into structured, zero-hallucination
-    markdown prompts for frontier LLMs (Claude 3.5, GPT-4o, Cursor) under a Bring-Your-Own-Key privacy model."
+11. Recruiter 6-Second Viewport Scanner:
+    "Created an eye-tracking viewport analyzer segmenting resumes at the 30% token boundary to quantify
+    accomplishment front-loading in the initial 6.0-7.4s glance."
 
-12. Layout Linearization & ATS Safety:
-    "Built a layout linearization engine in the document ingestion pipeline that flags multi-column gutters and
-    table borders to safeguard resumes against Workday and Taleo reading-order corruption."
+12. Google/IBM X-Y-Z Mathematical Scoring:
+    "Formulated a mathematical bullet evaluation equation weighting Action Verbs (25%), Metrics (45%), and Tooling (30%)
+    with automated deductions for passive duty statements (-40 pts) and verbosity (-25 pts)."
 
-13. Multi-Resume Batch Comparison:
-    "Created a multi-resume batch evaluator comparing up to 5 resumes simultaneously against a single job description,
-    generating an ATS leaderboard with score deltas."
+13. Regulatory Safe Harbor Verification:
+    "Certified 100% deterministic rule arithmetic complying with EU AI Act Article 86 Right to Explanation
+    and NYC Local Law 144 AEDT bias audit safe harbor."
 
-14. Defensive Rate Limiting & Observability:
-    "Configured SlowAPI rate limiters to guard against automated abuse, enforcing per-IP quotas on compute-heavy
-    endpoints with structured JSON logging and X-Request-ID correlation."
+14. Technical Acronym & Domain Synonym Graph:
+    "Constructed an ontology-backed bidirectional resolution graph translating abbreviations (K8s <-> Kubernetes)
+    to eliminate false candidate rejections caused by exact-string matching."
 
-15. Automated Testing Quality Gate:
-    "Enforced an 88%+ code coverage quality gate in pytest-cov across 133 unit and integration tests covering
-    parsers, ranking fusion, acronym expansion, security detectors, and asynchronous endpoints."
+15. Automated Testing & Pytest-Cov Quality Gate:
+    "Built and maintained 210+ unit and integration tests across 26 test modules, enforcing a 90%+ code coverage gate
+    to guarantee rock-solid regression resistance across all heuristic and API layers."

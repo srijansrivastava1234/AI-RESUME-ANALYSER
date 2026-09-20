@@ -214,8 +214,9 @@ def audit_skills(
         unsub_penalty = round((len(unsubstantiated_skills) / max(1, hard_count)) * 25.0, 1)
         penalties += unsub_penalty
         warnings.append(
-            f"{len(unsubstantiated_skills)} hard skills ({', '.join(unsubstantiated_skills[:5])}) are listed in skills but never "
-            f"substantiated in your Work Experience bullets. Recruiters and Ashby/Workday downrank unverified skills."
+            f"Unsubstantiated hard skills detected: {len(unsubstantiated_skills)} skills ({', '.join(unsubstantiated_skills[:5])}) "
+            f"are listed in your skills section but never substantiated in your Work Experience bullets. "
+            f"Recruiters and Ashby/Workday downrank unverified skills."
         )
 
     credibility_index = max(0.0, min(100.0, round(100.0 - penalties, 1)))

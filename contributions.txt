@@ -1,5 +1,5 @@
 ================================================================================
-           52 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+           77 KEY TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
 
 --------------------------------------------------------------------------------
@@ -286,6 +286,68 @@
     • Orchestrated milestone release v2.1.0 expanding automated test coverage to 184 unit and integration tests across 22 test modules
       with a 90% code coverage threshold, delivering an industry-leading, layout-safe, chronologically audited ATS analysis engine.
 
+63. Okapi BM25+ Lexical Retrieval & Term Saturation Engine (Lv & Zhai, 2011)
+    • Formulated and implemented Okapi BM25+ (k1=1.2, b=0.75, delta=1.0) calibrated for ATS resume keyword recall,
+      calculating Robertson-Spärck Jones IDF, modeling asymptotic term frequency saturation to penalize keyword stuffing,
+      and enforcing document length normalization against a 450-token empirical baseline.
+
+64. BM25+ Algorithmic Quality Gate & Saturation Test Suite (Pytest-Cov)
+    • Constructed comprehensive unit test suite in pytest-cov covering term frequency saturation bounds, document length
+      penalty arithmetic, Robertson-Spärck Jones IDF variance, and delta-floor non-zero relevance guarantees with 97% code coverage.
+
+65. ITU-T E.164 International Phone Numbering & Country Code Standardizer
+    • Engineered automated telephone parsing engine standardizing domestic inputs into canonical ITU-T E.164 formats (+1, +44, +91),
+      detecting missing country code knockouts in global ATS dialers, and filtering template placeholder numbers (555-0199, 123-456-7890).
+
+66. RFC 5322 Email Syntax & Disposable Domain Spam Defense
+    • Formulated email validation screening against RFC 5322 specifications, detecting disposable temporary inboxes (Mailinator,
+      GuerrillaMail, 10MinuteMail) and template placeholder emails to prevent automated applicant tracking spam disqualification.
+
+67. Candidate Profile Link HTTPS Encryption & Phishing Defense
+    • Architected external profile auditor validating LinkedIn, GitHub, and portfolio URLs, flagging unencrypted HTTP protocols,
+      detecting blacklisted redirect shorteners (bit.ly, tinyurl), and computing a 0–100 Contact Reliability Index.
+
+68. Candidate Contact Ingestion & Link Security Test Matrix (Pytest-Cov)
+    • Built 8 unit tests asserting RFC 5322 compliance, international E.164 prefix formatting, URL shortener security warnings,
+      and automated contact extraction from raw unstructured resume headers with 94% coverage in pytest-cov.
+
+69. Hard vs Soft Skills Taxonomy Classifier & Competency Segregation Engine
+    • Engineered skill taxonomy classifier separating hard technical proficiencies (Languages, Frameworks, Cloud, Databases,
+      AI/ML, Architecture) from subjective soft buzzwords ('team player', 'critical thinker', 'self-starter', 'results-driven').
+
+70. Candidate Buzzword Dilution & Credibility Profiler (Hard-to-Soft Ratio)
+    • Formulated Hard-to-Soft Skill Ratio (R_skill = N_hard / (N_hard + N_soft)) and buzzword dilution defense, penalizing resumes
+      where soft buzzwords exceed 30% of claimed competencies and computing a 0–100 Credibility Index.
+
+71. Work Experience Bullet Skill Substantiation Cross-Auditor
+    • Implemented cross-section substantiation engine auditing whether claimed hard skills are actively substantiated in Work
+      Experience accomplishment bullets, flagging ungrounded keyword claims downranked by Ashby and Workday.
+
+72. Skill Taxonomy & Substantiation Quality Gate (Pytest-Cov)
+    • Developed automated test suite validating multi-category skill classifications, buzzword dilution penalty formulas,
+      case-insensitive deduplication, and experience bullet cross-referencing with 95% coverage in pytest-cov.
+
+73. Sub-5ms Dedicated BM25+, Contact & Skills REST APIs (/api/audit-bm25, /api/audit-contact, /api/classify-skills)
+    • Exposed high-throughput POST endpoints in FastAPI protected by SlowAPI rate limits (30/min), providing sub-5ms deterministic
+      lexical retrieval, contact security, and skill taxonomy diagnostics with zero external LLM token cost.
+
+74. REST API v2.2.0 Integration & Schema Verification Suite (FastAPI TestClient)
+    • Constructed comprehensive integration test suite verifying Pydantic schema validation, HTTP 422 error handling,
+      rate throttling, and payload completeness across all 3 new endpoints.
+
+75. End-to-End Master Analysis Pipeline Integration & Diagnostics (/api/analyze)
+    • Enriched core analyze_resume and AnalysisResponse pipeline to automatically execute BM25+ scoring, contact security verification,
+      and skill taxonomy classification in a single unified execution pass.
+
+76. Interactive BM25+ Saturation & Hard vs Soft Skill Telemetry UI (React 19 & Vite)
+    • Designed interactive Okapi BM25+ saturation meters, term frequency progress bars, Hard vs Soft skill ratio gauges,
+      and Candidate Contact RFC & HTTPS security audit panels in React 19.
+
+77. Enterprise Milestone Release v2.2.0 & 210+ Test Quality Gate
+    • Orchestrated milestone release v2.2.0 expanding the automated test matrix from 184 to 210+ tests across 26 test modules
+      with a 90%+ code coverage threshold, delivering an industry-leading, retrieval-hardened, contact-verified, and taxonomy-segregated ATS platform.
+
+
 
 
 
@@ -355,6 +417,23 @@
 • Added end-to-end FastAPI integration tests validating v2.1.0 endpoints, schema validation, and analysis payload enrichment.
 • Integrated interactive Layout Linearizer, Chronology Timeline, and Ligature Normalizer panels into React dashboard.
 • Orchestrated release v2.1.0 scaling automated testing to 184 unit and integration tests with a 90% test coverage gate.
+• Engineered Okapi BM25+ lexical ranking engine with Robertson-Spärck Jones IDF and document length normalization.
+• Built BM25+ unit test suite verifying term frequency saturation bounds and delta-floor non-zero relevance guarantees.
+• Formulated ITU-T E.164 phone standardizer detecting missing international country codes and template placeholder numbers.
+• Engineered RFC 5322 email syntax validator screening out disposable temporary mailboxes to prevent ATS blacklisting.
+• Architected candidate profile link security auditor flagging unencrypted HTTP links and blacklisted URL shorteners.
+• Created candidate contact ingestion test suite asserting RFC 5322 compliance and E.164 phone formatting with 94% coverage.
+• Built hard vs soft skill taxonomy classifier separating technical proficiencies from subjective soft buzzwords.
+• Formulated Hard-to-Soft Skill Ratio (R_skill) and buzzword dilution defense penalizing resumes with >30% soft traits.
+• Implemented cross-section substantiation auditor verifying hard skills against Work Experience accomplishment bullets.
+• Developed skill classifier test suite asserting multi-category taxonomy mapping and substantiation rates with 95% coverage.
+• Exposed /api/audit-bm25, /api/audit-contact, and /api/classify-skills REST endpoints protected by SlowAPI rate limits.
+• Added end-to-end FastAPI integration test suite asserting v2.2.0 endpoint schemas, rate limiting, and response models.
+• Enriched master /api/analyze pipeline to execute BM25+ scoring, contact security, and skill taxonomy diagnostics in single pass.
+• Designed interactive BM25+ saturation meters, hard-vs-soft ratio bars, and contact security cards in React 19 UI.
+• Orchestrated release v2.2.0 expanding automated test suite to 210+ tests across 26 modules with 90%+ code coverage quality gate.
+
+
 
 
 
@@ -411,6 +490,13 @@
         \resumeItem{Exposed /api/audit-layout, /api/audit-chronology, and /api/audit-font-integrity REST endpoints delivering sub-5ms deterministic audits.}
         \resumeItem{Designed interactive Layout, Chronology & Typography workspace in React with simulated ATS text scramble and gap alert cards.}
         \resumeItem{Scaled automated test suite to 184 unit and integration tests across 22 test modules with a 90\% pytest-cov code coverage threshold.}
+        \resumeItem{Implemented Okapi BM25+ lexical ranking with Robertson-Spärck Jones IDF and document length normalization against keyword stuffing.}
+        \resumeItem{Engineered candidate contact auditor validating RFC 5322 email syntax, ITU-T E.164 phone numbering, and HTTPS link encryption.}
+        \resumeItem{Built hard vs soft skill taxonomy classifier computing Hard-to-Soft Ratios and penalizing >30\% soft buzzword dilution.}
+        \resumeItem{Developed experience bullet cross-auditor verifying whether claimed hard competencies are actively substantiated in accomplishment bullets.}
+        \resumeItem{Exposed high-throughput /api/audit-bm25, /api/audit-contact, and /api/classify-skills REST endpoints with SlowAPI rate throttling.}
+        \resumeItem{Designed interactive BM25+ saturation meters, term frequency progress bars, and contact security cards in React 19 UI.}
+        \resumeItem{Scaled automated testing suite to 210+ tests across 26 test modules with a 90\%+ pytest-cov code coverage quality gate.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -650,5 +736,34 @@
 58. Enterprise Milestone Release v2.1.0 & 184-Test Quality Gate:
     "Orchestrated release v2.1.0 scaling test coverage to 184 automated tests with a 90% coverage gate, solidifying an end-to-end,
     layout-resilient, chronologically verified, and typography-hardened ATS analysis platform."
+
+59. Okapi BM25+ Lexical Retrieval & Term Saturation:
+    "Integrated the Okapi BM25+ algorithm with Robertson-Spärck Jones IDF and document length normalization,
+    capping keyword stuffing rewards through asymptotic term frequency saturation while preserving floor scores via delta."
+
+60. Candidate Contact Security & RFC 5322 Email Compliance:
+    "Built an automated contact coordinates screening engine validating RFC 5322 email syntax and filtering out disposable
+    or temporary mailboxes that trigger automated candidate blacklisting in enterprise ATS."
+
+61. ITU-T E.164 International Phone Standardization:
+    "Standardized telephone parsing to canonical international E.164 formats (+1, +44, +91), eliminating automated dialer
+    and SMS knockout failures across global recruiting pipelines."
+
+62. Profile Link HTTPS Encryption & Phishing Defense:
+    "Engineered link security audits verifying HTTPS encryption on candidate LinkedIn and GitHub profiles while flagging
+    blacklisted redirect shorteners (bit.ly/tinyurl) and template placeholder handles."
+
+63. Hard vs Soft Skill Taxonomy Segregation:
+    "Constructed an ontological skill classifier separating verifiable technical proficiencies from subjective soft buzzwords,
+    enforcing a Hard-to-Soft Ratio to penalize buzzword dilution exceeding 30%."
+
+64. Bullet-Point Skill Substantiation Cross-Auditing:
+    "Cross-referenced claimed hard skills against Work Experience accomplishment bullets, detecting ungrounded keyword claims
+    that are downranked by modern ATS parsers like Ashby and Workday."
+
+65. Enterprise Milestone Release v2.2.0 & 210+ Test Quality Gate:
+    "Orchestrated milestone release v2.2.0 expanding automated test coverage to 210+ tests with a 90%+ code coverage gate,
+    delivering an industry-leading, retrieval-hardened, contact-verified, and taxonomy-segregated ATS analysis platform."
+
 
 

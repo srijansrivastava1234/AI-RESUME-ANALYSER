@@ -9,7 +9,7 @@ def test_health_check_version_v21():
     response = client.get("/api/health")
     assert response.status_code == 200
     data = response.json()
-    assert data["version"] == "2.1.0"
+    assert data["version"] == APP_VERSION
     assert data["status"] == "healthy"
 
 def test_audit_layout_endpoint_success():

@@ -42,7 +42,7 @@ graph TD
 | **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction and normalization |
 | **Security & Limits** | SlowAPI | IP-based rate limiting and DoS prevention |
 | **Observability** | Python Logging + JSONFormatter | Structured JSON logging with `X-Request-ID` correlation |
-| **Testing** | Pytest + Pytest-Cov + HTTPX | 184 automated tests with 90% code coverage gate |
+| **Testing** | Pytest + Pytest-Cov + HTTPX | 221 automated tests with 90% code coverage gate |
 | **Frontend** | React 19 + Vite | Glassmorphic dark dashboard & comparison leaderboard |
 | **Styling** | Vanilla CSS3 (Glassmorphism) | Zero-dependency bespoke modern design system |
 | **Icons** | Lucide React | Clean, scalable icon system |
@@ -194,6 +194,9 @@ If you are showcasing this project on your resume or portfolio, here are 25 impa
 | `/api/audit-layout` | `POST` | 30 / min | Simulate Recursive XY-Cut layout linearization and scanline reading-order hazards |
 | `/api/audit-chronology` | `POST` | 30 / min | Audit career timeline, date standardization, interval merging, and employment gaps (>90d) |
 | `/api/audit-font-integrity` | `POST` | 30 / min | Audit ISO 19005-2 PDF/A text layer, font CMap integrity, and decompose typographic ligatures |
+| `/api/audit-bm25` | `POST` | 30 / min | Compute Okapi BM25+ lexical ranking score with term saturation and document length normalization |
+| `/api/audit-contact` | `POST` | 30 / min | Audit candidate contact coordinates against RFC 5322, ITU-T E.164, and HTTPS link security |
+| `/api/classify-skills` | `POST` | 30 / min | Classify hard vs soft competencies, detect buzzword dilution (>30%), and check experience substantiation |
 | `/api/health` | `GET` | Unlimited | Health check endpoint returning supported formats and service status |
 
 ---

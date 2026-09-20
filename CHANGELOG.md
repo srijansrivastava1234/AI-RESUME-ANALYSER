@@ -4,6 +4,19 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-09-20
+
+### Added
+- **Okapi BM25+ Lexical Retrieval & Term Saturation Engine**: Implemented `app.bm25_scorer` providing Okapi BM25+ ($k_1=1.2, b=0.75, \delta=1.0$) with Robertson-Spärck Jones IDF, modeling asymptotic term frequency saturation to penalize keyword stuffing, and enforcing length normalization against a 450-token empirical baseline with granular per-term score contribution breakdowns.
+- **Candidate Contact Coordinates & Link Security Auditor**: Formulated `app.contact_validator` validating emails against RFC 5322 specifications, screening out disposable temporary mailboxes (Mailinator, GuerrillaMail), standardizing international phone numbers to ITU-T E.164 (`+1`, `+91`, `+44`), and auditing external profile links for HTTPS encryption and blacklisted URL redirect shorteners.
+- **Hard vs Soft Skills Taxonomy Classifier & Buzzword Dilution Defense**: Architected `app.skill_classifier` separating verifiable technical proficiencies from subjective soft buzzwords ('team player', 'fast learner', 'self-starter'), calculating the Hard-to-Soft Ratio ($R_{skill}$), flagging buzzword dilution (>30% soft), and cross-auditing hard skills against Work Experience accomplishment bullets.
+- **Dedicated High-Throughput REST APIs**: Exposed `POST /api/audit-bm25`, `POST /api/audit-contact`, and `POST /api/classify-skills` endpoints in `app.main` with SlowAPI rate throttling (30/minute), and enriched core `POST /api/analyze` response payloads to seamlessly return BM25+, contact security, and skill taxonomy diagnostics.
+- **Interactive BM25+ Relevance, Contact Security & Skill Taxonomy UI**: Added Okapi BM25+ saturation meters and Hard vs Soft skill ratio breakdown cards in `TabsPanel.jsx`, alongside an RFC 5322 and HTTPS link security audit section in `HygieneCard.jsx`.
+- **Automated Test Suite Scaling from 184 to 221 Tests**: Created `backend/tests/test_bm25_scorer.py`, `backend/tests/test_contact_validator.py`, `backend/tests/test_skill_classifier.py`, `backend/tests/test_api_v22.py`, and `backend/tests/test_analyzer_v22.py`, scaling test coverage to 221 unit and integration tests across 26 test modules with a 90% codebase coverage threshold in pytest-cov.
+- **Expanded Master 77 Key Technical Contributions Inventory**: Documented 15 new technical contributions (#63 to #77) in `contributions.txt`, refreshed `contributions_top15.txt`, and updated system architecture and metrics in `README.md`.
+
+---
+
 ## [2.1.0] - 2026-09-18
 
 ### Added

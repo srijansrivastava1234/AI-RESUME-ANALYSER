@@ -37,6 +37,9 @@ from app.redaction import anonymize_resume_for_blind_audit
 from app.layout_linearizer import simulate_recursive_xy_cut
 from app.chronology import audit_career_chronology
 from app.font_integrity import audit_font_cmap_integrity
+from app.bm25_scorer import compute_bm25_plus
+from app.contact_validator import audit_candidate_contact
+from app.skill_classifier import audit_skills
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -114,6 +117,20 @@ class ChronologyAuditRequest(BaseModel):
 
 class FontIntegrityRequest(BaseModel):
     text: str = Field(..., min_length=1, description="The resume text to audit for ISO 19005-2 PDF/A text layer and ligature health")
+
+class BM25AuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="The resume text to evaluate using BM25+")
+    target_keywords: List[str] = Field(..., description="List of target keywords or job competencies")
+
+class ContactAuditRequest(BaseModel):
+    email: Optional[str] = Field(None, description="Candidate email address")
+    phone: Optional[str] = Field(None, description="Candidate phone number")
+    links: Optional[List[str]] = Field(None, description="Candidate profile URLs (LinkedIn, GitHub, Portfolio)")
+    text: Optional[str] = Field(None, description="Optional raw resume text for automatic contact extraction")
+
+class SkillClassifyRequest(BaseModel):
+    skills: List[str] = Field(..., description="List of candidate skills to classify")
+    experience_text: Optional[str] = Field(None, description="Optional work experience text for substantiation cross-check")
 
 
 app = FastAPI(
@@ -649,6 +666,51 @@ def audit_font_integrity_endpoint(request: Request, payload: FontIntegrityReques
     except Exception as err:
         logger.error(f"Error in audit font integrity endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit font integrity: {str(err)}")
+
+@app.post("/api/audit-bm25")
+@limiter.limit("30/minute")
+def audit_bm25_endpoint(request: Request, payload: BM25AuditRequest):
+    """
+    Computes Okapi BM25+ relevance score with term frequency saturation and length normalization.
+    """
+    try:
+        result = compute_bm25_plus(payload.resume_text, payload.target_keywords)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit BM25 endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit BM25+ relevance: {str(err)}")
+
+@app.post("/api/audit-contact")
+@limiter.limit("30/minute")
+def audit_contact_endpoint(request: Request, payload: ContactAuditRequest):
+    """
+    Audits candidate contact coordinates against RFC 5322, ITU-T E.164, and HTTPS link security.
+    """
+    try:
+        result = audit_candidate_contact(
+            email=payload.email,
+            phone=payload.phone,
+            links=payload.links,
+            text=payload.text
+        )
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit contact endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit candidate contact: {str(err)}")
+
+@app.post("/api/classify-skills")
+@limiter.limit("30/minute")
+def classify_skills_endpoint(request: Request, payload: SkillClassifyRequest):
+    """
+    Classifies skills into hard vs soft competencies, detects buzzword dilution, and checks experience substantiation.
+    """
+    try:
+        result = audit_skills(payload.skills, experience_text=payload.experience_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in classify skills endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to classify candidate skills: {str(err)}")
+
 
 
 

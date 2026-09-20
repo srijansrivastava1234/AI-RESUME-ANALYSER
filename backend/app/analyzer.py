@@ -4,6 +4,9 @@ import logging
 import google.generativeai as genai
 from typing import Optional
 from app.hygiene import audit_resume_hygiene
+from app.bm25_scorer import compute_bm25_plus
+from app.contact_validator import audit_candidate_contact
+from app.skill_classifier import audit_skills
 
 logger = logging.getLogger("ResumeAnalyzer")
 
@@ -238,7 +241,10 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
             }
         ],
         "job_compatibility": job_compat,
-        "formatting_hygiene": audit_resume_hygiene(resume_text)
+        "formatting_hygiene": audit_resume_hygiene(resume_text),
+        "bm25_audit": compute_bm25_plus(resume_text, detected + missing),
+        "contact_audit": audit_candidate_contact(text=resume_text),
+        "skill_classification": audit_skills(detected, experience_text=resume_text)
     }
 
 def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> dict:
@@ -272,8 +278,14 @@ def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> d
         # Parse output to ensure validity
         analysis_data = json.loads(result_json)
         analysis_data["formatting_hygiene"] = audit_resume_hygiene(resume_text)
+        detected_kw = analysis_data.get("keywords", {}).get("detected", [])
+        missing_kw = analysis_data.get("keywords", {}).get("missing", [])
+        analysis_data["bm25_audit"] = compute_bm25_plus(resume_text, detected_kw + missing_kw)
+        analysis_data["contact_audit"] = audit_candidate_contact(text=resume_text)
+        analysis_data["skill_classification"] = audit_skills(detected_kw, experience_text=resume_text)
         return analysis_data
         
     except Exception as e:
         logger.error(f"Gemini API invocation error: {str(e)}. Falling back to mock data.")
         return generate_mock_analysis(resume_text, job_description)
+

@@ -286,6 +286,20 @@ async def analyze_resume_endpoint(
         analysis_report["career_chronology"] = audit_career_chronology(extracted_text)
         analysis_report["font_integrity"] = audit_font_cmap_integrity(extracted_text)
         
+        # Ensure v2.2.0 diagnostics are attached
+        if "bm25_audit" not in analysis_report:
+            target_kws = (
+                compliance_audit.get("pillars", {}).get("keywords", {}).get("detected_keywords", []) +
+                compliance_audit.get("pillars", {}).get("keywords", {}).get("missing_keywords", [])
+            )
+            analysis_report["bm25_audit"] = compute_bm25_plus(extracted_text, target_kws)
+        if "contact_audit" not in analysis_report:
+            analysis_report["contact_audit"] = audit_candidate_contact(text=extracted_text)
+        if "skill_classification" not in analysis_report:
+            detected_skills = analysis_report.get("keywords", {}).get("detected", [])
+            analysis_report["skill_classification"] = audit_skills(detected_skills, experience_text=extracted_text)
+
+        
         total_duration = time.time() - start_time
         logger.info(f"[{request_id}] Analysis completed in {analysis_duration:.3f}s. Total time: {total_duration:.3f}s")
         

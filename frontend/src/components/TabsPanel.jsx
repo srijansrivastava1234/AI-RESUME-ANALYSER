@@ -478,7 +478,10 @@ export default function TabsPanel({
           {report.formatting_hygiene && (
             <HygieneCard hygiene={{
               ...report.formatting_hygiene,
-              viewport: report.viewport_audit || report.formatting_hygiene.viewport
+              viewport: report.viewport_audit || report.formatting_hygiene.viewport,
+              section_flow: report.section_flow || report.formatting_hygiene.section_flow,
+              action_verbs: report.action_verbs || report.formatting_hygiene.action_verbs,
+              page_budget: report.page_budget || report.formatting_hygiene.page_budget
             }} />
           )}
 

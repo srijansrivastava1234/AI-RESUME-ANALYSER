@@ -414,6 +414,124 @@ export default function HygieneCard({ hygiene }) {
             )}
           </div>
 
+          {/* Section Flow & Structural Order */}
+          {hygiene.section_flow && (
+            <div style={{
+              background: 'rgba(99, 102, 241, 0.04)',
+              border: '1px solid rgba(99, 102, 241, 0.2)',
+              borderRadius: '8px',
+              padding: '0.75rem 1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Eye style={{ width: '16px', height: '16px', color: '#818cf8' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    Canonical Section Order & Sequence Flow
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  color: hygiene.section_flow.flow_score >= 80 ? 'var(--success)' : 'var(--warning)',
+                  background: 'rgba(99, 102, 241, 0.1)',
+                  padding: '2px 8px',
+                  borderRadius: '10px'
+                }}>
+                  Score: {hygiene.section_flow.flow_score}/100
+                </span>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                Sequence: {hygiene.section_flow.detected_sequence?.join(' → ') || 'Standard'}
+              </div>
+            </div>
+          )}
+
+          {/* Action Verb Dynamism & Variety */}
+          {hygiene.action_verbs && (
+            <div style={{
+              background: 'rgba(168, 85, 247, 0.04)',
+              border: '1px solid rgba(168, 85, 247, 0.2)',
+              borderRadius: '8px',
+              padding: '0.75rem 1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <Target style={{ width: '16px', height: '16px', color: '#c084fc' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    Action Verb Dynamism & Fatigue Scorer
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  color: hygiene.action_verbs.action_verb_score >= 80 ? 'var(--success)' : 'var(--warning)',
+                  background: 'rgba(168, 85, 247, 0.1)',
+                  padding: '2px 8px',
+                  borderRadius: '10px'
+                }}>
+                  Variety: {Math.round((hygiene.action_verbs.variety_ratio || 0) * 100)}% ({hygiene.action_verbs.action_verb_score}/100)
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', fontSize: '0.72rem' }}>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.35rem 0.5rem', borderRadius: '4px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Executive: </span>
+                  <strong style={{ color: '#a855f7' }}>{hygiene.action_verbs.tier_breakdown?.executive || 0}</strong>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.35rem 0.5rem', borderRadius: '4px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Engineering: </span>
+                  <strong style={{ color: '#38bdf8' }}>{hygiene.action_verbs.tier_breakdown?.engineering || 0}</strong>
+                </div>
+                <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.35rem 0.5rem', borderRadius: '4px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>Weak/Passive: </span>
+                  <strong style={{ color: hygiene.action_verbs.tier_breakdown?.weak > 0 ? 'var(--danger)' : 'var(--success)' }}>
+                    {hygiene.action_verbs.tier_breakdown?.weak || 0}
+                  </strong>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Multi-Page Visual Budget & Spillover Guard */}
+          {hygiene.page_budget && (
+            <div style={{
+              background: 'rgba(16, 185, 129, 0.04)',
+              border: '1px solid rgba(16, 185, 129, 0.2)',
+              borderRadius: '8px',
+              padding: '0.75rem 1rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <ShieldCheck style={{ width: '16px', height: '16px', color: '#34d399' }} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+                    Multi-Page Visual Budget & Spillover Guard
+                  </span>
+                </div>
+                <span style={{
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  color: hygiene.page_budget.spillover_detected ? 'var(--danger)' : 'var(--success)',
+                  background: hygiene.page_budget.spillover_detected ? 'rgba(239, 68, 68, 0.15)' : 'rgba(16, 185, 129, 0.1)',
+                  padding: '2px 8px',
+                  borderRadius: '10px'
+                }}>
+                  {hygiene.page_budget.metrics?.fractional_pages} Pages ({hygiene.page_budget.spillover_detected ? 'Spillover Hazard' : 'Balanced'})
+                </span>
+              </div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                Estimated {hygiene.page_budget.metrics?.total_words || 0} words across {hygiene.page_budget.metrics?.estimated_rendered_lines || 0} rendered lines.
+              </div>
+            </div>
+          )}
+
 
 
           {/* Hygiene Recommendations */}

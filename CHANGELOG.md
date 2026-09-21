@@ -4,6 +4,19 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2026-09-21
+
+### Added
+- **ATS Section Flow & Structural Ordering Auditor**: Implemented `app.section_flow` evaluating sequential resume flow against enterprise ATS parsing heuristics and recruiter F-pattern scanline reading ergonomics, automatically adjusting precedence rules for Early-Career vs Experienced candidate profiles.
+- **Action Verb Dynamism & Repetitive Fatigue Scorer**: Engineered `app.action_verb_analyzer` computing the Action Verb Variety Ratio (AVVR), categorizing opening verbs into Executive, Engineering, Operational, and Weak/Passive tiers, penalizing repetitive opening fatigue (>2x), and providing dynamic power-verb replacements.
+- **Multi-Page Visual Budget & Spillover Hazard Analyzer**: Formulated `app.page_budget_analyzer` calculating physical line count approximations and token density budgets against 1-page and 2-page targets, detecting dangerous trailing spillover hazards (1.05–1.20 pages) that create near-empty orphan pages in recruiter PDF previewers.
+- **Dedicated REST API Endpoints & Master Analyzer Pipeline Enrichment**: Exposed `POST /api/audit-section-flow`, `POST /api/audit-action-verbs`, and `POST /api/audit-page-budget` in `app.main` with SlowAPI rate throttling (30/minute), and seamlessly enriched the primary `POST /api/analyze` pipeline to return comprehensive section flow, verb dynamism, and page budget telemetry.
+- **Interactive Section Flow, Action Verb & Page Budget UI Workspace**: Added interactive visual cards in `HygieneCard.jsx` and `TabsPanel.jsx` displaying sequence flow breadcrumbs, action verb tier distribution badges, variety percentages, and multi-page budget safety indicators.
+- **Automated Test Suite Expansion to 237 Tests with 90% Code Coverage**: Added `test_section_flow.py`, `test_action_verb_analyzer.py`, `test_page_budget_analyzer.py`, and `test_api_v23.py`, scaling the test suite from 221 to 237 tests with 90% codebase coverage in pytest-cov.
+- **Expanded Master Technical Contributions Inventory**: Documented 8 new technical achievements in `contributions.txt` covering section flow sequence, verb fatigue algorithms, and multi-page layout budgeting.
+
+---
+
 ## [2.2.0] - 2026-09-20
 
 ### Added

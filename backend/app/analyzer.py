@@ -7,6 +7,9 @@ from app.hygiene import audit_resume_hygiene
 from app.bm25_scorer import compute_bm25_plus
 from app.contact_validator import audit_candidate_contact
 from app.skill_classifier import audit_skills
+from app.section_flow import audit_section_flow
+from app.action_verb_analyzer import audit_action_verbs
+from app.page_budget_analyzer import audit_page_budget
 
 logger = logging.getLogger("ResumeAnalyzer")
 
@@ -244,7 +247,10 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
         "formatting_hygiene": audit_resume_hygiene(resume_text),
         "bm25_audit": compute_bm25_plus(resume_text, detected + missing),
         "contact_audit": audit_candidate_contact(text=resume_text),
-        "skill_classification": audit_skills(detected, experience_text=resume_text)
+        "skill_classification": audit_skills(detected, experience_text=resume_text),
+        "section_flow": audit_section_flow(resume_text),
+        "action_verbs": audit_action_verbs(resume_text),
+        "page_budget": audit_page_budget(resume_text)
     }
 
 def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> dict:
@@ -283,6 +289,9 @@ def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> d
         analysis_data["bm25_audit"] = compute_bm25_plus(resume_text, detected_kw + missing_kw)
         analysis_data["contact_audit"] = audit_candidate_contact(text=resume_text)
         analysis_data["skill_classification"] = audit_skills(detected_kw, experience_text=resume_text)
+        analysis_data["section_flow"] = audit_section_flow(resume_text)
+        analysis_data["action_verbs"] = audit_action_verbs(resume_text)
+        analysis_data["page_budget"] = audit_page_budget(resume_text)
         return analysis_data
         
     except Exception as e:

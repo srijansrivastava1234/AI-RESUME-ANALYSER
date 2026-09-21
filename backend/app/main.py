@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List
 
-APP_VERSION = "2.2.0"
+APP_VERSION = "2.3.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 
@@ -40,6 +40,9 @@ from app.font_integrity import audit_font_cmap_integrity
 from app.bm25_scorer import compute_bm25_plus
 from app.contact_validator import audit_candidate_contact
 from app.skill_classifier import audit_skills
+from app.section_flow import audit_section_flow
+from app.action_verb_analyzer import audit_action_verbs
+from app.page_budget_analyzer import audit_page_budget
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -131,6 +134,17 @@ class ContactAuditRequest(BaseModel):
 class SkillClassifyRequest(BaseModel):
     skills: List[str] = Field(..., description="List of candidate skills to classify")
     experience_text: Optional[str] = Field(None, description="Optional work experience text for substantiation cross-check")
+
+class SectionFlowRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="Resume text to evaluate section order and structural flow")
+    is_early_career: Optional[bool] = Field(False, description="Whether to benchmark against early career / new grad profile")
+
+class ActionVerbRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="Resume text to evaluate action verb variety and fatigue")
+
+class PageBudgetRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="Resume text to evaluate page budget and spillover")
+    target_pages: Optional[int] = Field(1, description="Target page budget (1 or 2)")
 
 
 app = FastAPI(
@@ -724,6 +738,45 @@ def classify_skills_endpoint(request: Request, payload: SkillClassifyRequest):
     except Exception as err:
         logger.error(f"Error in classify skills endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to classify candidate skills: {str(err)}")
+
+@app.post("/api/audit-section-flow")
+@limiter.limit("30/minute")
+def audit_section_flow_endpoint(request: Request, payload: SectionFlowRequest):
+    """
+    Audits resume section sequence, identifying jarring inversions, misplaced sections, or buried qualifications.
+    """
+    try:
+        result = audit_section_flow(payload.resume_text, is_early_career=payload.is_early_career)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit section flow endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit section flow: {str(err)}")
+
+@app.post("/api/audit-action-verbs")
+@limiter.limit("30/minute")
+def audit_action_verbs_endpoint(request: Request, payload: ActionVerbRequest):
+    """
+    Audits resume bullet action verbs for variety, tier distribution, and repetitive fatigue.
+    """
+    try:
+        result = audit_action_verbs(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit action verbs endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit action verbs: {str(err)}")
+
+@app.post("/api/audit-page-budget")
+@limiter.limit("30/minute")
+def audit_page_budget_endpoint(request: Request, payload: PageBudgetRequest):
+    """
+    Audits page budget adherence and flags dangerous trailing spillover.
+    """
+    try:
+        result = audit_page_budget(payload.resume_text, target_pages=payload.target_pages or 1)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit page budget endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit page budget: {str(err)}")
 
 
 

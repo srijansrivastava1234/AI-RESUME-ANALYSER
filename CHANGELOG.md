@@ -4,6 +4,26 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-09-22
+
+### Added
+- **Flesch-Kincaid & Gunning Fog Readability Metrics Engine**: Implemented `app.readability` calculating Flesch Reading Ease, Flesch-Kincaid Grade Level, and Gunning Fog Index to evaluate linguistic clarity and target the optimal Grade 8-12 executive comprehension sweet spot.
+- **Passive Voice Density & Active Voice Ratio Detector**: Engineered `app.voice_detector` evaluating syntactic constructions to enforce a >=90% Active Voice Ratio and provide actionable power verb transformation recommendations.
+- **Weak Filler Words & Corporate Cliché Eliminator**: Created `app.cliche_detector` identifying overused buzzwords ('rockstar', 'team player', 'outside the box') and mapping them directly to substantiated technical alternatives.
+- **Multi-Dimensional Metric Diversity Classifier**: Developed `app.metric_diversity` categorizing quantified accomplishments into Financial, Percentage, Scale/Volume, Velocity/Latency, and Leadership dimensions to evaluate outcome breadth.
+- **Enterprise ATS File Naming Standard Auditor**: Formulated `app.filename_auditor` screening against whitespace breakage, special characters (`#`, `%`), and generic naming, producing standardized canonical filenames (`FirstName_LastName_Resume.pdf`).
+- **Skill Recency & Career Tenure Decay Engine**: Built `app.skill_recency` differentiating contemporary active frameworks (Docker, FastAPI, Kubernetes) from decayed legacy tech stacks (AngularJS 1.x, ColdFusion, Flash).
+- **Bullet Point Sweet-Spot Scannability Auditor**: Implemented `app.bullet_length` auditing word counts against the 15-25 words sweet spot to maximize recruiter eye-tracking engagement.
+- **Executive Value Summary vs Outdated Objective Classifier**: Developed `app.summary_classifier` identifying outdated candidate-centric Objective Statements and transforming them into modern Value Propositions.
+- **Confidential Salary & CTC Disclosure Prevention**: Engineered `app.salary_detector` detecting inadvertent personal compensation, CTC, or hourly wage disclosures.
+- **Canonical Portfolio & Digital Identity Link Security Auditor**: Architected `app.portfolio_validator` verifying HTTPS encryption on LinkedIn and GitHub handles and flagging unpopulated placeholder links.
+- **10 Dedicated FastAPI REST Endpoints**: Exposed `/api/audit-readability`, `/api/audit-voice`, `/api/audit-cliches`, `/api/audit-metric-diversity`, `/api/audit-filename`, `/api/audit-skill-recency`, `/api/audit-bullet-lengths`, `/api/audit-summary-style`, `/api/audit-salary-disclosures`, and `/api/audit-portfolio-links` with SlowAPI rate limiting.
+- **Master Analyzer Pipeline Deep Diagnostic Integration**: Seamlessly integrated all 10 diagnostic modules into the primary `analyze_resume` pipeline.
+- **Automated Test Suite Expansion to 267+ Tests**: Created 10 new test suites (`test_readability.py`, `test_voice_detector.py`, `test_cliche_detector.py`, `test_metric_diversity.py`, `test_filename_auditor.py`, `test_skill_recency.py`, `test_bullet_length.py`, `test_summary_classifier.py`, `test_salary_detector.py`, `test_portfolio_validator.py`, `test_api_v24.py`, `test_analyzer_v24.py`).
+- **Expanded Master Technical Contributions Inventory**: Documented 15 new achievements (#78 to #92) in `contributions.txt` and refreshed `contributions_top15.txt`.
+
+---
+
 ## [2.3.0] - 2026-09-21
 
 ### Added

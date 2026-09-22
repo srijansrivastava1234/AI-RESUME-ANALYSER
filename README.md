@@ -42,7 +42,7 @@ graph TD
 | **Parser** | PyPDF + python-docx | PDF, DOCX, and TXT text extraction and normalization |
 | **Security & Limits** | SlowAPI | IP-based rate limiting and DoS prevention |
 | **Observability** | Python Logging + JSONFormatter | Structured JSON logging with `X-Request-ID` correlation |
-| **Testing** | Pytest + Pytest-Cov + HTTPX | 237 automated tests with 90% code coverage gate |
+| **Testing** | Pytest + Pytest-Cov + HTTPX | 277+ automated tests with 90% code coverage gate |
 | **Frontend** | React 19 + Vite | Glassmorphic dark dashboard & comparison leaderboard |
 | **Styling** | Vanilla CSS3 (Glassmorphism) | Zero-dependency bespoke modern design system |
 | **Icons** | Lucide React | Clean, scalable icon system |

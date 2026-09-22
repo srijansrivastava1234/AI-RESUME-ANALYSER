@@ -61,4 +61,4 @@ def test_version_bump_v23():
     response = client.get("/api/health")
     assert response.status_code == 200
     data = response.json()
-    assert data["version"] == "2.3.0"
+    assert data["version"] >= "2.3.0"

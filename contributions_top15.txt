@@ -75,8 +75,8 @@ architectural differentiation, mathematical rigor, and recruiter impact.
       (e.g., K8s <-> Kubernetes, TS <-> TypeScript, AWS <-> Amazon Web Services, Postgres <-> PostgreSQL)
       to eliminate candidate knockout caused by rigid ATS exact-string matching filters.
 
-15. Comprehensive Automated Testing Matrix (210+ Tests, 90%+ Code Coverage Gate)
-    • Scaled automated test suite to 210+ unit and integration tests across 26 test modules, enforcing
+15. Automated Testing & Pytest-Cov Quality Gate (260+ Tests, 90%+ Code Coverage Gate)
+    • Scaled automated test suite to 260+ unit, integration, and API tests across 35 test modules, enforcing
       a 90%+ codebase coverage threshold in pytest-cov across parsers, ranking heuristics, and asynchronous REST APIs.
 
 
@@ -96,9 +96,9 @@ architectural differentiation, mathematical rigor, and recruiter impact.
 • Deployed Reciprocal Rank Fusion (RRF) candidate ranking engine consolidating multi-system evaluations into normalized leaderboards.
 • Built recruiter 6-second first-third viewport precision scanner quantifying accomplishment front-loading in upper 30% viewport.
 • Formulated deterministic Google/IBM XYZ mathematical scoring equation auditing action verbs, metrics, and tooling with seniority calibration.
-• Architected regulatory safe harbor audit verifying EU AI Act Article 86 Right to Explanation and NYC LL 144 AEDT bias safeguards.
+• Formulated Flesch-Kincaid & Gunning Fog readability scoring engine targeting Grade 8-12 executive comprehension.
 • Engineered bidirectional technical acronym and domain synonym graph (K8s <-> Kubernetes) eliminating false ATS knockouts.
-• Maintained 210+ automated test cases with 90%+ pytest-cov code coverage across parsers, mathematical heuristics, and REST APIs.
+• Maintained 260+ automated test cases with 90%+ pytest-cov code coverage across parsers, mathematical heuristics, and REST APIs.
 
 
 --------------------------------------------------------------------------------
@@ -121,9 +121,9 @@ architectural differentiation, mathematical rigor, and recruiter impact.
         \resumeItem{Deployed Reciprocal Rank Fusion (RRF) candidate ranking engine consolidating multi-system evaluations into normalized leaderboards.}
         \resumeItem{Built recruiter 6-second first-third viewport precision scanner quantifying accomplishment front-loading in upper 30\% viewport.}
         \resumeItem{Engineered deterministic Google/IBM XYZ mathematical scoring algorithm with seniority-calibrated weighting equations.}
-        \resumeItem{Architected regulatory safe harbor engine verifying EU AI Act Art. 86 transparency and NYC LL 144 bias mitigation.}
+        \resumeItem{Formulated Flesch-Kincaid and Gunning Fog readability metrics engine ensuring optimal Grade 8--12 executive clarity.}
         \resumeItem{Engineered bidirectional technical acronym and synonym resolution graph (K8s $\leftrightarrow$ Kubernetes) eliminating false knockouts.}
-        \resumeItem{Maintained 210+ automated unit/integration tests with 90\%+ code coverage across parsers, ranking, and REST endpoints.}
+        \resumeItem{Maintained 260+ automated unit/integration tests with 90\%+ code coverage across parsers, ranking, and REST endpoints.}
       \resumeItemListEnd
 \resumeSubHeadingListEnd
 
@@ -180,14 +180,14 @@ architectural differentiation, mathematical rigor, and recruiter impact.
     "Formulated a mathematical bullet evaluation equation weighting Action Verbs (25%), Metrics (45%), and Tooling (30%)
     with automated deductions for passive duty statements (-40 pts) and verbosity (-25 pts)."
 
-13. Regulatory Safe Harbor Verification:
-    "Certified 100% deterministic rule arithmetic complying with EU AI Act Article 86 Right to Explanation
-    and NYC Local Law 144 AEDT bias audit safe harbor."
+13. Readability & Linguistic Clarity Engine:
+    "Implemented algorithmic Flesch-Kincaid and Gunning Fog readability metrics ensuring executive-level clarity
+    and preventing dense syntactic overcomplexity in recruiter reviews."
 
 14. Technical Acronym & Domain Synonym Graph:
     "Constructed an ontology-backed bidirectional resolution graph translating abbreviations (K8s <-> Kubernetes)
     to eliminate false candidate rejections caused by exact-string matching."
 
 15. Automated Testing & Pytest-Cov Quality Gate:
-    "Built and maintained 210+ unit and integration tests across 26 test modules, enforcing a 90%+ code coverage gate
+    "Built and maintained 260+ unit and integration tests across 35 test modules, enforcing a 90%+ code coverage gate
     to guarantee rock-solid regression resistance across all heuristic and API layers."

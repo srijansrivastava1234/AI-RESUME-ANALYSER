@@ -10,6 +10,15 @@ from app.skill_classifier import audit_skills
 from app.section_flow import audit_section_flow
 from app.action_verb_analyzer import audit_action_verbs
 from app.page_budget_analyzer import audit_page_budget
+from app.readability import calculate_readability_metrics
+from app.voice_detector import analyze_voice
+from app.cliche_detector import audit_cliches
+from app.metric_diversity import analyze_metric_diversity
+from app.skill_recency import analyze_skill_recency
+from app.bullet_length import analyze_bullet_lengths
+from app.summary_classifier import classify_summary_style
+from app.salary_detector import detect_salary_disclosures
+from app.portfolio_validator import audit_portfolio_links
 
 logger = logging.getLogger("ResumeAnalyzer")
 
@@ -250,7 +259,16 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
         "skill_classification": audit_skills(detected, experience_text=resume_text),
         "section_flow": audit_section_flow(resume_text),
         "action_verbs": audit_action_verbs(resume_text),
-        "page_budget": audit_page_budget(resume_text)
+        "page_budget": audit_page_budget(resume_text),
+        "readability": calculate_readability_metrics(resume_text),
+        "voice_analysis": analyze_voice(resume_text),
+        "cliche_audit": audit_cliches(resume_text),
+        "metric_diversity": analyze_metric_diversity(resume_text),
+        "skill_recency": analyze_skill_recency(resume_text),
+        "bullet_lengths": analyze_bullet_lengths(resume_text),
+        "summary_style": classify_summary_style(resume_text),
+        "salary_disclosures": detect_salary_disclosures(resume_text),
+        "portfolio_links": audit_portfolio_links(resume_text)
     }
 
 def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> dict:
@@ -292,6 +310,15 @@ def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> d
         analysis_data["section_flow"] = audit_section_flow(resume_text)
         analysis_data["action_verbs"] = audit_action_verbs(resume_text)
         analysis_data["page_budget"] = audit_page_budget(resume_text)
+        analysis_data["readability"] = calculate_readability_metrics(resume_text)
+        analysis_data["voice_analysis"] = analyze_voice(resume_text)
+        analysis_data["cliche_audit"] = audit_cliches(resume_text)
+        analysis_data["metric_diversity"] = analyze_metric_diversity(resume_text)
+        analysis_data["skill_recency"] = analyze_skill_recency(resume_text)
+        analysis_data["bullet_lengths"] = analyze_bullet_lengths(resume_text)
+        analysis_data["summary_style"] = classify_summary_style(resume_text)
+        analysis_data["salary_disclosures"] = detect_salary_disclosures(resume_text)
+        analysis_data["portfolio_links"] = audit_portfolio_links(resume_text)
         return analysis_data
         
     except Exception as e:

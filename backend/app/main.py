@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List
 
-APP_VERSION = "2.3.0"
+APP_VERSION = "2.4.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 
@@ -43,6 +43,16 @@ from app.skill_classifier import audit_skills
 from app.section_flow import audit_section_flow
 from app.action_verb_analyzer import audit_action_verbs
 from app.page_budget_analyzer import audit_page_budget
+from app.readability import calculate_readability_metrics
+from app.voice_detector import analyze_voice
+from app.cliche_detector import audit_cliches
+from app.metric_diversity import analyze_metric_diversity
+from app.filename_auditor import audit_filename
+from app.skill_recency import analyze_skill_recency
+from app.bullet_length import analyze_bullet_lengths
+from app.summary_classifier import classify_summary_style
+from app.salary_detector import detect_salary_disclosures
+from app.portfolio_validator import audit_portfolio_links
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -145,6 +155,38 @@ class ActionVerbRequest(BaseModel):
 class PageBudgetRequest(BaseModel):
     resume_text: str = Field(..., min_length=10, description="Resume text to evaluate page budget and spillover")
     target_pages: Optional[int] = Field(1, description="Target page budget (1 or 2)")
+
+class ReadabilityRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to evaluate readability and grade levels")
+
+class VoiceAuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to evaluate passive vs active voice")
+
+class ClicheAuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to evaluate buzzwords and corporate clichés")
+
+class MetricDiversityRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to evaluate metric breadth across dimensions")
+
+class FilenameAuditRequest(BaseModel):
+    filename: str = Field(..., min_length=1, description="Uploaded resume filename")
+    candidate_name: Optional[str] = Field(None, description="Optional candidate full name")
+
+class SkillRecencyRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to evaluate skill currency and tenure decay")
+    current_year: Optional[int] = Field(2026, description="Current reference year")
+
+class BulletLengthRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text containing bullet points to audit for length")
+
+class SummaryStyleRequest(BaseModel):
+    summary_text: str = Field(..., min_length=1, description="Resume summary or objective text to classify")
+
+class SalaryAuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to audit for confidential salary disclosures")
+
+class PortfolioLinksRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to audit for portfolio and profile URLs")
 
 
 app = FastAPI(
@@ -777,6 +819,137 @@ def audit_page_budget_endpoint(request: Request, payload: PageBudgetRequest):
     except Exception as err:
         logger.error(f"Error in audit page budget endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit page budget: {str(err)}")
+
+@app.post("/api/audit-readability")
+@limiter.limit("30/minute")
+def audit_readability_endpoint(request: Request, payload: ReadabilityRequest):
+    """
+    Audits resume text for Flesch Reading Ease, Flesch-Kincaid Grade Level, and Gunning Fog Index.
+    """
+    try:
+        result = calculate_readability_metrics(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit readability endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to calculate readability metrics: {str(err)}")
+
+@app.post("/api/audit-voice")
+@limiter.limit("30/minute")
+def audit_voice_endpoint(request: Request, payload: VoiceAuditRequest):
+    """
+    Audits resume bullet points and sentences for passive voice density and active voice ratio.
+    """
+    try:
+        result = analyze_voice(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit voice endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to evaluate voice: {str(err)}")
+
+@app.post("/api/audit-cliches")
+@limiter.limit("30/minute")
+def audit_cliches_endpoint(request: Request, payload: ClicheAuditRequest):
+    """
+    Audits resume text for weak corporate clichés, buzzwords, and vague fluff.
+    """
+    try:
+        result = audit_cliches(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit cliches endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit clichés: {str(err)}")
+
+@app.post("/api/audit-metric-diversity")
+@limiter.limit("30/minute")
+def audit_metric_diversity_endpoint(request: Request, payload: MetricDiversityRequest):
+    """
+    Classifies quantified bullet points into financial, percentage, scale, velocity, and leadership dimensions.
+    """
+    try:
+        result = analyze_metric_diversity(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit metric diversity endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to evaluate metric diversity: {str(err)}")
+
+@app.post("/api/audit-filename")
+@limiter.limit("30/minute")
+def audit_filename_endpoint(request: Request, payload: FilenameAuditRequest):
+    """
+    Audits resume filename against enterprise ATS ingestion naming standards.
+    """
+    try:
+        result = audit_filename(payload.filename, candidate_name=payload.candidate_name or "")
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit filename endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit filename: {str(err)}")
+
+@app.post("/api/audit-skill-recency")
+@limiter.limit("30/minute")
+def audit_skill_recency_endpoint(request: Request, payload: SkillRecencyRequest):
+    """
+    Audits skill recency across career timeline, detecting active modern tools vs dormant legacy stacks.
+    """
+    try:
+        result = analyze_skill_recency(payload.resume_text, current_year=payload.current_year or 2026)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit skill recency endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit skill recency: {str(err)}")
+
+@app.post("/api/audit-bullet-lengths")
+@limiter.limit("30/minute")
+def audit_bullet_lengths_endpoint(request: Request, payload: BulletLengthRequest):
+    """
+    Audits individual bullet points against the 15-25 words sweet-spot and flags stubs/run-ons.
+    """
+    try:
+        result = analyze_bullet_lengths(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit bullet lengths endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit bullet lengths: {str(err)}")
+
+@app.post("/api/audit-summary-style")
+@limiter.limit("30/minute")
+def audit_summary_style_endpoint(request: Request, payload: SummaryStyleRequest):
+    """
+    Classifies resume summary into modern Executive Value Proposition vs outdated Objective Statement.
+    """
+    try:
+        result = classify_summary_style(payload.summary_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit summary style endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to classify summary style: {str(err)}")
+
+@app.post("/api/audit-salary-disclosures")
+@limiter.limit("30/minute")
+def audit_salary_disclosures_endpoint(request: Request, payload: SalaryAuditRequest):
+    """
+    Scans resume text for inadvertent confidential personal compensation or CTC disclosures.
+    """
+    try:
+        result = detect_salary_disclosures(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit salary disclosures endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit salary disclosures: {str(err)}")
+
+@app.post("/api/audit-portfolio-links")
+@limiter.limit("30/minute")
+def audit_portfolio_links_endpoint(request: Request, payload: PortfolioLinksRequest):
+    """
+    Audits digital profile links (LinkedIn, GitHub, portfolio) for HTTPS security and placeholder patterns.
+    """
+    try:
+        result = audit_portfolio_links(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in audit portfolio links endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit portfolio links: {str(err)}")
+
 
 
 

@@ -5,7 +5,9 @@ import {
   Printer,
   Copy,
   Check,
-  Download
+  Download,
+  Eye,
+  Send
 } from 'lucide-react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -15,6 +17,8 @@ import TabsPanel from './components/TabsPanel';
 import HelpModal from './components/HelpModal';
 import ComparePanel from './components/ComparePanel';
 import BulletImpactLab from './components/BulletImpactLab';
+import PdfVisualStudio from './components/PdfVisualStudio';
+import OutreachModal from './components/OutreachModal';
 
 // Dynamically resolve backend URL. If VITE_API_URL env variable is provided, use it.
 // Otherwise, fall back to using the current page hostname with port 8000.
@@ -37,6 +41,8 @@ function App() {
     return localStorage.getItem('theme') || 'dark';
   });
   const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showPdfStudio, setShowPdfStudio] = useState(false);
+  const [showOutreachModal, setShowOutreachModal] = useState(false);
   const [copiedReport, setCopiedReport] = useState(false);
   const [appMode, setAppMode] = useState('audit');
 
@@ -461,6 +467,7 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
           deleteHistoryItem={deleteHistoryItem}
           getScoreColor={getScoreColor}
           getScoreBg={getScoreBg}
+          backendUrl={BACKEND_URL}
         />
 
         {/* Dashboard Main */}
@@ -558,6 +565,52 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
                   <span>Summary TXT</span>
                 </button>
                 <button 
+                  onClick={() => setShowPdfStudio(true)} 
+                  className="btn-print"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.4rem', 
+                    padding: '0.45rem 0.85rem', 
+                    background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(56, 189, 248, 0.25))', 
+                    border: '1px solid rgba(99, 102, 241, 0.4)', 
+                    borderRadius: '8px', 
+                    color: '#38bdf8', 
+                    cursor: 'pointer', 
+                    fontFamily: 'var(--font-header)', 
+                    fontWeight: 600, 
+                    fontSize: '0.8rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                  title="Open Visual Eye-Tracking & ATS Bounding-Box Studio"
+                >
+                  <Eye style={{ width: '15px', height: '15px' }} />
+                  <span>Visual Gaze & Heatmap</span>
+                </button>
+                <button 
+                  onClick={() => setShowOutreachModal(true)} 
+                  className="btn-print"
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.4rem', 
+                    padding: '0.45rem 0.85rem', 
+                    background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(239, 68, 68, 0.2))', 
+                    border: '1px solid rgba(245, 158, 11, 0.4)', 
+                    borderRadius: '8px', 
+                    color: '#f59e0b', 
+                    cursor: 'pointer', 
+                    fontFamily: 'var(--font-header)', 
+                    fontWeight: 600, 
+                    fontSize: '0.8rem',
+                    transition: 'var(--transition-smooth)'
+                  }}
+                  title="Generate Tailored Cover Letter, InMail & Cold Outreach"
+                >
+                  <Send style={{ width: '15px', height: '15px' }} />
+                  <span>Outreach & Cover Letter</span>
+                </button>
+                <button 
                   onClick={() => window.print()} 
                   className="btn-print"
                   style={{ 
@@ -626,12 +679,14 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
               <TabsPanel
                 report={report}
                 extractedText={extractedText}
+                jobDesc={jobDesc}
                 editedText={editedText}
                 setEditedText={setEditedText}
                 analyzeSandboxText={analyzeSandboxText}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
                 loading={loading}
+                backendUrl={BACKEND_URL}
               />
             </div>
           )}
@@ -642,6 +697,23 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
       <HelpModal
         showHelpModal={showHelpModal}
         setShowHelpModal={setShowHelpModal}
+      />
+
+      {file && (
+        <PdfVisualStudio
+          file={file}
+          backendUrl={BACKEND_URL}
+          isOpen={showPdfStudio}
+          onClose={() => setShowPdfStudio(false)}
+        />
+      )}
+
+      <OutreachModal
+        isOpen={showOutreachModal}
+        onClose={() => setShowOutreachModal(false)}
+        extractedText={extractedText}
+        jobDesc={jobDesc}
+        backendUrl={BACKEND_URL}
       />
     </div>
   );

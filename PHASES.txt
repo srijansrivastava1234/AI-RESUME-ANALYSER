@@ -1,0 +1,184 @@
+================================================================================
+AI RESUME ANALYSER - 11/10 FLAGSHIP UPGRADE ROADMAP & PHASES
+================================================================================
+
+This document outlines the phased development roadmap to elevate the AI Resume
+Analyser from a robust ATS audit tool into an industry-leading, full-lifecycle
+career intelligence and visual ATS compilation platform.
+
+================================================================================
+PHASE 1: VISUAL PDF VIEWER & RECRUITER EYE-TRACKING HEATMAP [COMPLETED]
+================================================================================
+Goal: Move from plain text output to visual document intelligence with interactive
+recruiter scan simulation and layout diagnostics.
+
+1.1 In-Browser PDF Canvas Renderer
+    [x] Add `pdfjs-dist` to frontend dependencies.
+    [x] Create `PdfPreviewModal.jsx` / `PdfViewer.jsx` to render uploaded PDF
+        buffers directly onto an HTML5 `<canvas>`.
+    [x] Implement page navigation, smooth zoom (50% - 200%), and responsive scaling.
+
+1.2 Layout Extraction Backend Endpoint
+    [x] Extract exact bounding boxes (x, y, width, height) of all text blocks,
+        headers, and sections using PyPDF / PyMuPDF.
+    [x] Create endpoint `POST /api/v1/pdf/layout-tokens` returning normalized
+        JSON: [ { text, bbox: [x0, y0, x1, y1], type: 'header' | 'bullet' | 'contact' } ].
+
+1.3 Recruiter Eye-Tracking Heatmap Layer
+    [x] Calculate visual density weights based on font size, bold weight, and
+        viewport vertical position (Y <= 30%).
+    [x] Overlay a semi-transparent canvas gradient representing the F-pattern /
+        Z-pattern 6-second recruiter scanning path.
+    [x] Add visual layer toggles: [ Normal PDF | Eye-Tracking Heatmap | ATS Bounding Boxes ].
+
+================================================================================
+================================================================================
+PHASE 2: LIVE JOB URL INGESTION & AUTOMATED SCRAPER [COMPLETED]
+================================================================================
+Goal: Remove copy-paste friction by fetching and parsing job descriptions directly
+from target job URLs.
+
+2.1 Backend URL Fetcher & HTML Sanitizer
+    [x] Create `backend/app/jd_scraper.py` using `httpx` and `BeautifulSoup4`
+        with simulated browser headers.
+    [x] Implement specialized parsers for top ATS portals (Greenhouse, Lever,
+        LinkedIn, Indeed, Ashby, Workable).
+    [x] Strip boilerplate noise (EEO compliance disclaimers, cookie notices,
+        standard benefits packages).
+
+2.2 API Endpoint & Security Guardrails
+    [x] Add endpoint `POST /api/scrape-jd` accepting { "url": "https://..." }.
+    [x] Return structured payload: { job_title, company, cleaned_description, extracted_skills }.
+    [x] Enforce SSRF protection (block localhost, loopback, and private RFC 1918 subnets)
+        and rate limiting.
+
+2.3 Frontend URL Input Bar
+    [x] Add a dual-mode toggle to the JD input in `frontend/src/components/Sidebar.jsx`:
+        [ Paste Text | Import from Job URL ].
+    [x] Add loading animations, error toasts, and auto-population of parsed job text.
+
+================================================================================
+PHASE 3: MULTI-ATS SIMULATION SANDBOX [COMPLETED]
+================================================================================
+Goal: Emulate the exact parsing behavior, text extraction quirks, and failure modes
+of major enterprise ATS engines.
+
+3.1 Simulator Rule Engines
+    [x] Workday Simulator (`backend/app/simulators/workday.py`):
+        - Strip all headers and footers.
+        - Flatten multi-column layouts into linear top-to-bottom text streams to
+          reveal reading-order corruption.
+    [x] Greenhouse / Lever Simulator (`backend/app/simulators/greenhouse.py`):
+        - Tokenize into unformatted word bags; execute semantic keyword clustering.
+    [x] Taleo / Oracle Simulator (`backend/app/simulators/taleo.py`):
+        - Strict exact substring matching; penalize synonyms lacking explicit
+          acronym definitions.
+
+3.2 Simulator API & UI Diff Viewer
+    [x] Create endpoint `POST /api/simulate-ats` returning parsed text representations
+        for each engine: { workday: {...}, greenhouse: {...}, taleo: {...} }.
+    [x] Create `AtsSimulatorTab.jsx` with a side-by-side comparative diff viewer
+        and highlighted parser warning banners.
+
+================================================================================
+PHASE 4: "RECRUITER GRILL-ME" INTERVIEW PREP GENERATOR [COMPLETED]
+================================================================================
+Goal: Bridge the gap between passing the ATS screen and acing technical/behavioral
+interviews by probing detected resume gaps.
+
+4.1 Gap Identification Engine
+    [x] Compare candidate bullet metrics with JD requirements to identify under-quantified
+        achievements, missing technologies, or scope gaps.
+    [x] Generate 5 targeted interview challenge themes.
+
+4.2 STAR Response & Prompt Pipeline
+    [x] Enhance interview preparation generation with dual Gemini AI + deterministic heuristic engine:
+        - Exact tough technical/behavioral interview question.
+        - The recruiter's underlying concern/risk being evaluated.
+        - Step-by-step STAR (Situation, Task, Action, Result) framing strategy
+          derived from candidate's existing experience.
+        - Pitfalls to avoid in recruiter screening rounds.
+    [x] Create endpoint `POST /api/interview-prep`.
+
+4.3 Frontend Flashcard / Practice View
+    [x] Build `InterviewPrepPanel.jsx` with category filter pills, difficulty badges,
+        collapsible STAR response strategy breakdowns, and interactive live answer draft sandbox.
+    [x] Integrate into `TabsPanel.jsx` with `[ 🎯 Recruiter Grill-Me ]` tab.
+
+================================================================================
+PHASE 5: LIVE IN-BROWSER RESUME EDITOR & VERIFIED PDF EXPORT [COMPLETED]
+================================================================================
+Goal: Allow users to edit, apply AI enhancements in 1 click, and compile a 100%
+ATS-verified PDF directly in the browser.
+
+5.1 Document State Management
+    [x] Convert parsed resume text into a structured JSON schema:
+        { contact: {...}, summary: "...", experience: [...], education: [...], skills: [...] }.
+    [x] Implement editable state store in React for inline modifications.
+
+5.2 One-Click AI Bullet Replacer & Keyword Injection
+    [x] 1-Click "Inject Missing JD Keywords" directly into skills taxonomy.
+    [x] Inline bullet point modifier with XYZ metric guidance and dynamic bullet management.
+
+5.3 Deterministic PDF Export Engine & Plain Text Stream
+    [x] Implement 100% single-column Ivy-League ATS formatting preview with live page-budget tracking.
+    [x] Print-ready, crisp vector PDF generation with zero glyph/CMap corruption.
+    [x] Multi-format export: Verified PDF, Clean Plain Text (.txt), and Clipboard sync.
+
+================================================================================
+PHASE 6: TAILORED COVER LETTER & COLD OUTREACH SUITE [COMPLETED]
+================================================================================
+Goal: Provide an end-to-end job application acceleration toolkit.
+
+6.1 Outreach Prompt Modules
+    [x] Create `backend/app/outreach.py` with 4 outreach modes:
+        1. 200-word XYZ-structured Cover Letter highlighting top matching accomplishments.
+        2. 80-word LinkedIn InMail / Recruiter Direct Message (Hook -> Key Metric -> Low-friction CTA).
+        3. Hiring Manager Cold Email with high open-rate subject lines.
+        4. Post-Application / Post-Interview Follow-Up Note.
+    [x] Implement dual Gemini 2.5 AI + deterministic heuristic fallback engine.
+    [x] Create endpoint `POST /api/generate-outreach`.
+
+6.2 Frontend Outreach Modal & Studio
+    [x] Add `OutreachModal.jsx` with tone selector (Confident, Direct, Technical, Executive),
+        editable message draft, live word count, and read time tracker.
+    [x] One-click copy-to-clipboard and Markdown (.md) download shortcuts.
+    [x] Integrated in `App.jsx` top action bar with glowing `Outreach & Cover Letter` launcher.
+
+================================================================================
+PHASE 7: DISTRIBUTION, DOCKER & CI/CD TOOLING [COMPLETED]
+================================================================================
+Goal: Provide seamless containerized deployments and automated developer workflows.
+
+7.1 Docker Containerization
+    [x] Write a production multi-stage `Dockerfile` (FastAPI backend + built Vite frontend).
+    [x] Create `docker-compose.yml` for zero-configuration `docker compose up` launch.
+    [x] Create `.dockerignore` optimized ignore list.
+
+7.2 Standalone CLI & Dynamic SVG Status Badge Generator
+    [x] Create `backend/app/cli.py` CLI runner for file audits:
+        `python -m app.cli resume.pdf -o report.json -b badge.svg`
+    [x] Generate retina-ready Shields.io-compatible dynamic SVG badges.
+
+7.3 GitHub Actions CI & PR Resume Audit Actions
+    [x] `.github/workflows/ci.yml`: Automated pytest suite + coverage enforcement + Vite build.
+    [x] `.github/workflows/ats-audit.yml`: Automated resume auditing and badge generation on Pull Requests.
+
+================================================================================
+EXECUTION ORDER & PRIORITY MATRIX
+================================================================================
+
+Sprint 1 (Immediate High-Impact WOW Factor):
+    └── Phase 1: Visual PDF Viewer & Recruiter Eye-Tracking Heatmap
+Sprint 2 (Friction Reduction):
+    └── Phase 2: Live Job URL Ingestion & Automated Scraper
+Sprint 3 (Competitive Moat):
+    └── Phase 3: Multi-ATS Simulation Sandbox
+Sprint 4 (Full-Lifecycle Value):
+    └── Phase 4: "Recruiter Grill-Me" Interview Prep Generator
+Sprint 5 (Creation & Export):
+    └── Phase 5: Live In-Browser Resume Editor & Verified PDF Export
+Sprint 6 (Outreach & Ecosystem):
+    └── Phase 6: Tailored Cover Letter & Cold Outreach Suite
+    └── Phase 7: Distribution, Docker & CI/CD Tooling
+================================================================================

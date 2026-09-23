@@ -4,7 +4,7 @@ os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 
 import logging
 import time
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 APP_VERSION = "2.4.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
@@ -53,6 +53,12 @@ from app.bullet_length import analyze_bullet_lengths
 from app.summary_classifier import classify_summary_style
 from app.salary_detector import detect_salary_disclosures
 from app.portfolio_validator import audit_portfolio_links
+from app.pdf_layout import extract_pdf_layout_tokens
+from app.jd_scraper import scrape_job_description
+from app.ats_simulator import run_multi_ats_simulation
+from app.interview_prep import generate_interview_prep
+from app.resume_builder import parse_resume_to_structured_json, format_structured_resume_to_plain_text
+from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from dotenv import load_dotenv
 
@@ -187,6 +193,34 @@ class SalaryAuditRequest(BaseModel):
 
 class PortfolioLinksRequest(BaseModel):
     resume_text: str = Field(..., min_length=1, description="Resume text to audit for portfolio and profile URLs")
+
+class ScrapeJobDescriptionRequest(BaseModel):
+    url: str = Field(..., min_length=4, description="Target job description URL (e.g. Greenhouse, Lever, LinkedIn, etc.)")
+
+class SimulateATSRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="The plain text of the resume to simulate across ATS engines")
+
+class InterviewPrepRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="Candidate resume text")
+    job_description: Optional[str] = Field(None, description="Optional target job description")
+    seniority: Optional[str] = Field("mid", description="Target seniority tier ('junior', 'mid', 'senior', 'staff', 'executive')")
+
+class ParseStructuredResumeRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Raw resume text to parse into structured JSON")
+
+class FormatCleanTxtRequest(BaseModel):
+    structured_resume: Dict[str, Any] = Field(..., description="Structured resume JSON object")
+
+class GenerateOutreachRequest(BaseModel):
+    resume_text: str = Field(..., min_length=10, description="Candidate resume text")
+    job_description: Optional[str] = Field(None, description="Optional target job description")
+    mode: Optional[str] = Field("cover_letter", description="Outreach mode ('cover_letter', 'linkedin_inmail', 'cold_email', 'follow_up')")
+    tone: Optional[str] = Field("confident", description="Tone ('confident', 'direct', 'technical', 'executive')")
+    recipient_name: Optional[str] = Field(None, description="Target recipient or recruiter name")
+    company_name: Optional[str] = Field(None, description="Target company name")
+
+
+
 
 
 app = FastAPI(
@@ -949,6 +983,131 @@ def audit_portfolio_links_endpoint(request: Request, payload: PortfolioLinksRequ
     except Exception as err:
         logger.error(f"Error in audit portfolio links endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit portfolio links: {str(err)}")
+
+@app.post("/api/pdf-layout-tokens")
+@limiter.limit("30/minute")
+async def extract_pdf_layout_tokens_endpoint(
+    request: Request,
+    file: UploadFile = File(...)
+):
+    """
+    Extracts spatial layout tokens, normalized bounding boxes, and simulated
+    recruiter eye-tracking gaze weights directly from an uploaded PDF.
+    """
+    if not file.filename.lower().endswith('.pdf'):
+        raise HTTPException(status_code=400, detail="Layout token extraction is only supported for PDF files.")
+
+    contents = await file.read()
+    if len(contents) > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(status_code=400, detail=f"File exceeds maximum allowed size of {MAX_FILE_SIZE_BYTES / (1024*1024):.0f}MB.")
+
+    result = extract_pdf_layout_tokens(contents)
+    if not result.get("success", False):
+        raise HTTPException(status_code=422, detail=result.get("error", "Failed to parse PDF layout tokens."))
+
+    return result
+
+@app.post("/api/scrape-jd")
+@limiter.limit("20/minute")
+async def scrape_job_description_endpoint(request: Request, payload: ScrapeJobDescriptionRequest):
+    """
+    Fetches, sanitizes, and extracts structured requirements, company name,
+    job title, and technical skills from target job URLs with SSRF protection.
+    """
+    try:
+        result = await scrape_job_description(payload.url)
+        if not result.get("success", False):
+            raise HTTPException(status_code=422, detail=result.get("error", "Failed to scrape job description."))
+        return result
+    except ValueError as val_err:
+        logger.warning(f"URL validation failed for {payload.url}: {val_err}")
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as err:
+        logger.error(f"Error scraping job description: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to process job URL: {str(err)}")
+
+@app.post("/api/simulate-ats")
+@limiter.limit("30/minute")
+def simulate_ats_endpoint(request: Request, payload: SimulateATSRequest):
+    """
+    Simulates parsing behavior across Workday, Greenhouse/Lever, and Taleo/Oracle ATS engines,
+    providing comparative diffs, entity extraction health, and cross-ATS hazard alerts.
+    """
+    try:
+        result = run_multi_ats_simulation(payload.resume_text)
+        return result
+    except Exception as err:
+        logger.error(f"Error in multi-ATS simulation endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate ATS parsing: {str(err)}")
+
+@app.post("/api/interview-prep")
+@limiter.limit("20/minute")
+async def generate_interview_prep_endpoint(request: Request, payload: InterviewPrepRequest):
+    """
+    Generates the top 5 toughest technical and behavioral probing interview questions
+    with tailored STAR response strategies based on resume vulnerabilities and target JD gaps.
+    """
+    try:
+        result = await generate_interview_prep(
+            resume_text=payload.resume_text,
+            job_description=payload.job_description,
+            seniority=payload.seniority
+        )
+        return result
+    except Exception as err:
+        logger.error(f"Error in interview prep generation endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate interview preparation: {str(err)}")
+
+@app.post("/api/resume/parse-structured")
+@limiter.limit("30/minute")
+def parse_structured_resume_endpoint(request: Request, payload: ParseStructuredResumeRequest):
+    """
+    Parses unstructured resume text into a structured, editable JSON schema.
+    """
+    try:
+        result = parse_resume_to_structured_json(payload.resume_text)
+        return {"structured_resume": result}
+    except Exception as err:
+        logger.error(f"Error parsing structured resume: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to parse structured resume: {str(err)}")
+
+@app.post("/api/resume/format-clean-txt")
+@limiter.limit("60/minute")
+def format_clean_txt_endpoint(request: Request, payload: FormatCleanTxtRequest):
+    """
+    Converts structured resume data into clean, single-column ATS-safe plain text.
+    """
+    try:
+        plain_text = format_structured_resume_to_plain_text(payload.structured_resume)
+        return {"plain_text": plain_text}
+    except Exception as err:
+        logger.error(f"Error formatting structured resume to text: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to format resume text: {str(err)}")
+
+@app.post("/api/generate-outreach")
+@limiter.limit("20/minute")
+async def generate_outreach_endpoint(request: Request, payload: GenerateOutreachRequest):
+    """
+    Generates personalized Cover Letters, LinkedIn InMails, Hiring Manager Cold Emails,
+    and Follow-Up notes based on candidate resume and job requirements.
+    """
+    try:
+        result = await generate_outreach(
+            resume_text=payload.resume_text,
+            job_description=payload.job_description,
+            mode=payload.mode or "cover_letter",
+            tone=payload.tone or "confident",
+            recipient_name=payload.recipient_name,
+            company_name=payload.company_name
+        )
+        return result
+    except Exception as err:
+        logger.error(f"Error generating outreach copy: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate outreach copy: {str(err)}")
+
+
+
+
 
 
 

@@ -24,20 +24,27 @@ import {
   RefreshCw,
   Target,
   Cpu,
-  Database
+  Database,
+  Flame,
+  Edit3
 } from 'lucide-react';
 import HygieneCard from './HygieneCard';
+import AtsSimulatorTab from './AtsSimulatorTab';
+import InterviewPrepPanel from './InterviewPrepPanel';
+import ResumeEditorStudio from './ResumeEditorStudio';
 import { calculateKeywordDensity } from '../utils/performance';
 
 export default function TabsPanel({
   report,
   extractedText,
+  jobDesc,
   editedText,
   setEditedText,
   analyzeSandboxText,
   activeTab,
   setActiveTab,
-  loading
+  loading,
+  backendUrl
 }) {
   const [showRawText, setShowRawText] = useState(false);
   const [copiedKeyword, setCopiedKeyword] = useState(null);
@@ -426,6 +433,30 @@ export default function TabsPanel({
         >
           <Layers style={{ width: '14px', height: '14px', color: activeTab === 'layout_chronology' ? 'white' : 'var(--primary)' }} />
           Layout & Chronology
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'ats_sim' ? 'active' : ''}`}
+          onClick={() => setActiveTab('ats_sim')}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+        >
+          <Cpu style={{ width: '14px', height: '14px', color: activeTab === 'ats_sim' ? 'white' : '#38bdf8' }} />
+          Multi-ATS Simulator
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'interview_prep' ? 'active' : ''}`}
+          onClick={() => setActiveTab('interview_prep')}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+        >
+          <Flame style={{ width: '14px', height: '14px', color: activeTab === 'interview_prep' ? 'white' : '#f59e0b' }} />
+          Recruiter Grill-Me
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'resume_editor' ? 'active' : ''}`}
+          onClick={() => setActiveTab('resume_editor')}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+        >
+          <Edit3 style={{ width: '14px', height: '14px', color: activeTab === 'resume_editor' ? 'white' : '#10b981' }} />
+          Live Editor & PDF
         </button>
       </div>
 
@@ -2193,6 +2224,33 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
             </div>
           )}
         </div>
+      )}
+
+      {/* Tab: Multi-ATS Engine Simulator */}
+      {activeTab === 'ats_sim' && (
+        <AtsSimulatorTab
+          extractedText={extractedText}
+          backendUrl={backendUrl}
+        />
+      )}
+
+      {/* Tab: Recruiter Grill-Me Interview Simulation */}
+      {activeTab === 'interview_prep' && (
+        <InterviewPrepPanel
+          extractedText={extractedText}
+          jobDesc={jobDesc}
+          backendUrl={backendUrl}
+        />
+      )}
+
+      {/* Tab: Live Resume Editor & Verified PDF Export Studio */}
+      {activeTab === 'resume_editor' && (
+        <ResumeEditorStudio
+          extractedText={extractedText}
+          report={report}
+          backendUrl={backendUrl}
+          onApplyEditedText={setEditedText}
+        />
       )}
     </div>
   );

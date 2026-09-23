@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  ai-resume-analyser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_resume_analyser_app
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - VITE_API_URL=http://localhost:8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

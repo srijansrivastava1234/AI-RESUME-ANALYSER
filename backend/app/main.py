@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List, Dict, Any
 
-APP_VERSION = "2.4.0"
+APP_VERSION = "3.1.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 
@@ -225,7 +225,10 @@ class GenerateOutreachRequest(BaseModel):
 
 app = FastAPI(
     title="AI Resume Analyser API",
-    description="High-performance asynchronous API for resume parsing, ATS scoring, and generative AI feedback using Google Gemini.",
+    description=(
+        "Enterprise-grade, asynchronous REST API for resume ingestion, 4-pillar deterministic "
+        "ATS compliance scoring, and generative AI feedback. Grounded in the 9 Core Architectural Pillars."
+    ),
     version=APP_VERSION,
     docs_url="/docs",
     redoc_url="/redoc"

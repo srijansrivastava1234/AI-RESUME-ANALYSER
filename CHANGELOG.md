@@ -4,6 +4,19 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2026-09-24
+
+### Added
+- **Top 9 Flagship Technical Contributions Catalog**: Authored `CONTRIBUTIONS_TOP9.md` and `contributions_top9.txt` synthesizing Google/IBM X-Y-Z quantifiable achievements, mathematical formulations, and ATS system mechanics.
+- **Top 9 Architectural Integrity Test Suite**: Created `backend/tests/test_top9_integrity.py` providing end-to-end regression validation across all 9 core architectural pillars.
+- **Runtime Environment & Configuration Validator**: Implemented `app.config_validator` and `test_config_validator.py` with runtime sanity auditing, API key readiness detection, and system health reporting.
+- **High-Performance Parser Utilities & Cache**: Engineered `app.parser_utils` and `test_parser_utils.py` featuring `@lru_cache` string sanitization, fast tokenization, and precompiled regex operations.
+- **Latency & Scalability Benchmark Regression Suite**: Added `backend/tests/test_performance_benchmarks.py` enforcing sub-25ms SLA thresholds across deterministic ATS parsing engines.
+- **Expanded Developer & Contribution Standards**: Updated `CONTRIBUTING.md` with the 9-Pillar Architecture & Quality Checklist and conventional commit specifications.
+- **OpenAPI 3.1 Metadata & Route Tags**: Updated FastAPI application metadata with version 3.1.0 and modular route tags.
+
+---
+
 ## [2.4.0] - 2026-09-22
 
 ### Added

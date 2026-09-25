@@ -40,12 +40,16 @@ STOPWORDS = {
 }
 
 
+TOKEN_PATTERN = re.compile(r"\b[a-zA-Z0-9_\-\.\+#]{2,}\b")
+
+
 def tokenize(text: str) -> List[str]:
     """Tokenize raw text into lowercase alphanumeric tokens excluding common stopwords."""
     if not text:
         return []
-    raw_tokens = re.findall(r"\b[a-zA-Z0-9_\-\.\+#]{2,}\b", text.lower())
+    raw_tokens = TOKEN_PATTERN.findall(text.lower())
     return [t for t in raw_tokens if t not in STOPWORDS]
+
 
 
 def calculate_idf(term: str, corpus_size: int = 1000, doc_freq: Optional[int] = None) -> float:

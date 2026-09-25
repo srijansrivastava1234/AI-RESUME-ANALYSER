@@ -73,7 +73,23 @@ def test_unpunctuated_keyword_dump():
     assert any(t["type"] == "unpunctuated_keyword_dump" for t in result["detected_traps"])
 
 
+def test_word_joiner_and_bom_unicode_injection():
+    # Word joiner (\u2060) and Zero Width Non-Breaking Space (\uFEFF)
+    injected = "Engineer" + ("\u2060\uFEFF" * 8) + "Architect"
+    result = detect_ats_hacks(injected)
+    assert result["is_flagged"] is True
+    assert any(t["type"] == "invisible_unicode_injection" for t in result["detected_traps"])
+
+
+def test_rgba_zero_opacity_color():
+    markup = "<p style='color: rgba(255, 255, 255, 0);'>Hidden React Node GraphQL</p>"
+    result = detect_ats_hacks("Standard text", raw_markup=markup)
+    assert result["is_flagged"] is True
+    assert any(t["type"] == "white_font_stuffing" for t in result["detected_traps"])
+
+
 def test_empty_input():
     result = detect_ats_hacks("", raw_markup="")
     assert result["hack_risk_score"] == 100
     assert result["clean_text_certified"] is True
+

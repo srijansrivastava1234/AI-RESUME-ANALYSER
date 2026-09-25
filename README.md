@@ -10,9 +10,9 @@ A visually premium, modern ATS (Applicant Tracking System) compiler and resume a
 
 ---
 
-## 🌟 Top 9 Core Architectural Innovations
+## 🌟 Top 10 Core Architectural Innovations
 
-For detailed mathematical formulations, recruiter impact metrics, and Google XYZ statements, see the [Flagship Contributions Guide](CONTRIBUTIONS_TOP9.md).
+For detailed mathematical formulations, recruiter impact metrics, and Google XYZ statements, see the [Flagship Top 10 Contributions Guide](contributions_top10.txt).
 
 | # | Architectural Innovation | Core Technology | Key Impact / Metric |
 |---|---|---|---|
@@ -25,6 +25,8 @@ For detailed mathematical formulations, recruiter impact metrics, and Google XYZ
 | **7** | **EEOC & NYC Local Law 144 PII Redactor** | Deterministic regex scrubber | 100% blind review compliance under NYC LL 144 & EU AI Act Art. 10 |
 | **8** | **Hard vs Soft Skills Taxonomy Classifier** | Ontological skill graph | Enforces $R_{\text{skill}} \ge 0.70$ to prevent soft buzzword dilution |
 | **9** | **Multi-Format Structural Resume Builder** | Schema engine + Single-column PDF | Universal ATS compatibility with deterministic margin clearance |
+| **10** | **Multi-Vendor ATS Emulation & Exploit Guard** | Workday/Taleo/Greenhouse sandbox | Intercepts white text, micro-fonts (<0.5pt), and zero-width spaces |
+
 
 ---
 

@@ -1,0 +1,126 @@
+================================================================================
+           TOP 10 FLAGSHIP TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+================================================================================
+Curated flagship architectural and algorithmic innovations engineered for the
+enterprise-grade AI Resume Analyser platform. Each contribution is formulated
+using the Google/IBM X-Y-Z action-result framework with quantifiable metrics,
+mathematical specifications, and ATS system mechanics.
+
+--------------------------------------------------------------------------------
+1. FULL RESUME BULLET POINTS (XYZ / ACTION-RESULT FORMAT)
+--------------------------------------------------------------------------------
+
+1. Asynchronous Full-Stack Architecture & REST API (FastAPI & React 19)
+   • Architected and deployed a low-latency full-stack resume analysis platform using
+     FastAPI (Python 3.12+) and React 19 / Vite, establishing asynchronous non-blocking
+     request handling and live health-check polling to process multi-format resumes
+     (PDF, DOCX, TXT) with sub-1.5s end-to-end response latency.
+
+2. Deterministic 4-Pillar ATS Compliance Scoring & Letter Grade Engine
+   • Formulated and deployed a mathematically auditable 4-pillar compliance engine
+     deconstructing resumes into Keywords & Hard Skills (40%), Google/IBM X-Y-Z Impact (30%),
+     Structural Parseability (15%), and Reading Density (15%), mapping composite scores
+     (0–100) to executive letter grades (A+ through D) with percentile benchmarking.
+
+3. Okapi BM25+ Lexical Retrieval & Asymptotic Term Saturation Engine
+   • Formulated and implemented an Okapi BM25+ ranking algorithm (k1=1.2, b=0.75, delta=1.0)
+     calibrated for ATS keyword recall, calculating Robertson-Spärck Jones IDF, modeling
+     asymptotic term frequency saturation to penalize keyword stuffing, and enforcing
+     length normalization against a 450-token baseline.
+
+4. Recursive XY-Cut Layout Linearization & Scanline Interleaving Detector
+   • Engineered a deterministic layout linearization engine simulating horizontal and
+     vertical whitespace projection valleys, detecting column gutter collapses (<12pt),
+     ASCII table intersections, and legacy scanline interleaving hazards where multi-column
+     sidebars concatenate across job titles in older Workday and Taleo parsers.
+
+5. ISO 19005-2 PDF/A Text Layer, CMap Integrity & Ligature Normalizer
+   • Architected a PDF text layer diagnostic engine detecting Unicode Private Use Area (PUA)
+     codepoints (\uE000-\uF8FF), replacement glyphs (\uFFFD), and soft hyphens, decomposing
+     typographic ligatures (fi, fl, ffi, ffl) into standard ASCII to recover unsearchable
+     keywords in ATS Boolean search filters.
+
+6. Non-Canonical Career Chronology & Overlapping Tenure Normalizer
+   • Formulated career timeline parsing standardizing disparate date formats into ISO-8601
+     compatible months, calculating non-duplicative total Years of Experience (YoE) across
+     concurrent/overlapping tenures, and flagging unannounced employment gaps (>90 days).
+
+7. EEOC & NYC Local Law 144 Blind Review PII Redactor
+   • Engineered deterministic PII anonymization redacting emails, phone numbers, candidate
+     names, physical locations, and graduation year age discrimination proxies to eliminate
+     algorithmic bias under NYC LL 144 and EU AI Act Article 10 compliance frameworks.
+
+8. Ontological Hard vs Soft Skills Taxonomy Classifier & Dilution Defense
+   • Built an ontological skill classifier separating hard technical proficiencies from
+     subjective soft buzzwords, enforcing a Hard-to-Soft Ratio (R_skill) to penalize
+     buzzword dilution exceeding 30% and verifying bullet-level quantifiable substantiation.
+
+9. Multi-Format Structural Document Compiler & Verified Single-Column PDF Exporter
+   • Designed a schema-driven resume builder and compiler translating structured JSON resumes
+     into verified single-column, ATS-parseable PDF documents with deterministic margins,
+     lossless text layers, and embedded metadata headers.
+
+10. Multi-Vendor ATS Emulation Sandbox & Adversarial Exploit / White-Font Guard
+    • Architected a multi-vendor ATS emulation sandbox (Workday, Taleo, Greenhouse) coupled
+      with a deterministic exploit auditor, intercepting white-on-white text stuffing (#ffffff),
+      microscopic typography (<0.5pt), off-screen DOM positioning, and zero-width Unicode
+      codepoints (\u200B-\uFEFF) to eliminate candidate blacklisting risks.
+
+--------------------------------------------------------------------------------
+2. ARCHITECTURAL MATRIX & MATHEMATICAL SPECIFICATIONS
+--------------------------------------------------------------------------------
+
+Pillar 1: Performance SLA
+- Target Latency: < 1.5s end-to-end for full audit
+- Concurrency: Async event loop with non-blocking I/O
+- Throughput: 50+ concurrent requests/sec on standard container runtime
+
+Pillar 2: Mathematical Compliance Formula
+- Composite Score S = 0.40 * S_keywords + 0.30 * S_xyz + 0.15 * S_structure + 0.15 * S_density
+- Grade Tiers:
+  * A+ (90 - 100): Tier-1 FAANG / Fortune 50 Ready
+  * A  (80 - 89): Strong ATS Pass
+  * B  (70 - 79): Moderate Match (minor keyword gaps)
+  * C  (60 - 69): Parsing or Structural Deficiencies
+  * D  (< 60): High Rejection Probability
+
+Pillar 3: BM25+ Retrieval Formulation
+- BM25+(D, Q) = sum_{q in Q} IDF(q) * [ ((k1 + 1) * f(q, D)) / (k1 * (1 - b + b * (|D| / avgdl)) + f(q, D)) + delta ]
+- Parameter Defaults: k1 = 1.2, b = 0.75, delta = 1.0, avgdl = 450 tokens
+
+Pillar 4: Layout Linearization
+- Min Gutter Width: 12.0 pt
+- Column Detection: Horizontal histogram projections with valley thresholding
+- Scanline Interleaving: Heuristic line-height and bounding-box overlap tracking
+
+Pillar 5: Font & Text Layer Integrity
+- Unicode Sanitization: Decomposition of NFKD ligatures
+- Replacement Glyph Detection: Flag \uFFFD and PUA ranges
+- Fallback Mode: High-fidelity heuristic rule engine if PDF text stream is corrupt
+
+Pillar 6: Timeline Normalization
+- ISO Month Mapping: [Jan-Dec] [YYYY] -> YYYY-MM
+- Overlap De-duplication: Interval tree union calculation for accurate net YoE
+- Gap Threshold: delta_t > 90 calendar days flagged for proactive explanation
+
+Pillar 7: Regulatory Compliance
+- Standards: NYC Local Law 144, EU AI Act Art. 10, EEOC Title VII
+- Redaction Vectors: Names, emails, phone numbers, postal addresses, graduation years
+
+Pillar 8: Skill Taxonomy
+- Ratio Metric: R_skill = count(HardSkills) / [count(HardSkills) + count(SoftSkills)]
+- Target Threshold: R_skill >= 0.70 (max 30% soft buzzword dilution)
+- Verification: Bullet cross-referencing to ensure skills appear in context
+
+Pillar 9: Export Compilation
+- Format: Single-column standard flow
+- Typography: System sans-serif with 100% CMap embedded font mapping
+- Margins: 0.75 in (54 pt) uniform padding for universal ATS optical margin clearance
+
+Pillar 10: Adversarial Exploit Auditing
+- White-Text Trap: Matches `#ffffff`, `rgb(255,255,255)`, and `opacity:0`
+- Microscopic Fonts: Flags `font-size <= 1px` / `0.5pt`
+- Unicode Obfuscation: Regex scan for zero-width spaces (`\u200B`, `\u200C`, `\u200D`, `\uFEFF`)
+- Penalty Scaling: Immediate 45-point penalty for critical visual deception traps
+
+================================================================================

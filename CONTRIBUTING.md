@@ -62,8 +62,8 @@ pytest backend/tests -v
 # Run performance and latency benchmark suite
 pytest backend/tests/test_performance_benchmarks.py -v
 
-# Run Top 9 architectural integrity suite
-pytest backend/tests/test_top9_integrity.py -v
+# Run Top 10 architectural integrity suite
+pytest backend/tests/test_top10_integrity.py -v
 
 # Verify frontend production build
 cd frontend
@@ -72,9 +72,9 @@ npm run build
 
 ---
 
-## 🌟 9-Pillar Architecture & Quality Checklist
+## 🌟 10-Pillar Architecture & Quality Checklist
 
-Every major feature or Pull Request must adhere to the 9 Core Architectural Standards:
+Every major feature or Pull Request must adhere to the 10 Core Architectural Standards:
 
 1. **Async Non-Blocking I/O**: Endpoints must leverage `async def` and preserve sub-1.5s response SLAs.
 2. **Deterministic 4-Pillar Scoring**: Compliance calculations must be mathematically grounded and auditable.
@@ -85,6 +85,7 @@ Every major feature or Pull Request must adhere to the 9 Core Architectural Stan
 7. **EEOC / NYC LL 144 Anonymization**: Protect candidate privacy by removing all PII before blind audits.
 8. **Ontological Skill Taxonomy**: Enforce a Hard-to-Soft skill ratio $R_{\text{skill}} \ge 0.70$.
 9. **Single-Column Resume Compilation**: PDF builders must produce strict single-column ATS layouts.
+10. **Multi-Vendor Exploit Defense**: Intercept white-on-white text (#ffffff), micro-fonts, and zero-width characters.
 
 ---
 

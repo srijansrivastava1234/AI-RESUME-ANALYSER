@@ -3,18 +3,15 @@ from typing import Dict, Any, List
 
 def simulate_workday_parsing(raw_text: str) -> Dict[str, Any]:
     """
-    Emulates Workday ATS text parsing behavior:
+    Emulates Workday ATS text parsing behavior and extraction mechanics:
     1. Strips page headers, footers, and page numbers.
     2. Simulates strict top-to-bottom vertical line scan (multi-column text flattening).
-    3. Extracts standard Workday profile entities:
-       - Name & Contact Info
-       - Work Experience (Job Title, Employer, Date Range, Bullets)
-       - Education (Degree, Institution, Dates)
-       - Skills Taxonomy
-    4. Evaluates structural risk:
-       - Multi-column reading-order collisions
-       - Loss of header/footer contact details
-       - Date misalignment
+    3. Extracts standard Workday profile entities (Contact, Experience, Education, Skills).
+    4. Evaluates structural risk (Multi-column interleaving, lost contact headers, date misalignment).
+
+    :param raw_text: Raw plain text extracted from candidate resume document.
+    :return: Standardized dictionary containing engine metadata, compatibility score (0-100),
+             parsed text stream, extracted profile entities, hazards list, and safety boolean.
     """
     if not raw_text or not raw_text.strip():
         return {

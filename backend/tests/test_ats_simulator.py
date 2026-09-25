@@ -98,6 +98,15 @@ def test_run_multi_ats_simulation_composite():
     assert "taleo" in res["engines"]
 
 
+def test_simulate_ats_empty_input():
+    res = run_multi_ats_simulation("")
+    assert res is not None
+    assert "overall_cross_ats_score" in res
+    assert res["overall_cross_ats_score"] <= 50
+    assert "Empty" in res["tier"] or "Risk" in res["tier"]
+
+
+
 def test_api_simulate_ats_endpoint():
     response = client.post(
         "/api/simulate-ats",
@@ -111,3 +120,4 @@ def test_api_simulate_ats_endpoint():
     assert data["engines"]["workday"]["engine"] == "Workday"
     assert data["engines"]["greenhouse"]["engine"] == "Greenhouse / Lever"
     assert data["engines"]["taleo"]["engine"] == "Taleo / Oracle"
+

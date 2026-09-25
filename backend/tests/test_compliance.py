@@ -267,3 +267,19 @@ def test_audit_score_distribution_disparity():
     assert summary["pass_rate"] == 0.75
     assert summary["audit_tier"] == "BALANCED"
 
+
+def test_compliance_letter_grade_boundaries():
+    from app.compliance import calculate_letter_grade
+    assert calculate_letter_grade(95) == "A+"
+    assert calculate_letter_grade(90) == "A+"
+    assert calculate_letter_grade(85) == "A"
+    assert calculate_letter_grade(80) == "A"
+    assert calculate_letter_grade(75) == "B"
+    assert calculate_letter_grade(70) == "B"
+    assert calculate_letter_grade(65) == "C"
+    assert calculate_letter_grade(60) == "C"
+    assert calculate_letter_grade(55) == "D"
+    assert calculate_letter_grade(0) == "D"
+
+
+

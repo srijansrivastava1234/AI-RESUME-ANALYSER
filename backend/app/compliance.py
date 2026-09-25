@@ -47,7 +47,21 @@ BINARY_IMPACT_PATTERNS = [
 ]
 
 
+def calculate_letter_grade(score: int) -> str:
+    """Map a 0-100 composite ATS score to an executive letter grade tier."""
+    if score >= 90:
+        return "A+"
+    elif score >= 80:
+        return "A"
+    elif score >= 70:
+        return "B"
+    elif score >= 60:
+        return "C"
+    return "D"
+
+
 def extract_resume_bullets(text: str) -> List[str]:
+
     """
     Extracts career bullet points from resume text by detecting leading symbols,
     numbered items, or action-oriented lines.
@@ -291,21 +305,18 @@ def audit_ats_compliance(
     )
     composite_score = int(round(max(0, min(100, composite_raw))))
 
-    if composite_score >= 90:
-        letter_grade = "A+"
+    letter_grade = calculate_letter_grade(composite_score)
+    if letter_grade == "A+":
         grade_descriptor = "Elite Competitive Profile (Top 5% ATS Ingestion)"
-    elif composite_score >= 80:
-        letter_grade = "A"
+    elif letter_grade == "A":
         grade_descriptor = "Strong Role Alignment & Parseability"
-    elif composite_score >= 70:
-        letter_grade = "B"
+    elif letter_grade == "B":
         grade_descriptor = "Competitive with Minor Structural Gaps"
-    elif composite_score >= 60:
-        letter_grade = "C"
+    elif letter_grade == "C":
         grade_descriptor = "Sub-Optimal / Knockout Risk in High-Volume Pipelines"
     else:
-        letter_grade = "D"
         grade_descriptor = "Critical Deficiencies Detected (High Parser Attrition)"
+
 
     # -------------------------------------------------------------------------
     # Percentile Rank & Executive Summary

@@ -131,3 +131,25 @@ def test_api_format_clean_txt_endpoint():
     json_data = res.json()
     assert "plain_text" in json_data
     assert "ALEX MERCER" in json_data["plain_text"]
+
+
+def test_escape_latex_special_chars():
+    from app.resume_builder import escape_latex_special_chars
+    assert escape_latex_special_chars("R&D at 50% cost & $100k savings") == r"R\&D at 50\% cost \& \$100k savings"
+    assert escape_latex_special_chars("user_id_#1") == r"user\_id\_\#1"
+    assert escape_latex_special_chars("{key: value}") == r"\{key: value\}"
+    assert escape_latex_special_chars("") == ""
+
+
+def test_generate_latex_resume():
+    from app.resume_builder import generate_latex_resume
+    parsed = parse_resume_to_structured_json(SAMPLE_RESUME)
+    latex_output = generate_latex_resume(parsed)
+    assert r"\documentclass" in latex_output
+    assert r"\begin{document}" in latex_output
+    assert r"\end{document}" in latex_output
+    assert "Alex Mercer" in latex_output or "ALEX MERCER" in latex_output
+    assert r"\section*{Work Experience}" in latex_output
+    assert r"\section*{Technical Skills}" in latex_output
+    assert r"\begin{itemize}" in latex_output
+

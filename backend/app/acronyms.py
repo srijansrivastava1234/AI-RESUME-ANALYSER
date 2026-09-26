@@ -57,6 +57,9 @@ _COMPILED_SHORT_PATTERNS: Dict[str, re.Pattern] = {
 }
 
 
+from functools import lru_cache
+
+@lru_cache(maxsize=1024)
 def get_canonical_term(term: str) -> str:
     """
     Returns the canonical standardized name for a given technical term or abbreviation.
@@ -68,11 +71,14 @@ def get_canonical_term(term: str) -> str:
     return _REVERSE_SYNONYM_MAP.get(normalized, term.strip().title())
 
 
-def get_all_aliases(canonical_term: str) -> Set[str]:
+@lru_cache(maxsize=256)
+def get_all_aliases(canonical_term: str) -> frozenset:
     """
-    Returns all aliases associated with a canonical technical term.
+    Returns all aliases associated with a canonical technical term as an immutable frozenset.
     """
-    return TECH_SYNONYM_CLUSTERS.get(canonical_term, {canonical_term.lower()})
+    aliases = TECH_SYNONYM_CLUSTERS.get(canonical_term, {canonical_term.lower()})
+    return frozenset(aliases)
+
 
 
 def expand_technical_terms(text: str) -> Dict[str, Any]:

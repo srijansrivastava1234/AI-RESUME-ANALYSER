@@ -177,7 +177,31 @@ def parse_job_html(html_content: str, url: str) -> Dict[str, Any]:
         if content_el:
             main_text = content_el.get_text(separator="\n")
 
-    # 7. Generic Fallback
+    # 7. SmartRecruiters
+    elif "smartrecruiters.com" in domain:
+        title_el = soup.find(class_=re.compile(r'job-title|posting-title', re.I)) or soup.find("h1")
+        if title_el:
+            job_title = title_el.get_text(strip=True)
+        company_el = soup.find(class_=re.compile(r'company-name|brand-name', re.I))
+        if company_el:
+            company = company_el.get_text(strip=True)
+        content_el = soup.find(class_=re.compile(r'job-sections|job-detail|job-description', re.I)) or soup.find("main")
+        if content_el:
+            main_text = content_el.get_text(separator="\n")
+
+    # 8. Jobvite
+    elif "jobvite.com" in domain:
+        title_el = soup.find(class_=re.compile(r'jv-header|jv-job-detail-top', re.I)) or soup.find("h2") or soup.find("h1")
+        if title_el:
+            job_title = title_el.get_text(strip=True)
+        company_el = soup.find(class_=re.compile(r'jv-job-detail-meta|company', re.I))
+        if company_el:
+            company = company_el.get_text(strip=True)
+        content_el = soup.find(class_=re.compile(r'jv-job-detail-description|jv-description', re.I)) or soup.find("main")
+        if content_el:
+            main_text = content_el.get_text(separator="\n")
+
+    # 9. Generic Fallback
     if not main_text:
         # Try finding article, main, or primary content block
         candidates = soup.find_all(["article", "main", "div", "section"], class_=re.compile(r'job|description|posting|career|vacancy|details', re.I))

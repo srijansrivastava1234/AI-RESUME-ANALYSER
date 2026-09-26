@@ -102,3 +102,17 @@ def test_parser_utils_cached_sanitization_throughput():
     avg_per_op_us = (elapsed_total_ms / iterations) * 1000.0
     # Cached lookup should be under 50 microseconds per op
     assert avg_per_op_us < 50.0, f"Cached lookup took {avg_per_op_us:.2f}µs per op"
+
+
+def test_ats_simulation_latency_and_throughput_sla():
+    from app.ats_simulator import run_multi_ats_simulation
+    start = time.perf_counter()
+    res = run_multi_ats_simulation(SAMPLE_LONG_RESUME)
+    elapsed_ms = (time.perf_counter() - start) * 1000.0
+    assert res["overall_cross_ats_score"] > 0
+    assert "workday" in res["engines"]
+    assert "greenhouse" in res["engines"]
+    assert "taleo" in res["engines"]
+    # Total multi-engine simulation SLA is sub-30ms
+    assert elapsed_ms < 30.0, f"Multi-ATS simulation took {elapsed_ms:.2f}ms, exceeding 30ms SLA"
+

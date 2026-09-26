@@ -148,11 +148,108 @@ def run_cli_audit(
     return report
 
 
+def run_batch_cli_audit(
+    directory_path: str,
+    jd_path: Optional[str] = None,
+    output_summary_path: Optional[str] = None,
+    quiet: bool = False
+) -> Dict[str, Any]:
+    """
+    Evaluates all supported resume files within a target directory in batch mode.
+    Returns aggregate statistics, score distributions, and individual rankings.
+    """
+    if not os.path.exists(directory_path) or not os.path.isdir(directory_path):
+        raise NotADirectoryError(f"Directory not found or invalid: {directory_path}")
+
+    supported_exts = {'.pdf', '.docx', '.doc', '.txt', '.md'}
+    files = [
+        os.path.join(directory_path, f)
+        for f in os.listdir(directory_path)
+        if os.path.splitext(f)[1].lower() in supported_exts and os.path.isfile(os.path.join(directory_path, f))
+    ]
+
+    if not files:
+        summary = {
+            "total_files": 0,
+            "average_score": 0.0,
+            "results": [],
+            "message": "No supported resume files found in directory."
+        }
+        if output_summary_path:
+            with open(output_summary_path, 'w', encoding='utf-8') as f:
+                json.dump(summary, f, indent=2)
+        return summary
+
+    results = []
+    jd_text = None
+    if jd_path and os.path.exists(jd_path):
+        with open(jd_path, 'r', encoding='utf-8', errors='ignore') as f:
+            jd_text = f.read()
+
+    for file_path in files:
+        try:
+            text = parse_resume_file(file_path)
+            report = analyze_resume(resume_text=text, job_description=jd_text)
+            score = report.get('ats_score', 0)
+            results.append({
+                "filename": os.path.basename(file_path),
+                "path": file_path,
+                "ats_score": score,
+                "strengths_count": len(report.get('key_strengths', [])),
+                "improvements_count": len(report.get('improvements', [])),
+                "status": "success"
+            })
+        except Exception as e:
+            results.append({
+                "filename": os.path.basename(file_path),
+                "path": file_path,
+                "ats_score": 0,
+                "error": str(e),
+                "status": "error"
+            })
+
+    # Sort results by ATS score descending
+    results.sort(key=lambda r: r.get("ats_score", 0), reverse=True)
+    valid_scores = [r["ats_score"] for r in results if r["status"] == "success"]
+    avg_score = round(sum(valid_scores) / len(valid_scores), 2) if valid_scores else 0.0
+
+    batch_summary = {
+        "total_files": len(files),
+        "successful_evaluations": len(valid_scores),
+        "average_score": avg_score,
+        "highest_score": max(valid_scores) if valid_scores else 0,
+        "lowest_score": min(valid_scores) if valid_scores else 0,
+        "rankings": results
+    }
+
+    if output_summary_path:
+        with open(output_summary_path, 'w', encoding='utf-8') as f:
+            json.dump(batch_summary, f, indent=2)
+        if not quiet:
+            print(f"✓ Batch evaluation summary saved to: {output_summary_path}")
+
+    if not quiet:
+        print("\n" + "=" * 60)
+        print(f"          BATCH RESUME AUDIT SUMMARY")
+        print("=" * 60)
+        print(f"Evaluated Files: {len(files)} | Average ATS Score: {avg_score}/100")
+        print("-" * 60)
+        for rank, res in enumerate(results, 1):
+            if res["status"] == "success":
+                print(f"  #{rank:02d} [{res['ats_score']:3d}/100] {res['filename']}")
+            else:
+                print(f"  #{rank:02d} [ERR]     {res['filename']} - {res.get('error', '')}")
+        print("=" * 60 + "\n")
+
+    return batch_summary
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="AI Resume Analyser CLI - Audits resumes for ATS compliance and generates SVG status badges."
     )
-    parser.add_argument("resume", help="Path to resume file (.pdf, .docx, .txt, .md)")
+    parser.add_argument("resume", nargs="?", help="Path to single resume file (.pdf, .docx, .txt, .md)", default=None)
+    parser.add_argument("--batch", "-B", help="Directory path to batch evaluate all resumes", default=None)
     parser.add_argument("--jd", help="Optional path to target job description text file", default=None)
     parser.add_argument("--output", "-o", help="Optional path to save JSON analysis report", default=None)
     parser.add_argument("--badge", "-b", help="Optional path to save dynamic SVG status badge", default=None)
@@ -161,13 +258,24 @@ def main():
     args = parser.parse_args()
 
     try:
-        run_cli_audit(
-            resume_path=args.resume,
-            jd_path=args.jd,
-            output_json_path=args.output,
-            badge_svg_path=args.badge,
-            quiet=args.quiet
-        )
+        if args.batch:
+            run_batch_cli_audit(
+                directory_path=args.batch,
+                jd_path=args.jd,
+                output_summary_path=args.output,
+                quiet=args.quiet
+            )
+        elif args.resume:
+            run_cli_audit(
+                resume_path=args.resume,
+                jd_path=args.jd,
+                output_json_path=args.output,
+                badge_svg_path=args.badge,
+                quiet=args.quiet
+            )
+        else:
+            parser.print_help()
+            sys.exit(1)
     except Exception as err:
         print(f"Error: {err}", file=sys.stderr)
         sys.exit(1)
@@ -175,3 +283,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

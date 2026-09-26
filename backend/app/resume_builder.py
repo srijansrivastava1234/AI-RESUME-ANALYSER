@@ -419,3 +419,180 @@ def format_structured_resume_to_plain_text(data: Dict[str, Any]) -> str:
         lines.append("")
 
     return "\n".join(lines).strip()
+
+
+def escape_latex_special_chars(text: str) -> str:
+    """
+    Escapes LaTeX reserved control characters to prevent document compilation failures.
+    """
+    if not text:
+        return ""
+    
+    # Mapping of special characters to LaTeX escaped equivalents
+    latex_escapes = {
+        '\\': r'\textbackslash{}',
+        '&': r'\&',
+        '%': r'\%',
+        '$': r'\$',
+        '#': r'\#',
+        '_': r'\_',
+        '{': r'\{',
+        '}': r'\}',
+        '~': r'\textasciitilde{}',
+        '^': r'\textasciicircum{}',
+    }
+    
+    # Process backslash first if present
+    escaped = str(text)
+    for char, replacement in latex_escapes.items():
+        escaped = escaped.replace(char, replacement)
+        
+    return escaped
+
+
+def generate_latex_resume(data: Dict[str, Any]) -> str:
+    """
+    Renders a structured resume dictionary into clean, compilation-ready LaTeX source code
+    following standard Ivy League single-column ATS typography conventions.
+    """
+    contact = data.get('contact', {})
+    name = escape_latex_special_chars(contact.get('full_name', 'Candidate Name'))
+    email = escape_latex_special_chars(contact.get('email', ''))
+    phone = escape_latex_special_chars(contact.get('phone', ''))
+    location = escape_latex_special_chars(contact.get('location', ''))
+    linkedin = escape_latex_special_chars(contact.get('linkedin', ''))
+    github = escape_latex_special_chars(contact.get('github', ''))
+
+    header_parts = [p for p in [phone, email, location, linkedin, github] if p]
+    header_contact_str = " $\\cdot$ ".join(header_parts)
+
+    latex_code = [
+        r"\documentclass[letterpaper,10pt]{article}",
+        r"\usepackage[empty]{fullpage}",
+        r"\usepackage{titlesec}",
+        r"\usepackage{enumitem}",
+        r"\usepackage[hidelinks]{hyperref}",
+        r"\usepackage[utf8]{inputenc}",
+        r"\usepackage[margin=0.65in]{geometry}",
+        r"",
+        r"\pagestyle{empty}",
+        r"\titleformat{\section}{\large\bfseries\scshape\raggedright}{}{0em}{}[\titlerule]",
+        r"\setlist[itemize]{leftmargin=*,noitemsep,topsep=0pt}",
+        r"",
+        r"\begin{document}",
+        r"",
+        r"%% Candidate Header",
+        r"\begin{center}",
+        f"    {{\\Huge\\textbf{{{name}}}}}\\\\[4pt]",
+        f"    {header_contact_str}",
+        r"\end{center}",
+        r"\vspace{-10pt}",
+    ]
+
+    # Summary
+    summary = data.get('summary', '').strip()
+    if summary:
+        latex_code.extend([
+            r"\section*{Professional Summary}",
+            f"{escape_latex_special_chars(summary)}",
+            r"\vspace{4pt}"
+        ])
+
+    # Experience
+    experiences = data.get('experience', [])
+    if experiences:
+        latex_code.extend([
+            r"\section*{Work Experience}"
+        ])
+        for exp in experiences:
+            role = escape_latex_special_chars(exp.get('role', 'Role'))
+            company = escape_latex_special_chars(exp.get('company', 'Company'))
+            date_range = escape_latex_special_chars(exp.get('date_range', ''))
+            latex_code.extend([
+                f"\\textbf{{{role}}} \\hfill {date_range}\\\\",
+                f"\\textit{{{company}}}\\\\",
+                r"\begin{itemize}"
+            ])
+            for bullet in exp.get('bullets', []):
+                latex_code.append(f"    \\item {escape_latex_special_chars(bullet)}")
+            latex_code.extend([
+                r"\end{itemize}",
+                r"\vspace{4pt}"
+            ])
+
+    # Skills
+    skills = data.get('skills', {})
+    if any(skills.values()):
+        latex_code.extend([
+            r"\section*{Technical Skills}",
+            r"\begin{itemize}"
+        ])
+        if skills.get('technical'):
+            tech_str = escape_latex_special_chars(", ".join(skills['technical']))
+            latex_code.append(f"    \\item \\textbf{{Languages \\& Core:}} {tech_str}")
+        if skills.get('tools_frameworks'):
+            tools_str = escape_latex_special_chars(", ".join(skills['tools_frameworks']))
+            latex_code.append(f"    \\item \\textbf{{Tools \\& Platforms:}} {tools_str}")
+        if skills.get('soft_skills'):
+            soft_str = escape_latex_special_chars(", ".join(skills['soft_skills']))
+            latex_code.append(f"    \\item \\textbf{{Leadership \\& Methodologies:}} {soft_str}")
+        latex_code.extend([
+            r"\end{itemize}",
+            r"\vspace{4pt}"
+        ])
+
+    # Projects
+    projects = data.get('projects', [])
+    if projects:
+        latex_code.extend([
+            r"\section*{Projects}"
+        ])
+        for proj in projects:
+            title = escape_latex_special_chars(proj.get('title', 'Project'))
+            techs = escape_latex_special_chars(", ".join(proj.get('technologies', [])))
+            tech_suffix = f" \\textit{{({techs})}}" if techs else ""
+            latex_code.extend([
+                f"\\textbf{{{title}}}{tech_suffix}\\\\",
+                r"\begin{itemize}"
+            ])
+            for bullet in proj.get('bullets', []):
+                latex_code.append(f"    \\item {escape_latex_special_chars(bullet)}")
+            latex_code.extend([
+                r"\end{itemize}",
+                r"\vspace{4pt}"
+            ])
+
+    # Education
+    education = data.get('education', [])
+    if education:
+        latex_code.extend([
+            r"\section*{Education}"
+        ])
+        for edu in education:
+            degree = escape_latex_special_chars(edu.get('degree', 'Degree'))
+            inst = escape_latex_special_chars(edu.get('institution', 'Institution'))
+            grad = escape_latex_special_chars(edu.get('grad_year', ''))
+            latex_code.append(f"\\textbf{{{inst}}} \\hfill {grad}\\\\")
+            latex_code.append(f"\\textit{{{degree}}}\\\\")
+        latex_code.append(r"\vspace{4pt}")
+
+    # Certifications
+    certs = data.get('certifications', [])
+    if certs:
+        latex_code.extend([
+            r"\section*{Certifications}",
+            r"\begin{itemize}"
+        ])
+        for cert in certs:
+            latex_code.append(f"    \\item {escape_latex_special_chars(cert)}")
+        latex_code.extend([
+            r"\end{itemize}",
+            r"\vspace{4pt}"
+        ])
+
+    latex_code.extend([
+        r"\end{document}"
+    ])
+
+    return "\n".join(latex_code).strip()
+

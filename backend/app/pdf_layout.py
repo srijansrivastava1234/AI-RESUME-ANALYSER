@@ -40,6 +40,37 @@ METRIC_PATTERNS = [
     r'\b\d+\s*(?:ms|sec|hours?|days?|users?|clients?|engineers?|team\s+members?|x|X)\b'
 ]
 
+def clamp_viewport_bounds(val: float, min_bound: float = 0.0, max_bound: float = 1.0) -> float:
+    """Clamps a floating coordinate strictly between min_bound and max_bound."""
+    return max(min_bound, min(max_bound, float(val)))
+
+
+def normalize_bbox_coordinates(
+    x_pt: float,
+    y_pt: float,
+    width_pt: float,
+    height_pt: float,
+    page_width: float,
+    page_height: float
+) -> Dict[str, float]:
+    """
+    Converts absolute PDF point dimensions to normalized (0.0 - 1.0) viewport coordinates
+    with strictly enforced boundary safety and sub-millimeter precision.
+    """
+    safe_pw = max(1.0, page_width)
+    safe_ph = max(1.0, page_height)
+    x_norm = clamp_viewport_bounds(x_pt / safe_pw)
+    y_norm = clamp_viewport_bounds(y_pt / safe_ph)
+    w_norm = clamp_viewport_bounds(width_pt / safe_pw, min_bound=0.01)
+    h_norm = clamp_viewport_bounds(height_pt / safe_ph, min_bound=0.01)
+    return {
+        "x": round(x_norm, 4),
+        "y": round(y_norm, 4),
+        "w": round(w_norm, 4),
+        "h": round(h_norm, 4)
+    }
+
+
 def classify_token_type(text: str, y_norm: float, font_size: float, avg_font_size: float) -> str:
     """
     Classifies a text block into a semantic ATS role:
@@ -246,14 +277,17 @@ def extract_pdf_layout_tokens(pdf_bytes: bytes) -> Dict[str, Any]:
 
             tokens = []
             for order_idx, line in enumerate(grouped_lines):
-                # Normalized coordinates (0.0 to 1.0)
-                x_norm = max(0.0, min(1.0, line["min_x"] / page_width))
-                y_norm = max(0.0, min(1.0, (line["y_pt"] - line["font_size"]) / page_height))
-                w_norm = max(0.05, min(1.0, (line["max_x"] - line["min_x"]) / page_width))
-                h_norm = max(0.015, min(0.2, (line["font_size"] * 1.3) / page_height))
+                bbox = normalize_bbox_coordinates(
+                    x_pt=line["min_x"],
+                    y_pt=line["y_pt"] - line["font_size"],
+                    width_pt=line["max_x"] - line["min_x"],
+                    height_pt=line["font_size"] * 1.3,
+                    page_width=page_width,
+                    page_height=page_height
+                )
 
-                t_type = classify_token_type(line["text"], y_norm, line["font_size"], avg_font_size)
-                gaze_weight = calculate_gaze_weight(t_type, y_norm, x_norm, line["text"], line["font_size"], avg_font_size)
+                t_type = classify_token_type(line["text"], bbox["y"], line["font_size"], avg_font_size)
+                gaze_weight = calculate_gaze_weight(t_type, bbox["y"], bbox["x"], line["text"], line["font_size"], avg_font_size)
 
                 tokens.append({
                     "reading_order": order_idx + 1,
@@ -261,13 +295,9 @@ def extract_pdf_layout_tokens(pdf_bytes: bytes) -> Dict[str, Any]:
                     "type": t_type,
                     "font_size": round(line["font_size"], 1),
                     "gaze_weight": gaze_weight,
-                    "bbox": {
-                        "x": round(x_norm, 4),
-                        "y": round(y_norm, 4),
-                        "w": round(w_norm, 4),
-                        "h": round(h_norm, 4)
-                    }
+                    "bbox": bbox
                 })
+
 
             pages_data.append({
                 "page_number": page_idx + 1,

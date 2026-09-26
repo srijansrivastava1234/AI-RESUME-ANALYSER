@@ -23,6 +23,17 @@ def test_health_check():
     assert "docx" in data["supported_formats"]
     assert "txt" in data["supported_formats"]
 
+def test_diagnostics_endpoint():
+    response = client.get("/api/diagnostics")
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "operational"
+    assert "engines" in data
+    assert "ats_simulators" in data["engines"]
+    assert "scoring_pillars" in data["engines"]
+    assert "compliance" in data
+
+
 def test_security_and_timing_headers():
     response = client.get("/api/health")
     assert "X-Process-Time" in response.headers

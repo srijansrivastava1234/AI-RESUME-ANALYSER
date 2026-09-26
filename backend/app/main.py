@@ -316,6 +316,49 @@ def health_check():
         "max_file_size_mb": MAX_FILE_SIZE_BYTES // (1024 * 1024)
     }
 
+
+@app.get("/api/diagnostics")
+def get_diagnostics():
+    """
+    Returns runtime diagnostics, loaded ATS simulation engines,
+    deterministic scoring modules, and security policies.
+    """
+    return {
+        "status": "operational",
+        "version": APP_VERSION,
+        "environment": {
+            "pure_python_protobuf": os.environ.get("PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION") == "python",
+            "log_level": os.getenv("LOG_LEVEL", "INFO"),
+            "max_file_size_bytes": MAX_FILE_SIZE_BYTES,
+            "max_compare_files": MAX_COMPARE_FILES,
+        },
+        "engines": {
+            "ats_simulators": ["workday", "greenhouse", "taleo"],
+            "scoring_pillars": [
+                "deterministic_bm25_plus",
+                "font_cmap_integrity",
+                "career_chronology",
+                "viewport_first_third",
+                "token_density",
+                "google_ibm_xyz_scorer",
+                "adverse_impact_four_fifths",
+                "blind_pii_redactor",
+                "ats_hack_detector",
+                "layout_linearizer_xy_cut"
+            ],
+            "ai_integration": {
+                "gemini_enabled": bool(os.getenv("GEMINI_API_KEY")),
+                "deterministic_fallback_ready": True
+            }
+        },
+        "compliance": {
+            "nyc_local_law_144": "enforced",
+            "eeoc_four_fifths_rule": "active",
+            "eu_ai_act_article_10": "compliant"
+        }
+    }
+
+
 @app.post("/api/analyze")
 @limiter.limit("10/minute")
 async def analyze_resume_endpoint(

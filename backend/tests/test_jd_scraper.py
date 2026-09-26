@@ -146,6 +146,51 @@ def test_parse_job_html_generic():
     assert "React" in result["extracted_skills"]
 
 
+def test_parse_job_html_smartrecruiters():
+    html = """
+    <html>
+      <body>
+        <h1 class="job-title">Senior DevOps Architect</h1>
+        <div class="company-name">Global Scale Labs</div>
+        <div class="job-sections">
+          <p>We are seeking a Senior DevOps Architect to scale our Kubernetes clusters on AWS.</p>
+          <p>Must have deep expertise in Terraform, Docker, and CI/CD pipelines.</p>
+        </div>
+      </body>
+    </html>
+    """
+    result = parse_job_html(html, "https://jobs.smartrecruiters.com/GlobalScaleLabs/743999-senior-devops-architect")
+    assert result["success"] is True
+    assert result["job_title"] == "Senior DevOps Architect"
+    assert result["company"] == "Global Scale Labs"
+    assert "Kubernetes" in result["extracted_skills"]
+    assert "AWS" in result["extracted_skills"]
+    assert "Terraform" in result["extracted_skills"]
+
+
+def test_parse_job_html_jobvite():
+    html = """
+    <html>
+      <body>
+        <h2 class="jv-header">Principal Machine Learning Engineer</h2>
+        <div class="jv-job-detail-meta">AI Dynamics</div>
+        <div class="jv-job-detail-description">
+          <p>Lead AI model fine-tuning with Python, PyTorch, and Scikit-Learn.</p>
+          <p>Experience building REST APIs with FastAPI and deploying to GCP is required.</p>
+        </div>
+      </body>
+    </html>
+    """
+    result = parse_job_html(html, "https://jobs.jobvite.com/aidynamics/job/oW0dfwD1")
+    assert result["success"] is True
+    assert result["job_title"] == "Principal Machine Learning Engineer"
+    assert result["company"] == "AI Dynamics"
+    assert "Python" in result["extracted_skills"]
+    assert "PyTorch" in result["extracted_skills"]
+    assert "FastAPI" in result["extracted_skills"]
+
+
+
 def test_api_scrape_jd_endpoint_ssrf_error():
     response = client.post(
         "/api/scrape-jd",

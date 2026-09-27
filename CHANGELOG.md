@@ -4,6 +4,21 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-09-27
+
+### Added
+- **Top 10 Flagship Technical Contributions Framework**: Created `CONTRIBUTIONS_TOP10.md` incorporating the Multi-Vendor ATS Emulation Sandbox & Adversarial White-Font Guard.
+- **Performance & Latency Benchmark Documentation**: Added `docs/BENCHMARKS.md` detailing sub-1.5s SLA metrics, memory profiles, and pipeline breakdowns.
+- **Algorithmic Bias Compliance Guide**: Authored `docs/COMPLIANCE_AUDIT.md` mapping controls to NYC Local Law 144, EU AI Act, and ADEA Title VII.
+- **End-to-End System Architecture Schematics**: Added `docs/SYSTEM_ARCHITECTURE.md` with high-level component diagrams and sequence flows.
+- **Automated Performance Benchmark Test Suite**: Implemented `backend/tests/test_benchmarks.py` benchmarking BM25+ and XY-Cut linearizer latency.
+- **Local Batch Evaluation CLI Utility**: Added `backend/cli.py` for headless plain text and markdown resume evaluation.
+- **Security Policy & Threat Model**: Published `SECURITY.md` defining threat vectors, input sanitization rules, and disclosure practices.
+- **Workspace Consistency & Formatting Config**: Added `.editorconfig` for cross-platform indentation and line endings.
+- **Declarative ATS Rules Schema**: Added `backend/app/rules_config.json` standardizing scoring weights, constraints, and thresholds.
+
+---
+
 ## [3.1.0] - 2026-09-24
 
 ### Added

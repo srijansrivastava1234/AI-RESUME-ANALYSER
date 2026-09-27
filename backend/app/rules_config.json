@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ATSRulesConfiguration",
+  "version": "1.1.0",
+  "scoring_weights": {
+    "keywords_hard_skills": 0.40,
+    "xyz_impact_metric": 0.30,
+    "structural_parseability": 0.15,
+    "reading_density": 0.15
+  },
+  "grade_thresholds": {
+    "A_PLUS": 90,
+    "A": 80,
+    "B": 70,
+    "C": 60,
+    "D": 0
+  },
+  "constraints": {
+    "min_gutter_width_pt": 12.0,
+    "max_employment_gap_days": 90,
+    "min_hard_skill_ratio": 0.70,
+    "bm25_k1": 1.2,
+    "bm25_b": 0.75,
+    "bm25_delta": 1.0,
+    "baseline_token_length": 450
+  }
+}

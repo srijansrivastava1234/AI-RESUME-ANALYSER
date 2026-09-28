@@ -1,7 +1,7 @@
 import time
 import pytest
-from app.bm25 import calculate_bm25_score
-from app.pdf_layout import XYCutLinearizer
+from app.bm25_scorer import compute_bm25_plus as calculate_bm25_score
+from app.layout_linearizer import simulate_recursive_xy_cut
 
 def test_bm25_performance_benchmark():
     query_tokens = ["python", "fastapi", "react", "docker", "kubernetes", "aws", "postgresql"]
@@ -20,19 +20,18 @@ def test_bm25_performance_benchmark():
     assert elapsed_ms < 100.0, f"BM25 benchmark took {elapsed_ms:.2f}ms (threshold: 100ms)"
 
 def test_xycut_linearizer_performance_benchmark():
-    mock_bounding_boxes = [
-        {"x0": 50, "y0": 100, "x1": 250, "y1": 120, "text": "Senior Software Engineer"},
-        {"x0": 50, "y0": 130, "x1": 250, "y1": 150, "text": "Google Inc. (2020 - Present)"},
-        {"x0": 300, "y0": 100, "x1": 500, "y1": 120, "text": "Skills: Python, FastAPI"},
-        {"x0": 300, "y0": 130, "x1": 500, "y1": 150, "text": "Certifications: AWS Solution Architect"},
-    ]
-    
-    linearizer = XYCutLinearizer(gutter_threshold_pt=12.0)
+    sample_text = (
+        "Skills: Python, Go        Acme Corp - Lead Engineer\n"
+        "Tools: Docker, K8s        Architected multi-region cloud cluster\n"
+        "Contact: jane@test.com    Decreased API latency by 45% using Redis\n"
+        "Education: BS CS 2020     Mentored 8 junior and mid-level developers\n"
+        "Languages: English        Managed $1.2M annual AWS cloud infrastructure\n"
+    )
     
     start_time = time.perf_counter()
-    for _ in range(50):
-        _ = linearizer.linearize(mock_bounding_boxes)
+    for _ in range(100):
+        _ = simulate_recursive_xy_cut(sample_text)
     elapsed_ms = (time.perf_counter() - start_time) * 1000
     
-    # 50 layout evaluations should complete under 100ms
+    # 100 layout evaluations should complete under 100ms
     assert elapsed_ms < 100.0, f"XYCut benchmark took {elapsed_ms:.2f}ms (threshold: 100ms)"

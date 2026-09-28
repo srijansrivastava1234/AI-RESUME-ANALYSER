@@ -4,6 +4,16 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2026-09-28
+
+### Added
+- **Automated JSON Schema & ATS Rule Configuration Exporter**: Added `app.schema_exporter` and `test_schema_exporter.py` enabling declarative export and runtime validation of ATS scoring weights and constraints.
+- **Corporate Buzzword & Jargon Density Analyzer**: Implemented `app.buzzword_detector` and `test_buzzword_detector.py` measuring buzzword density against quantified Google X-Y-Z outcome metrics.
+- **ATS-Optimized Markdown & Plaintext Resume Exporter**: Engineered `app.export_formatter` and `test_export_formatter.py` providing Unicode ligature sanitization and single-column ATS serialization.
+- **BM25 & Layout Benchmark Alignment**: Unified backward-compatible BM25 scoring aliases and verified 100% test pass rate across 390+ unit tests.
+
+---
+
 ## [3.2.0] - 2026-09-27
 
 ### Added

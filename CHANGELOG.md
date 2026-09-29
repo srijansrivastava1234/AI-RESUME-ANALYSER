@@ -4,6 +4,21 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2026-09-29
+
+### Added
+- **Interactive Rich CLI Dashboard & Batch Leaderboard**: Added ANSI-styled interactive terminal dashboard, score progress bars, letter grade indicators, and batch candidate leaderboard in `app.cli` and `test_cli_dashboard.py`.
+- **Resume Revision Delta Comparison Engine**: Engineered `app.revision_diff` and `test_revision_diff.py` computing net ATS score gain, resolved keyword gaps, and regression alerts between resume iterations.
+- **LaTeX Source (.tex) Resume AST Parser & Sanitizer**: Implemented `app.latex_parser` and `test_latex_parser.py` stripping LaTeX commands and extracting structured sections from `.tex` resumes.
+- **OpenXML DOCX Single-Column Resume Exporter**: Added `app.docx_exporter` and `test_docx_exporter.py` translating structured JSON schemas into ATS-compliant single-column DOCX documents.
+- **Automated Sub-1.5s Performance Benchmark & Latency Suite**: Implemented `app.benchmark_runner` and `test_benchmark_runner.py` tracking P50/P95/P99 latency percentiles and token throughput.
+- **Specialized Industry Domain Taxonomies**: Built `app.domain_taxonomy` and `test_domain_taxonomy.py` with custom skill vocabularies and scoring weights for FinTech, Cloud/DevOps, and AI/ML roles.
+- **Coleman-Liau & ARI Automated Readability Metrics**: Added `app.readability_metrics` and `test_readability_metrics.py` calculating executive scannability and reading grade level.
+- **Pipeline Execution Timer & Memory Tracer**: Added `app.telemetry` and `test_telemetry.py` profiling sub-millisecond stage latencies and peak memory allocations.
+- **ATS Section Ordering & Canonical Sequence Validator**: Implemented `app.section_order_validator` and `test_section_order_validator.py` verifying optical reading flow against standard hiring manager conventions.
+
+---
+
 ## [3.3.0] - 2026-09-28
 
 ### Added

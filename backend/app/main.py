@@ -62,6 +62,7 @@ from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
 from app.bullet_linter import audit_bullet_list_typography, audit_single_bullet_typography
+from app.ats_benchmarker import benchmark_ats_parsing_resilience
 from dotenv import load_dotenv
 
 # Load environmental variables from .env if present
@@ -227,6 +228,10 @@ class SemanticMatchRequest(BaseModel):
 
 class BulletTypographyRequest(BaseModel):
     bullets: List[str] = Field(..., min_length=1, description="List of resume bullet points to audit for typography and typos")
+
+class ATSBenchmarkRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Plain text of the candidate resume")
+
 
 
 
@@ -1186,6 +1191,20 @@ def audit_bullet_typography_endpoint(request: Request, payload: BulletTypography
     except Exception as err:
         logger.error(f"Error auditing bullet typography: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit bullet typography: {str(err)}")
+
+@app.post("/api/audit/ats-benchmark")
+@limiter.limit("60/minute")
+def benchmark_ats_parsing_endpoint(request: Request, payload: ATSBenchmarkRequest):
+    """
+    Evaluates resume against multi-engine parsing failure modes across Workday,
+    Taleo, Greenhouse, and iCIMS.
+    """
+    try:
+        return benchmark_ats_parsing_resilience(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error executing ATS parsing benchmark: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to benchmark ATS resilience: {str(err)}")
+
 
 
 

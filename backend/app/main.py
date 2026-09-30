@@ -60,6 +60,7 @@ from app.interview_prep import generate_interview_prep
 from app.resume_builder import parse_resume_to_structured_json, format_structured_resume_to_plain_text
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
+from app.semantic_match import calculate_semantic_alignment
 from dotenv import load_dotenv
 
 # Load environmental variables from .env if present
@@ -218,6 +219,10 @@ class GenerateOutreachRequest(BaseModel):
     tone: Optional[str] = Field("confident", description="Tone ('confident', 'direct', 'technical', 'executive')")
     recipient_name: Optional[str] = Field(None, description="Target recipient or recruiter name")
     company_name: Optional[str] = Field(None, description="Target company name")
+
+class SemanticMatchRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="The plain text of the candidate resume")
+    job_description: str = Field(..., min_length=5, description="Target job description plain text")
 
 
 
@@ -1150,6 +1155,20 @@ async def generate_outreach_endpoint(request: Request, payload: GenerateOutreach
     except Exception as err:
         logger.error(f"Error generating outreach copy: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to generate outreach copy: {str(err)}")
+
+@app.post("/api/semantic-match")
+@limiter.limit("60/minute")
+def semantic_match_endpoint(request: Request, payload: SemanticMatchRequest):
+    """
+    Computes Jaccard n-gram similarity, term recall, and semantic alignment
+    between resume text and target job description.
+    """
+    try:
+        return calculate_semantic_alignment(payload.resume_text, payload.job_description)
+    except Exception as err:
+        logger.error(f"Error computing semantic match: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to calculate semantic match: {str(err)}")
+
 
 
 

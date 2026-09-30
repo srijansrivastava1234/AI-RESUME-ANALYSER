@@ -4,6 +4,14 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-09-30
+
+### Added
+- **Top 4 Flagship Technical Contribution Catalog**: Added executive and resume-ready Google/IBM X-Y-Z contribution bullet points with mathematical formulas and SLA benchmarks in `CONTRIBUTIONS_TOP4.md` and `contributions_top4.txt`.
+- **Top 4 Architectural Integrity Test Suite**: Added dedicated end-to-end integration test suite `backend/tests/test_top4_integrity.py` validating async REST endpoints, 4-pillar compliance scoring, Okapi BM25+ term saturation, and adversarial exploit interception.
+
+---
+
 ## [3.4.0] - 2026-09-29
 
 ### Added

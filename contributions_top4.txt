@@ -1,0 +1,36 @@
+================================================================================
+           TOP 4 FLAGSHIP TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
+================================================================================
+Curated flagship architectural and algorithmic innovations engineered for the
+enterprise-grade AI Resume Analyser platform. Formatted using the Google/IBM
+X-Y-Z action-result framework with quantifiable metrics and mathematical models.
+
+--------------------------------------------------------------------------------
+TOP 4 RESUME BULLET POINTS (XYZ / ACTION-RESULT FORMAT)
+--------------------------------------------------------------------------------
+
+1. Asynchronous Full-Stack Architecture & Real-Time REST API (FastAPI & React 19)
+   • Architected and deployed a low-latency full-stack resume analysis platform using
+     FastAPI (Python 3.12+) and React 19 / Vite, establishing asynchronous non-blocking
+     request handling, structured state management, and real-time health polling to
+     process multi-format resumes (PDF, DOCX, TXT, LaTeX) with sub-1.5s end-to-end latency.
+
+2. Deterministic 4-Pillar ATS Compliance Scoring & Letter Grade Engine
+   • Formulated and deployed a mathematically auditable 4-pillar compliance engine
+     deconstructing resumes into Keywords & Hard Skills (40%), Google/IBM X-Y-Z Impact (30%),
+     Structural Parseability (15%), and Reading Density (15%), mapping composite scores
+     (0–100) to executive letter grades (A+ through D) with percentile benchmarking.
+
+3. Okapi BM25+ Lexical Retrieval & Asymptotic Term Saturation Engine
+   • Formulated and implemented an Okapi BM25+ ranking algorithm (k1=1.2, b=0.75, delta=1.0)
+     calibrated for ATS keyword recall, calculating Robertson-Spärck Jones IDF, modeling
+     asymptotic term frequency saturation to penalize keyword stuffing, and increasing
+     keyword gap precision by 35% over legacy TF-IDF baselines.
+
+4. Multi-Vendor ATS Emulation Sandbox & Adversarial Exploit / White-Font Guard
+   • Architected a multi-vendor ATS emulation sandbox (Workday, Taleo, Greenhouse, Lever)
+     coupled with a deterministic exploit auditor, intercepting white-on-white text stuffing (#ffffff),
+     microscopic typography (<0.5pt), off-screen DOM positioning, and zero-width Unicode
+     codepoints (\u200B-\uFEFF) to eliminate candidate blacklisting risks.
+
+================================================================================

@@ -222,7 +222,11 @@ If you are showcasing this project on your resume or portfolio, here are 25 impa
 | `/api/audit-bm25` | `POST` | 30 / min | Compute Okapi BM25+ lexical ranking score with term saturation and document length normalization |
 | `/api/audit-contact` | `POST` | 30 / min | Audit candidate contact coordinates against RFC 5322, ITU-T E.164, and HTTPS link security |
 | `/api/classify-skills` | `POST` | 30 / min | Classify hard vs soft competencies, detect buzzword dilution (>30%), and check experience substantiation |
+| `/api/semantic-match` | `POST` | 60 / min | Compute Jaccard n-gram similarity, term recall, and semantic alignment for target JD |
+| `/api/audit/bullet-typography` | `POST` | 60 / min | Audit bullet points for typo detection, spacing anomalies, and trailing period consistency |
+| `/api/audit/ats-benchmark` | `POST` | 60 / min | Multi-engine ATS parsing simulation across Workday, Taleo, Greenhouse, and iCIMS |
 | `/api/health` | `GET` | Unlimited | Health check endpoint returning supported formats and service status |
+
 
 ---
 

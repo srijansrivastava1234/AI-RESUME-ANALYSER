@@ -4,6 +4,16 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.6.0] - 2026-09-30
+
+### Added
+- **Jaccard & Soft-Cosine Semantic Match Scorer**: Implemented `app.semantic_match` and `test_semantic_match.py` evaluating token n-gram Jaccard similarity, JD keyword coverage ratios, and semantic alignment tiers.
+- **Bullet Point Typography & Typo Linter**: Implemented `app.bullet_linter` and `test_bullet_linter.py` auditing trailing period consistency, spacing anomalies, unbalanced brackets, and common resume typos.
+- **Multi-Engine ATS Parse Resilience Benchmarker**: Implemented `app.ats_benchmarker` and `test_ats_benchmarker.py` profiling layout hazards, contact extraction reliability, and section detection across Workday, Taleo, Greenhouse, and iCIMS.
+- **API Endpoints**: Added `/api/semantic-match`, `/api/audit/bullet-typography`, and `/api/audit/ats-benchmark` endpoints.
+
+---
+
 ## [3.5.0] - 2026-09-30
 
 ### Added

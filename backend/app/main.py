@@ -6,7 +6,7 @@ import logging
 import time
 from typing import Optional, List, Dict, Any
 
-APP_VERSION = "3.2.0"
+APP_VERSION = "3.6.0"
 MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB
 MAX_COMPARE_FILES = 5
 

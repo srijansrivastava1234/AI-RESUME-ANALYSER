@@ -61,6 +61,7 @@ from app.resume_builder import parse_resume_to_structured_json, format_structure
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
+from app.bullet_linter import audit_bullet_list_typography, audit_single_bullet_typography
 from dotenv import load_dotenv
 
 # Load environmental variables from .env if present
@@ -223,6 +224,10 @@ class GenerateOutreachRequest(BaseModel):
 class SemanticMatchRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="The plain text of the candidate resume")
     job_description: str = Field(..., min_length=5, description="Target job description plain text")
+
+class BulletTypographyRequest(BaseModel):
+    bullets: List[str] = Field(..., min_length=1, description="List of resume bullet points to audit for typography and typos")
+
 
 
 
@@ -1168,6 +1173,20 @@ def semantic_match_endpoint(request: Request, payload: SemanticMatchRequest):
     except Exception as err:
         logger.error(f"Error computing semantic match: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to calculate semantic match: {str(err)}")
+
+@app.post("/api/audit/bullet-typography")
+@limiter.limit("60/minute")
+def audit_bullet_typography_endpoint(request: Request, payload: BulletTypographyRequest):
+    """
+    Audits resume bullet points for spacing anomalies, unbalanced punctuation,
+    common typos, and trailing period consistency.
+    """
+    try:
+        return audit_bullet_list_typography(payload.bullets)
+    except Exception as err:
+        logger.error(f"Error auditing bullet typography: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit bullet typography: {str(err)}")
+
 
 
 

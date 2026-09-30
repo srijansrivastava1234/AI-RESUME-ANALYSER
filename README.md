@@ -10,9 +10,12 @@ A visually premium, modern ATS (Applicant Tracking System) compiler and resume a
 
 ---
 
-## 🌟 Top 10 Core Architectural Innovations
+## 🌟 Flagship Architectural Innovations
 
-For detailed mathematical formulations, recruiter impact metrics, and Google XYZ statements, see the [Flagship Top 10 Contributions Guide](contributions_top10.txt).
+For quick executive overviews and detailed mathematical formulations, see:
+- [Top 4 Core Flagship Contributions](CONTRIBUTIONS_TOP4.md) (Executive / Resume Highlights)
+- [Top 10 Architectural Innovations](CONTRIBUTIONS_TOP10.md) (Full Architectural Matrix)
+- [Plain Text Contribution Catalog](contributions_top4.txt) (Plain Text Showcase)
 
 | # | Architectural Innovation | Core Technology | Key Impact / Metric |
 |---|---|---|---|

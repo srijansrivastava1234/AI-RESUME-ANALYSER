@@ -64,6 +64,7 @@ from app.ats_benchmarker import benchmark_ats_parsing_resilience
 from app.dialect_checker import audit_dialect_and_voice
 from app.skill_decay import profile_skill_decay
 from app.role_readiness import evaluate_role_readiness
+from app.compensation_calibrator import calibrate_compensation
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -248,6 +249,11 @@ class SkillDecayRequest(BaseModel):
 class RoleReadinessRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Candidate resume text to evaluate against target archetypes")
     target_role: Optional[str] = Field(None, description="Target archetype key ('backend_engineer', 'frontend_engineer', 'fullstack_engineer', 'ml_engineer', 'devops_platform_engineer', 'data_engineer')")
+
+class CompensationCalibrationRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Candidate resume text to calibrate for seniority tier and compensation bands")
+    years_experience: Optional[float] = Field(None, description="Optional explicit total years of experience")
+
 
 
 
@@ -1260,6 +1266,19 @@ def audit_role_readiness_endpoint(request: Request, payload: RoleReadinessReques
     except Exception as err:
         logger.error(f"Error evaluating role readiness: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to evaluate role readiness: {str(err)}")
+
+@app.post("/api/audit/compensation-calibration")
+@limiter.limit("60/minute")
+def audit_compensation_calibration_endpoint(request: Request, payload: CompensationCalibrationRequest):
+    """
+    Calibrates candidate market seniority tier (L3-L7) and compensation bands.
+    """
+    try:
+        return calibrate_compensation(payload.resume_text, years_experience=payload.years_experience)
+    except Exception as err:
+        logger.error(f"Error calibrating compensation: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to calibrate compensation: {str(err)}")
+
 
 
 

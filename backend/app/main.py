@@ -62,6 +62,7 @@ from app.semantic_match import calculate_semantic_alignment
 from app.bullet_linter import audit_bullet_list_typography
 from app.ats_benchmarker import benchmark_ats_parsing_resilience
 from app.dialect_checker import audit_dialect_and_voice
+from app.skill_decay import profile_skill_decay
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -238,6 +239,11 @@ class ATSBenchmarkRequest(BaseModel):
 
 class DialectConsistencyRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text to evaluate for dialect and grammatical voice consistency")
+
+class SkillDecayRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to profile for technical skill freshness and half-life decay")
+    reference_year: Optional[int] = Field(None, description="Optional baseline year for decay calculations")
+
 
 
 
@@ -1224,6 +1230,19 @@ def audit_dialect_consistency_endpoint(request: Request, payload: DialectConsist
     except Exception as err:
         logger.error(f"Error checking dialect consistency: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit dialect consistency: {str(err)}")
+
+@app.post("/api/audit/skill-decay")
+@limiter.limit("60/minute")
+def audit_skill_decay_endpoint(request: Request, payload: SkillDecayRequest):
+    """
+    Evaluates exponential half-life decay and technical skill freshness.
+    """
+    try:
+        return profile_skill_decay(payload.resume_text, reference_year=payload.reference_year)
+    except Exception as err:
+        logger.error(f"Error profiling skill decay: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to profile skill decay: {str(err)}")
+
 
 
 

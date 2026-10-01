@@ -63,6 +63,7 @@ from app.bullet_linter import audit_bullet_list_typography
 from app.ats_benchmarker import benchmark_ats_parsing_resilience
 from app.dialect_checker import audit_dialect_and_voice
 from app.skill_decay import profile_skill_decay
+from app.role_readiness import evaluate_role_readiness
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -243,6 +244,11 @@ class DialectConsistencyRequest(BaseModel):
 class SkillDecayRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text to profile for technical skill freshness and half-life decay")
     reference_year: Optional[int] = Field(None, description="Optional baseline year for decay calculations")
+
+class RoleReadinessRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Candidate resume text to evaluate against target archetypes")
+    target_role: Optional[str] = Field(None, description="Target archetype key ('backend_engineer', 'frontend_engineer', 'fullstack_engineer', 'ml_engineer', 'devops_platform_engineer', 'data_engineer')")
+
 
 
 
@@ -1242,6 +1248,19 @@ def audit_skill_decay_endpoint(request: Request, payload: SkillDecayRequest):
     except Exception as err:
         logger.error(f"Error profiling skill decay: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to profile skill decay: {str(err)}")
+
+@app.post("/api/audit/role-readiness")
+@limiter.limit("60/minute")
+def audit_role_readiness_endpoint(request: Request, payload: RoleReadinessRequest):
+    """
+    Evaluates qualification coverage against standard industry job archetypes.
+    """
+    try:
+        return evaluate_role_readiness(payload.resume_text, target_role=payload.target_role)
+    except Exception as err:
+        logger.error(f"Error evaluating role readiness: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to evaluate role readiness: {str(err)}")
+
 
 
 

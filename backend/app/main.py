@@ -58,6 +58,10 @@ from app.jd_scraper import scrape_job_description
 from app.ats_simulator import run_multi_ats_simulation
 from app.interview_prep import generate_interview_prep
 from app.resume_builder import parse_resume_to_structured_json, format_structured_resume_to_plain_text
+from app.semantic_match import calculate_semantic_alignment
+from app.bullet_linter import audit_bullet_list_typography
+from app.ats_benchmarker import benchmark_ats_parsing_resilience
+from app.dialect_checker import audit_dialect_and_voice
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -231,6 +235,10 @@ class BulletTypographyRequest(BaseModel):
 
 class ATSBenchmarkRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Plain text of the candidate resume")
+
+class DialectConsistencyRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to evaluate for dialect and grammatical voice consistency")
+
 
 
 
@@ -1204,6 +1212,19 @@ def benchmark_ats_parsing_endpoint(request: Request, payload: ATSBenchmarkReques
     except Exception as err:
         logger.error(f"Error executing ATS parsing benchmark: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to benchmark ATS resilience: {str(err)}")
+
+@app.post("/api/audit/dialect-consistency")
+@limiter.limit("60/minute")
+def audit_dialect_consistency_endpoint(request: Request, payload: DialectConsistencyRequest):
+    """
+    Evaluates regional English dialect consistency (US vs UK) and passive voice density.
+    """
+    try:
+        return audit_dialect_and_voice(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error checking dialect consistency: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit dialect consistency: {str(err)}")
+
 
 
 

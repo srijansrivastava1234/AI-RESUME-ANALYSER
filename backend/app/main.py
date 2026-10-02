@@ -66,6 +66,7 @@ from app.skill_decay import profile_skill_decay
 from app.role_readiness import evaluate_role_readiness
 from app.compensation_calibrator import calibrate_compensation
 from app.metric_consistency import audit_metric_verifiability
+from app.education_hierarchy import parse_education_hierarchy
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -257,6 +258,10 @@ class CompensationCalibrationRequest(BaseModel):
 
 class MetricConsistencyRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text to evaluate for metric verifiability and baseline denominator calibration")
+
+class EducationHierarchyRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text or education section to parse and evaluate academic hierarchy")
+
 
 
 
@@ -1295,6 +1300,19 @@ def audit_metric_consistency_endpoint(request: Request, payload: MetricConsisten
     except Exception as err:
         logger.error(f"Error auditing metric consistency: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit metric consistency: {str(err)}")
+
+@app.post("/api/audit/education-hierarchy")
+@limiter.limit("60/minute")
+def audit_education_hierarchy_endpoint(request: Request, payload: EducationHierarchyRequest):
+    """
+    Parses educational credentials, degree hierarchy tiers, honors, and normalizes GPA scales.
+    """
+    try:
+        return parse_education_hierarchy(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error parsing education hierarchy: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to parse education hierarchy: {str(err)}")
+
 
 
 

@@ -4,6 +4,19 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2026-10-02
+
+### Added
+- **Metric Verifiability & Baseline Denominator Calibrator**: Formulated `app.metric_consistency` and `test_metric_consistency.py` auditing numerical claims, percentages, financial ROI ($), latency (ms/QPS), and enforcing 'from X to Y' baseline context attachment.
+- **Academic Credential Hierarchy & GPA Normalizer**: Built `app.education_hierarchy` and `test_education_hierarchy.py` categorizing degree tiers (Doctorate through Certifications), STEM majors, honors distinctions, and normalizes GPA across 4.0, 10.0 CGPA, and percentage scales.
+- **Cognitive Load & Readability Index Engine**: Implemented `app.cognitive_load` and `test_cognitive_load.py` calculating Gunning Fog Index, Coleman-Liau Index, Automated Readability Index (ARI), and recruiter 6-second glance skimmability scores.
+- **Prompt Injection & Zero-Width Steganography Security Auditor**: Built `app.prompt_injection_detector` and `test_prompt_injection_detector.py` defending against LLM instruction overrides, system prompts, hidden HTML comments, and zero-width Unicode steganography (`\u200B`, `\uFEFF`, `\u200C`).
+- **Leadership Trajectory & Organizational Scope Profiler**: Developed `app.leadership_scorer` and `test_leadership_scorer.py` measuring leadership across 5 dimensions (People Management, Technical Governance, Stakeholder Alignment, Budget Stewardship, Thought Leadership).
+- **Frontend Deep Diagnostics & Security Analytics Hub**: Added `DeepDiagnosticsPanel.jsx` in React 19 frontend with real-time multi-engine diagnostic visualization and sub-tab analytics.
+- **End-to-End v3.7.0 Flagship Integration Suite**: Built `test_v370_flagship_suite.py` validating full-stack API contract execution across all new diagnostic services.
+
+---
+
 ## [3.6.0] - 2026-09-30
 
 ### Added

@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import HygieneCard from './HygieneCard';
 import AtsSimulatorTab from './AtsSimulatorTab';
+import DeepDiagnosticsPanel from './DeepDiagnosticsPanel';
 import InterviewPrepPanel from './InterviewPrepPanel';
 import ResumeEditorStudio from './ResumeEditorStudio';
 import { calculateKeywordDensity } from '../utils/performance';
@@ -441,6 +442,14 @@ export default function TabsPanel({
         >
           <Cpu style={{ width: '14px', height: '14px', color: activeTab === 'ats_sim' ? 'white' : '#38bdf8' }} />
           Multi-ATS Simulator
+        </button>
+        <button 
+          className={`tab-btn ${activeTab === 'deep_diagnostics' ? 'active' : ''}`}
+          onClick={() => setActiveTab('deep_diagnostics')}
+          style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+        >
+          <Sparkles style={{ width: '14px', height: '14px', color: activeTab === 'deep_diagnostics' ? 'white' : '#818cf8' }} />
+          Deep Diagnostics
         </button>
         <button 
           className={`tab-btn ${activeTab === 'interview_prep' ? 'active' : ''}`}
@@ -2229,6 +2238,14 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
       {/* Tab: Multi-ATS Engine Simulator */}
       {activeTab === 'ats_sim' && (
         <AtsSimulatorTab
+          extractedText={extractedText}
+          backendUrl={backendUrl}
+        />
+      )}
+
+      {/* Tab: Deep Diagnostic & Security Analytics Hub */}
+      {activeTab === 'deep_diagnostics' && (
+        <DeepDiagnosticsPanel
           extractedText={extractedText}
           backendUrl={backendUrl}
         />

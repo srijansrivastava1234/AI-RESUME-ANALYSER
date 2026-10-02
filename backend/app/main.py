@@ -67,6 +67,7 @@ from app.role_readiness import evaluate_role_readiness
 from app.compensation_calibrator import calibrate_compensation
 from app.metric_consistency import audit_metric_verifiability
 from app.education_hierarchy import parse_education_hierarchy
+from app.cognitive_load import evaluate_cognitive_load
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -261,6 +262,10 @@ class MetricConsistencyRequest(BaseModel):
 
 class EducationHierarchyRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text or education section to parse and evaluate academic hierarchy")
+
+class CognitiveLoadRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to evaluate for cognitive load, Gunning Fog, and recruiter skimmability")
+
 
 
 
@@ -1312,6 +1317,19 @@ def audit_education_hierarchy_endpoint(request: Request, payload: EducationHiera
     except Exception as err:
         logger.error(f"Error parsing education hierarchy: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to parse education hierarchy: {str(err)}")
+
+@app.post("/api/audit/cognitive-load")
+@limiter.limit("60/minute")
+def audit_cognitive_load_endpoint(request: Request, payload: CognitiveLoadRequest):
+    """
+    Evaluates Gunning Fog, Coleman-Liau, ARI, and recruiter glance cognitive load.
+    """
+    try:
+        return evaluate_cognitive_load(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error evaluating cognitive load: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to evaluate cognitive load: {str(err)}")
+
 
 
 

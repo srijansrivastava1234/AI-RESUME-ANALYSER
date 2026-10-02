@@ -69,6 +69,7 @@ from app.metric_consistency import audit_metric_verifiability
 from app.education_hierarchy import parse_education_hierarchy
 from app.cognitive_load import evaluate_cognitive_load
 from app.prompt_injection_detector import audit_prompt_injection_safety
+from app.leadership_scorer import profile_leadership_trajectory
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -269,6 +270,10 @@ class CognitiveLoadRequest(BaseModel):
 
 class PromptInjectionAuditRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text to audit for adversarial prompt injections, steganography, and security risks")
+
+class LeadershipProfileRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to profile for leadership competencies, scope, and seniority tier")
+
 
 
 
@@ -1346,6 +1351,19 @@ def audit_prompt_injection_endpoint(request: Request, payload: PromptInjectionAu
     except Exception as err:
         logger.error(f"Error auditing prompt injection safety: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit prompt injection safety: {str(err)}")
+
+@app.post("/api/audit/leadership-profile")
+@limiter.limit("60/minute")
+def audit_leadership_profile_endpoint(request: Request, payload: LeadershipProfileRequest):
+    """
+    Profiles leadership competencies, scope of influence, and mapped organizational seniority tiers.
+    """
+    try:
+        return profile_leadership_trajectory(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error profiling leadership trajectory: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to profile leadership trajectory: {str(err)}")
+
 
 
 

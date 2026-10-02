@@ -68,6 +68,7 @@ from app.compensation_calibrator import calibrate_compensation
 from app.metric_consistency import audit_metric_verifiability
 from app.education_hierarchy import parse_education_hierarchy
 from app.cognitive_load import evaluate_cognitive_load
+from app.prompt_injection_detector import audit_prompt_injection_safety
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -265,6 +266,10 @@ class EducationHierarchyRequest(BaseModel):
 
 class CognitiveLoadRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text to evaluate for cognitive load, Gunning Fog, and recruiter skimmability")
+
+class PromptInjectionAuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to audit for adversarial prompt injections, steganography, and security risks")
+
 
 
 
@@ -1329,6 +1334,19 @@ def audit_cognitive_load_endpoint(request: Request, payload: CognitiveLoadReques
     except Exception as err:
         logger.error(f"Error evaluating cognitive load: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to evaluate cognitive load: {str(err)}")
+
+@app.post("/api/audit/prompt-injection")
+@limiter.limit("60/minute")
+def audit_prompt_injection_endpoint(request: Request, payload: PromptInjectionAuditRequest):
+    """
+    Scans resume text for adversarial LLM prompt injections, hidden HTML comments, and zero-width steganography.
+    """
+    try:
+        return audit_prompt_injection_safety(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error auditing prompt injection safety: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit prompt injection safety: {str(err)}")
+
 
 
 

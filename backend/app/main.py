@@ -65,6 +65,7 @@ from app.dialect_checker import audit_dialect_and_voice
 from app.skill_decay import profile_skill_decay
 from app.role_readiness import evaluate_role_readiness
 from app.compensation_calibrator import calibrate_compensation
+from app.metric_consistency import audit_metric_verifiability
 from app.outreach import generate_outreach
 from app.logging_config import setup_logging, generate_request_id
 from app.semantic_match import calculate_semantic_alignment
@@ -253,6 +254,10 @@ class RoleReadinessRequest(BaseModel):
 class CompensationCalibrationRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Candidate resume text to calibrate for seniority tier and compensation bands")
     years_experience: Optional[float] = Field(None, description="Optional explicit total years of experience")
+
+class MetricConsistencyRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to evaluate for metric verifiability and baseline denominator calibration")
+
 
 
 
@@ -1278,6 +1283,19 @@ def audit_compensation_calibration_endpoint(request: Request, payload: Compensat
     except Exception as err:
         logger.error(f"Error calibrating compensation: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to calibrate compensation: {str(err)}")
+
+@app.post("/api/audit/metric-consistency")
+@limiter.limit("60/minute")
+def audit_metric_consistency_endpoint(request: Request, payload: MetricConsistencyRequest):
+    """
+    Audits resume text for numerical metric verifiability, implausible claims, and baseline denominator attachment.
+    """
+    try:
+        return audit_metric_verifiability(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error auditing metric consistency: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit metric consistency: {str(err)}")
+
 
 
 

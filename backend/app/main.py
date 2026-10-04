@@ -56,6 +56,12 @@ from app.portfolio_validator import audit_portfolio_links
 from app.pdf_layout import extract_pdf_layout_tokens
 from app.jd_scraper import scrape_job_description
 from app.ats_simulator import run_multi_ats_simulation
+from app.simulators import (
+    simulate_workday_parsing,
+    simulate_greenhouse_parsing,
+    simulate_taleo_parsing,
+    simulate_icims_parsing
+)
 from app.interview_prep import generate_interview_prep
 from app.resume_builder import parse_resume_to_structured_json, format_structured_resume_to_plain_text
 from app.semantic_match import calculate_semantic_alignment
@@ -273,6 +279,9 @@ class PromptInjectionAuditRequest(BaseModel):
 
 class LeadershipProfileRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text to profile for leadership competencies, scope, and seniority tier")
+
+class AtsSimulatorRequest(BaseModel):
+    resume_text: str = Field(..., min_length=5, description="Resume text to simulate across ATS parsing engines")
 
 
 
@@ -1363,6 +1372,66 @@ def audit_leadership_profile_endpoint(request: Request, payload: LeadershipProfi
     except Exception as err:
         logger.error(f"Error profiling leadership trajectory: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to profile leadership trajectory: {str(err)}")
+
+@app.post("/api/simulate/ats")
+@limiter.limit("60/minute")
+def simulate_multi_ats_endpoint(request: Request, payload: AtsSimulatorRequest):
+    """
+    Executes composite multi-ATS parser emulation across Workday, Greenhouse, Taleo, and iCIMS.
+    """
+    try:
+        return run_multi_ats_simulation(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error executing multi-ATS simulation: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate multi-ATS parsing: {str(err)}")
+
+@app.post("/api/simulate/icims")
+@limiter.limit("60/minute")
+def simulate_icims_endpoint(request: Request, payload: AtsSimulatorRequest):
+    """
+    Simulates iCIMS Enterprise Talent Cloud parsing heuristics and hazard identification.
+    """
+    try:
+        return simulate_icims_parsing(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error simulating iCIMS parsing: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate iCIMS: {str(err)}")
+
+@app.post("/api/simulate/workday")
+@limiter.limit("60/minute")
+def simulate_workday_endpoint(request: Request, payload: AtsSimulatorRequest):
+    """
+    Simulates Workday parsing heuristics.
+    """
+    try:
+        return simulate_workday_parsing(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error simulating Workday parsing: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate Workday: {str(err)}")
+
+@app.post("/api/simulate/greenhouse")
+@limiter.limit("60/minute")
+def simulate_greenhouse_endpoint(request: Request, payload: AtsSimulatorRequest):
+    """
+    Simulates Greenhouse / Lever parsing heuristics.
+    """
+    try:
+        return simulate_greenhouse_parsing(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error simulating Greenhouse parsing: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate Greenhouse: {str(err)}")
+
+@app.post("/api/simulate/taleo")
+@limiter.limit("60/minute")
+def simulate_taleo_endpoint(request: Request, payload: AtsSimulatorRequest):
+    """
+    Simulates Taleo / Oracle ATS parsing heuristics.
+    """
+    try:
+        return simulate_taleo_parsing(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error simulating Taleo parsing: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate Taleo: {str(err)}")
 
 
 

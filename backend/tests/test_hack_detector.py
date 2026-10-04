@@ -93,3 +93,13 @@ def test_empty_input():
     assert result["hack_risk_score"] == 100
     assert result["clean_text_certified"] is True
 
+
+def test_homoglyph_confusable_detection():
+    # 'Pуthоn' with Cyrillic 'у' (\u0443) and Cyrillic 'о' (\u043E)
+    confusable_text = "Proficient in P\u0443th\u043En and J\u0430va for cloud development"
+    result = detect_ats_hacks(confusable_text)
+    assert result["is_flagged"] is True
+    assert result["clean_text_certified"] is False
+    assert any(t["type"] == "homoglyph_confusable_injection" for t in result["detected_traps"])
+    assert any("mixed-script homoglyph" in t["detail"] for t in result["detected_traps"])
+

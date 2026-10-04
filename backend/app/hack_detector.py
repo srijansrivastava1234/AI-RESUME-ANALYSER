@@ -143,6 +143,25 @@ def detect_ats_hacks(
                     remediation_advice.append("Format skills into categorized sections rather than flat keyword dumps.")
                     break
 
+    # 6. Check for Mixed-Script Homoglyph / Confusable Obfuscation Attacks
+    if text:
+        # Detect words containing a mix of Latin letters and Cyrillic/Greek homoglyphs
+        # Common Cyrillic lookalikes: а, е, о, р, с, у, х, і, ј, ѕ
+        # Common Greek lookalikes: α, ο, ν, ρ
+        mixed_homoglyphs = re.findall(
+            r'\b(?=[a-zA-Z]*[\u0430\u0435\u043E\u0440\u0441\u0443\u0445\u0456\u0458\u0455\u03B1\u03BF\u03BD\u03C1])(?=[\u0430\u0435\u043E\u0440\u0441\u0443\u0445\u0456\u0458\u0455\u03B1\u03BF\u03BD\u03C1]*[a-zA-Z])[a-zA-Z\u0430\u0435\u043E\u0440\u0441\u0443\u0445\u0456\u0458\u0455\u03B1\u03BF\u03BD\u03C1]+\b',
+            text
+        )
+        if mixed_homoglyphs:
+            penalty += min(40, len(mixed_homoglyphs) * 15)
+            sample_words = ", ".join(f"'{w}'" for w in mixed_homoglyphs[:3])
+            detected_traps.append({
+                "type": "homoglyph_confusable_injection",
+                "severity": "CRITICAL",
+                "detail": f"Detected {len(mixed_homoglyphs)} mixed-script homoglyph confusable token(s) (e.g., {sample_words})."
+            })
+            remediation_advice.append("Replace non-Latin homoglyph characters with pure ASCII/Latin letters to prevent keyword tokenization failures.")
+
     # Calculate final hack risk score (100 = pristine, 0 = severe hack exploitation)
     hack_risk_score = max(0, 100 - penalty)
     is_flagged = len(detected_traps) > 0

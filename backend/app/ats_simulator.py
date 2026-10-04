@@ -2,10 +2,11 @@ from typing import Dict, Any, List
 from app.simulators.workday import simulate_workday_parsing
 from app.simulators.greenhouse import simulate_greenhouse_parsing
 from app.simulators.taleo import simulate_taleo_parsing
+from app.simulators.icims import simulate_icims_parsing
 
 def run_multi_ats_simulation(resume_text: str) -> Dict[str, Any]:
     """
-    Executes multi-ATS parser emulation across Workday, Greenhouse/Lever, and Taleo/Oracle.
+    Executes multi-ATS parser emulation across Workday, Greenhouse/Lever, Taleo/Oracle, and iCIMS.
     Computes unified cross-ATS compatibility scores and identifies high-risk parser discrepancies.
     """
     if not resume_text or not resume_text.strip():
@@ -15,7 +16,8 @@ def run_multi_ats_simulation(resume_text: str) -> Dict[str, Any]:
             "engines": {
                 "workday": simulate_workday_parsing(""),
                 "greenhouse": simulate_greenhouse_parsing(""),
-                "taleo": simulate_taleo_parsing("")
+                "taleo": simulate_taleo_parsing(""),
+                "icims": simulate_icims_parsing("")
             },
             "summary_alerts": ["No text provided for ATS simulation."]
         }
@@ -23,12 +25,14 @@ def run_multi_ats_simulation(resume_text: str) -> Dict[str, Any]:
     workday_res = simulate_workday_parsing(resume_text)
     greenhouse_res = simulate_greenhouse_parsing(resume_text)
     taleo_res = simulate_taleo_parsing(resume_text)
+    icims_res = simulate_icims_parsing(resume_text)
 
-    # Calculate weighted composite score
+    # Calculate weighted composite score across top enterprise ATS engines
     overall_score = round(
-        (workday_res["compatibility_score"] * 0.4) +
-        (greenhouse_res["compatibility_score"] * 0.35) +
-        (taleo_res["compatibility_score"] * 0.25)
+        (workday_res["compatibility_score"] * 0.35) +
+        (greenhouse_res["compatibility_score"] * 0.25) +
+        (taleo_res["compatibility_score"] * 0.20) +
+        (icims_res["compatibility_score"] * 0.20)
     )
 
     if overall_score >= 85:
@@ -40,7 +44,7 @@ def run_multi_ats_simulation(resume_text: str) -> Dict[str, Any]:
 
     # Aggregate high priority alerts
     all_alerts = []
-    for eng in [workday_res, greenhouse_res, taleo_res]:
+    for eng in [workday_res, greenhouse_res, taleo_res, icims_res]:
         for h in eng.get("hazards", []):
             all_alerts.append(f"[{eng['engine']}] {h}")
 
@@ -50,7 +54,8 @@ def run_multi_ats_simulation(resume_text: str) -> Dict[str, Any]:
         "engines": {
             "workday": workday_res,
             "greenhouse": greenhouse_res,
-            "taleo": taleo_res
+            "taleo": taleo_res,
+            "icims": icims_res
         },
         "summary_alerts": all_alerts
     }

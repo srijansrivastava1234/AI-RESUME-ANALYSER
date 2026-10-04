@@ -15,6 +15,11 @@ PLACEHOLDER_USERNAMES = {
 }
 
 
+SHORTENER_DOMAINS = {
+    "bit.ly", "tinyurl.com", "t.co", "ow.ly", "is.gd", "buff.ly", "goo.gl", "cutt.ly", "rb.gy"
+}
+
+
 def audit_portfolio_links(text: str) -> Dict[str, Any]:
     """
     Audits URLs and digital identity links within resume text.
@@ -40,12 +45,24 @@ def audit_portfolio_links(text: str) -> Dict[str, Any]:
     has_portfolio = False
     has_insecure_http = False
     has_placeholders = False
+    has_shorteners = False
+    has_raw_ip = False
 
     for url in cleaned_urls:
         url_lower = url.lower()
         is_https = url_lower.startswith("https://")
         if url_lower.startswith("http://"):
             has_insecure_http = True
+
+        # Check for URL shorteners
+        is_shortener = any(d in url_lower for d in SHORTENER_DOMAINS)
+        if is_shortener:
+            has_shorteners = True
+
+        # Check for raw IP address
+        is_ip = bool(re.search(r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b', url_lower))
+        if is_ip:
+            has_raw_ip = True
 
         link_type = "OTHER"
         is_placeholder = False
@@ -83,7 +100,9 @@ def audit_portfolio_links(text: str) -> Dict[str, Any]:
             "url": url,
             "type": link_type,
             "is_https": is_https,
-            "is_placeholder": is_placeholder
+            "is_placeholder": is_placeholder,
+            "is_shortener": is_shortener,
+            "is_raw_ip": is_ip
         })
 
     # Score calculation
@@ -98,13 +117,22 @@ def audit_portfolio_links(text: str) -> Dict[str, Any]:
         score -= 15.0
     if has_placeholders:
         score -= 30.0
+    if has_shorteners:
+        score -= 25.0
+    if has_raw_ip:
+        score -= 35.0
 
     final_score = max(0.0, min(100.0, round(score, 1)))
 
     feedback: List[str] = []
-    if has_placeholders:
+    if has_raw_ip or has_shorteners or has_placeholders:
         status = "CRITICAL"
-        feedback.append("Placeholder URLs detected (e.g. 'github.com/username'). Update links with your authentic verified handles.")
+        if has_shorteners:
+            feedback.append("URL shorteners detected (e.g. bit.ly, tinyurl). ATS security filters flag shortened URLs as phishing hazards.")
+        if has_raw_ip:
+            feedback.append("Raw numeric IP address detected instead of a canonical domain name. High risk of ATS firewall quarantine.")
+        if has_placeholders:
+            feedback.append("Placeholder URLs detected (e.g. 'github.com/username'). Update links with your authentic verified handles.")
     elif final_score >= 80.0:
         status = "EXCELLENT"
         feedback.append("Excellent digital presence links. Verified LinkedIn and GitHub profiles detected.")
@@ -123,6 +151,8 @@ def audit_portfolio_links(text: str) -> Dict[str, Any]:
         "has_linkedin": has_linkedin,
         "has_github": has_github,
         "has_portfolio": has_portfolio,
+        "has_shorteners": has_shorteners,
+        "has_raw_ip": has_raw_ip,
         "link_score": final_score,
         "links": links_diagnostics,
         "status": status,

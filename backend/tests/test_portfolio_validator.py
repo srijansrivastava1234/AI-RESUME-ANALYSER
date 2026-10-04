@@ -30,3 +30,15 @@ def test_placeholder_and_insecure_links():
     assert res["status"] == "CRITICAL"
     assert any(link["is_placeholder"] for link in res["links"])
     assert any("placeholder" in f.lower() for f in res["feedback"])
+
+
+def test_shortener_and_raw_ip_links():
+    text = "Portfolio: http://bit.ly/my-portfolio | Server: http://192.168.1.50/resume"
+    res = audit_portfolio_links(text)
+    assert res["has_shorteners"] is True
+    assert res["has_raw_ip"] is True
+    assert res["status"] == "CRITICAL"
+    assert any(link["is_shortener"] for link in res["links"])
+    assert any(link["is_raw_ip"] for link in res["links"])
+    assert any("shortener" in f.lower() for f in res["feedback"])
+    assert any("raw numeric ip" in f.lower() for f in res["feedback"])

@@ -50,10 +50,18 @@ def audit_single_bullet_typography(bullet: str) -> Dict[str, Any]:
         }
 
     raw = bullet.strip()
-    # Strip leading bullet symbols if present
-    cleaned = re.sub(r"^[\u2022\u2023\u25E6\u2043\u2219\*\-\+]\s*", "", raw)
-    issues = []
-    fixed = cleaned
+    # Check for exotic non-standard bullet glyphs or emojis at start of bullet
+    exotic_prefix_match = re.match(r"^([\u2700-\u27BF\U0001F300-\U0001FAFF\u27A1\u279C\u25C6\u25C8\u25B6\u25BA\u2714\u2713\u25C9\u272A\u2605])\s*", raw)
+    if exotic_prefix_match:
+        glyph = exotic_prefix_match.group(1)
+        issues = [f"Non-standard decorative glyph or emoji ('{glyph}') used as bullet point. Standard ATS parsers may render this as corrupt text."]
+        fixed = re.sub(r"^[\u2700-\u27BF\U0001F300-\U0001FAFF\u27A1\u279C\u25C6\u25C8\u25B6\u25BA\u2714\u2713\u25C9\u272A\u2605]\s*", "", raw)
+        cleaned = fixed
+    else:
+        issues = []
+        # Strip leading standard bullet symbols if present
+        cleaned = re.sub(r"^[\u2022\u2023\u25E6\u2043\u2219\*\-\+]\s*", "", raw)
+        fixed = cleaned
 
     # Check trailing punctuation
     has_trailing_period = cleaned.endswith(".") or cleaned.endswith(";")

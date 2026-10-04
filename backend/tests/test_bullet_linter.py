@@ -56,3 +56,10 @@ def test_bullet_typography_endpoint():
     assert data["cleanliness_score"] == 100
     assert data["period_consistency"] == "Consistent"
 
+
+def test_audit_single_bullet_exotic_glyph():
+    res = audit_single_bullet_typography("🚀 Deployed automated CI/CD pipeline on Kubernetes.")
+    assert res["has_issues"] is True
+    assert any("Non-standard decorative glyph" in issue for issue in res["issues"])
+    assert not res["suggested_bullet"].startswith("🚀")
+

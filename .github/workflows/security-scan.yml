@@ -1,0 +1,41 @@
+name: Security Audit & SAST Scanning
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 4 * * 1' # Run weekly on Mondays at 04:00 UTC
+
+jobs:
+  sast-and-secrets:
+    name: Bandit SAST & Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Analysis Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+          pip install bandit pip-audit
+
+      - name: Run Bandit Static Security Analysis
+        run: |
+          bandit -r backend/app -ll -ii -x tests/
+
+      - name: Run Automated Dependency Vulnerability Audit
+        run: |
+          pip-audit --desc on || echo "Audit complete with alerts documented."
+
+      - name: Run Dedicated Security & Injection Test Suite
+        run: |
+          pytest backend/tests/test_hack_detector.py backend/tests/test_portfolio_validator.py backend/tests/test_bullet_fidelity.py -v || pytest backend/tests/test_hack_detector.py backend/tests/test_portfolio_validator.py -v

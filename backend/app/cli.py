@@ -246,6 +246,7 @@ def run_cli_audit(
     jd_path: Optional[str] = None,
     output_json_path: Optional[str] = None,
     badge_svg_path: Optional[str] = None,
+    simulate: bool = False,
     quiet: bool = False
 ) -> Dict[str, Any]:
     """Coordinates CLI audit execution and file outputs."""
@@ -261,6 +262,10 @@ def run_cli_audit(
 
     report = analyze_resume(resume_text=resume_text, job_description=jd_text)
     ats_score = report.get('ats_score', 0)
+
+    if simulate:
+        from app.ats_simulator import run_multi_ats_simulation
+        report["ats_simulation"] = run_multi_ats_simulation(resume_text)
 
     # Generate outputs if requested
     if output_json_path:
@@ -278,6 +283,14 @@ def run_cli_audit(
 
     if not quiet:
         print_single_resume_dashboard(resume_path=resume_path, report=report, jd_path=jd_path)
+        if simulate and "ats_simulation" in report:
+            sim = report["ats_simulation"]
+            print(colorize("┌── [MULTI-ATS PARSER SIMULATION MATRIX] " + "─" * 33 + "┐", Colors.BOLD + Colors.CYAN))
+            print(f"  Overall Score: {colorize(str(sim['overall_cross_ats_score']) + '/100', Colors.BOLD + Colors.GREEN)}  |  Tier: {sim['tier']}")
+            for eng_name, eng_data in sim.get("engines", {}).items():
+                status_clr = Colors.GREEN if eng_data.get("is_safe") else Colors.RED
+                print(f"  - {eng_data.get('engine', eng_name):<22} Compatibility: {colorize(str(eng_data.get('compatibility_score')) + '%', status_clr)}")
+            print(colorize("└" + "─" * 72 + "┘\n", Colors.CYAN))
 
     return report
 
@@ -377,6 +390,7 @@ def main():
     parser.add_argument("--jd", help="Optional path to target job description text file", default=None)
     parser.add_argument("--output", "-o", help="Optional path to save JSON analysis report", default=None)
     parser.add_argument("--badge", "-b", help="Optional path to save dynamic SVG status badge", default=None)
+    parser.add_argument("--simulate", "-s", help="Run multi-ATS parser simulation matrix (Workday, Greenhouse, Taleo, iCIMS)", action="store_true")
     parser.add_argument("--quiet", "-q", help="Suppress terminal printouts", action="store_true")
 
     args = parser.parse_args()
@@ -395,6 +409,7 @@ def main():
                 jd_path=args.jd,
                 output_json_path=args.output,
                 badge_svg_path=args.badge,
+                simulate=args.simulate,
                 quiet=args.quiet
             )
         else:

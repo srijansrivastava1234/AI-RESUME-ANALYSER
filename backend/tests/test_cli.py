@@ -97,3 +97,26 @@ def test_run_cli_audit_with_outputs():
         for p in [resume_tmp, jd_tmp, out_json, out_svg]:
             if os.path.exists(p):
                 os.remove(p)
+
+
+def test_run_cli_audit_with_simulation():
+    with tempfile.NamedTemporaryFile(suffix=".txt", mode="w", delete=False, encoding="utf-8") as rf:
+        rf.write(SAMPLE_RESUME_TXT)
+        resume_tmp = rf.name
+
+    try:
+        report = run_cli_audit(
+            resume_path=resume_tmp,
+            simulate=True,
+            quiet=True
+        )
+        assert "ats_simulation" in report
+        sim = report["ats_simulation"]
+        assert "overall_cross_ats_score" in sim
+        assert "engines" in sim
+        assert "icims" in sim["engines"]
+        assert "workday" in sim["engines"]
+        assert sim["overall_cross_ats_score"] > 0
+    finally:
+        if os.path.exists(resume_tmp):
+            os.remove(resume_tmp)

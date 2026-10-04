@@ -84,3 +84,51 @@ def test_format_ats_plaintext():
     assert "Technical Skills" in plain
     assert "Python, FastAPI, Docker" in plain
     assert "#" not in plain
+
+
+def test_export_json_resume_schema():
+    from app.schema_exporter import export_json_resume_schema
+    data = {
+        "contact": {
+            "name": "Jane Developer",
+            "title": "Senior Cloud Engineer",
+            "email": "jane@example.com",
+            "phone": "555-123-4567",
+            "linkedin": "https://linkedin.com/in/janedev",
+            "github": "https://github.com/janedev",
+            "city": "Seattle",
+            "region": "WA",
+            "country": "US"
+        },
+        "summary": "Cloud Architect with deep AWS expertise.",
+        "work_experience": [
+            {
+                "company": "CloudTech",
+                "position": "Principal Architect",
+                "start_date": "2020-01",
+                "end_date": "Present",
+                "bullets": ["Designed multi-region serverless infrastructure."]
+            }
+        ],
+        "education": [
+            {
+                "institution": "University of Washington",
+                "degree": "Computer Science",
+                "study_type": "B.S.",
+                "start_date": "2014",
+                "end_date": "2018"
+            }
+        ],
+        "skills": [
+            {"category": "Cloud", "skills": ["AWS", "Kubernetes", "Terraform"]}
+        ]
+    }
+
+    schema = export_json_resume_schema(data)
+    assert schema["$schema"] == "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json"
+    assert schema["basics"]["name"] == "Jane Developer"
+    assert schema["basics"]["email"] == "jane@example.com"
+    assert len(schema["basics"]["profiles"]) == 2
+    assert schema["work"][0]["name"] == "CloudTech"
+    assert schema["education"][0]["institution"] == "University of Washington"
+    assert schema["skills"][0]["name"] == "Cloud"

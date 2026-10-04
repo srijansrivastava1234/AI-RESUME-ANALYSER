@@ -126,3 +126,79 @@ def validate_custom_rules_schema(config_dict: Dict[str, Any]) -> bool:
         raise ValueError(f"Scoring weights must sum to 1.0 (actual sum: {total_weight:.3f})")
 
     return True
+
+
+def export_json_resume_schema(resume_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Transforms internal resume analysis and extracted entities into the
+    official JSON Resume standard schema (v1.0.0).
+    https://jsonresume.org/schema/
+    """
+    contact = resume_data.get("contact", {}) or {}
+    basics = {
+        "name": contact.get("name") or "",
+        "label": contact.get("title") or "",
+        "email": contact.get("email") or "",
+        "phone": contact.get("phone") or "",
+        "url": contact.get("linkedin") or contact.get("website") or "",
+        "summary": resume_data.get("summary") or "",
+        "location": {
+            "city": contact.get("city") or "",
+            "region": contact.get("region") or "",
+            "countryCode": contact.get("country") or ""
+        },
+        "profiles": []
+    }
+
+    if contact.get("linkedin"):
+        basics["profiles"].append({
+            "network": "LinkedIn",
+            "url": contact["linkedin"]
+        })
+    if contact.get("github"):
+        basics["profiles"].append({
+            "network": "GitHub",
+            "url": contact["github"]
+        })
+
+    work_list = []
+    for exp in resume_data.get("work_experience", []) or []:
+        work_list.append({
+            "name": exp.get("company") or "",
+            "position": exp.get("position") or exp.get("role") or "",
+            "startDate": exp.get("start_date") or "",
+            "endDate": exp.get("end_date") or "Present",
+            "summary": exp.get("summary") or "",
+            "highlights": exp.get("bullets") or exp.get("highlights") or []
+        })
+
+    education_list = []
+    for edu in resume_data.get("education", []) or []:
+        education_list.append({
+            "institution": edu.get("institution") or edu.get("school") or "",
+            "area": edu.get("degree") or edu.get("field") or "",
+            "studyType": edu.get("study_type") or "Bachelor",
+            "startDate": edu.get("start_date") or "",
+            "endDate": edu.get("end_date") or ""
+        })
+
+    skills_list = []
+    for skill_cat in resume_data.get("skills", []) or []:
+        if isinstance(skill_cat, dict):
+            skills_list.append({
+                "name": skill_cat.get("category") or "Technical Skills",
+                "keywords": skill_cat.get("keywords") or skill_cat.get("skills") or []
+            })
+        elif isinstance(skill_cat, str):
+            skills_list.append({
+                "name": "Skills",
+                "keywords": [skill_cat]
+            })
+
+    return {
+        "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+        "basics": basics,
+        "work": work_list,
+        "education": education_list,
+        "skills": skills_list
+    }

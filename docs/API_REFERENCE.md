@@ -71,10 +71,10 @@ Accepts a single resume file (`.pdf`, `.docx`, `.txt`) and optional job descript
 
 ---
 
-### 3. Multi-ATS Engine Simulation
+### 3. Multi-ATS Engine Simulation & Sandboxing
 
-#### `POST /api/simulate-ats`
-Emulates parsing across Workday, Greenhouse/Lever, and Taleo/Oracle sandbox engines.
+#### `POST /api/simulate/ats`
+Emulates parsing across Workday, Greenhouse/Lever, Taleo/Oracle, and iCIMS Enterprise sandbox engines.
 
 **Request Payload**:
 ```json
@@ -86,15 +86,23 @@ Emulates parsing across Workday, Greenhouse/Lever, and Taleo/Oracle sandbox engi
 **Response `200 OK`**:
 ```json
 {
-  "overall_cross_ats_score": 90,
+  "overall_cross_ats_score": 92,
   "tier": "Universal ATS Compatible (Low Risk)",
   "engines": {
     "workday": { "engine": "Workday", "compatibility_score": 95, "hazards": [] },
-    "greenhouse": { "engine": "Greenhouse", "compatibility_score": 92, "hazards": [] },
-    "taleo": { "engine": "Taleo", "compatibility_score": 84, "hazards": [] }
-  }
+    "greenhouse": { "engine": "Greenhouse / Lever", "compatibility_score": 92, "hazards": [] },
+    "taleo": { "engine": "Taleo / Oracle", "compatibility_score": 88, "hazards": [] },
+    "icims": { "engine": "iCIMS Enterprise", "compatibility_score": 94, "hazards": [] }
+  },
+  "summary_alerts": []
 }
 ```
+
+#### Individual Dedicated Simulator Endpoints:
+- `POST /api/simulate/icims`: Deep diagnostic parsing audit for iCIMS Enterprise Talent Cloud.
+- `POST /api/simulate/workday`: Workday parsing and section schema verification.
+- `POST /api/simulate/greenhouse`: Greenhouse and Lever token stream and skill cluster density analyzer.
+- `POST /api/simulate/taleo`: Taleo legacy table flattening and chronological date validator.
 
 ---
 
@@ -129,3 +137,13 @@ Generates tailored cover letters, recruiter LinkedIn InMails, hiring manager col
 - `linkedin_inmail` (80 words, high-conversion recruiter hook)
 - `hiring_manager_email` (Direct cold email with tailored subject line)
 - `follow_up` (Post-interview or post-application note)
+
+---
+
+### 7. Security, Typographic & Schema Exporter Specifications
+
+- **Homoglyph Attack Defense**: Mixed-script Cyrillic/Greek lookalike character injection detection (`app.hack_detector`).
+- **URL & Domain Security**: Automated detection of URL shorteners (bit.ly, t.co) and raw numeric IP addresses (`app.portfolio_validator`).
+- **Typography & Glyph Fidelity**: Non-standard emoji/dingbat bullet sanitization and period consistency checking (`app.bullet_linter`).
+- **JSON Resume Standard Exporter**: Serialization to official v1.0.0 JSON Resume schema specification (`app.schema_exporter`).
+- **CLI Diagnostics**: Run `python backend/app/cli.py resume.pdf --simulate` for interactive multi-ATS terminal matrix outputs.

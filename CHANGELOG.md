@@ -4,6 +4,19 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.8.0] - 2026-10-05
+
+### Added
+- **Lever ATS Diagnostic Simulator & Fast-Tagging Engine**: Implemented `app.simulators.lever` emulating plain-text linearization, candidate fast-tags (role, seniority, skills), and contextual skill proximity indexing.
+- **SAP SuccessFactors XML Profile Mapping Simulator**: Implemented `app.simulators.successfactors` verifying standard section delimiter compliance and XML profile field mapping integrity.
+- **Binary Zero-Width Steganography & Homoglyph Attack Detector**: Implemented `app.adversarial_steganography` decoding hidden binary stego payloads and restoring Cyrillic/Greek homoglyph substitutions to canonical Latin.
+- **EEOC 4/5ths Rule & 2-Standard-Deviation Statistical Auditor**: Implemented `app.eeoc_statistical_auditor` executing two-sample pooled z-tests and generating NYC Local Law 144 compliance audit tables.
+- **Euclidean 2D Bounding Box Spatial Density & Gutter Collision Budgeter**: Implemented `app.spatial_budgeter` auditing print margin breaches, visual reading density (45-70%), and column gutter collapses.
+- **Flagship REST Endpoints**: Added `/api/simulate/lever`, `/api/simulate/successfactors`, `/api/security/adversarial-audit`, `/api/compliance/eeoc-audit`, and `/api/layout/spatial-budget`.
+- **CLI Multi-ATS Matrix & Adversarial Security Dashboard**: Enhanced `app.cli` with 6-engine ATS matrix simulation (`--simulate`) and steganography auditing (`--audit-security`).
+
+---
+
 ## [3.7.0] - 2026-10-02
 
 ### Added

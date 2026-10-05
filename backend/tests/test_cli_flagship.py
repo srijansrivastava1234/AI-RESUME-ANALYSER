@@ -1,6 +1,7 @@
 import os
 import pytest
-from backend.app.cli import run_cli_audit
+from app.cli import run_cli_audit
+
 
 def test_cli_audit_with_simulation_and_security(tmp_path):
     resume_file = tmp_path / "sample_resume.txt"

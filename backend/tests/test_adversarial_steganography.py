@@ -1,5 +1,5 @@
 import pytest
-from backend.app.adversarial_steganography import (
+from app.adversarial_steganography import (
     decode_zero_width_binary_payload,
     detect_homoglyph_substitutions,
     sanitize_adversarial_text,

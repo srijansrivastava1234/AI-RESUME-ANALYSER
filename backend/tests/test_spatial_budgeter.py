@@ -1,5 +1,6 @@
 import pytest
-from backend.app.spatial_budgeter import audit_canvas_spatial_budget, BoundingBox
+from app.spatial_budgeter import audit_canvas_spatial_budget, BoundingBox
+
 
 def test_empty_canvas_budget():
     res = audit_canvas_spatial_budget([])

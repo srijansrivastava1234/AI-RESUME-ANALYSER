@@ -1,5 +1,6 @@
 import pytest
-from backend.app.simulators.successfactors import simulate_successfactors_parsing
+from app.simulators.successfactors import simulate_successfactors_parsing
+
 
 def test_simulate_successfactors_empty():
     res = simulate_successfactors_parsing("")

@@ -1,5 +1,5 @@
 import pytest
-from backend.app.eeoc_statistical_auditor import (
+from app.eeoc_statistical_auditor import (
     calculate_two_standard_deviation_z_score,
     generate_nyc_ll144_audit_report
 )

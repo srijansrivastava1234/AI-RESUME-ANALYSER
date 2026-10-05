@@ -1,5 +1,6 @@
 import pytest
-from backend.app.simulators.lever import simulate_lever_parsing
+from app.simulators.lever import simulate_lever_parsing
+
 
 def test_simulate_lever_empty_input():
     res = simulate_lever_parsing("")

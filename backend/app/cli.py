@@ -247,6 +247,7 @@ def run_cli_audit(
     output_json_path: Optional[str] = None,
     badge_svg_path: Optional[str] = None,
     simulate: bool = False,
+    audit_security: bool = False,
     quiet: bool = False
 ) -> Dict[str, Any]:
     """Coordinates CLI audit execution and file outputs."""
@@ -266,6 +267,11 @@ def run_cli_audit(
     if simulate:
         from app.ats_simulator import run_multi_ats_simulation
         report["ats_simulation"] = run_multi_ats_simulation(resume_text)
+
+    if audit_security:
+        from app.adversarial_steganography import sanitize_adversarial_text
+        sanitized_text, stego_report = sanitize_adversarial_text(resume_text)
+        report["adversarial_security"] = stego_report
 
     # Generate outputs if requested
     if output_json_path:
@@ -292,7 +298,15 @@ def run_cli_audit(
                 print(f"  - {eng_data.get('engine', eng_name):<22} Compatibility: {colorize(str(eng_data.get('compatibility_score')) + '%', status_clr)}")
             print(colorize("└" + "─" * 72 + "┘\n", Colors.CYAN))
 
+        if audit_security and "adversarial_security" in report:
+            sec = report["adversarial_security"]
+            sec_clr = Colors.GREEN if not sec["is_adversarial"] else Colors.RED
+            print(colorize("┌── [ADVERSARIAL STEGANOGRAPHY & HOMOGLYPH AUDIT] " + "─" * 24 + "┐", Colors.BOLD + Colors.CYAN))
+            print(f"  Threat Score: {colorize(str(sec['threat_score']) + '/100', sec_clr)}  |  Homoglyphs: {sec['homoglyphs_detected']}  |  Stego Payloads: {len(sec['decoded_payloads'])}")
+            print(colorize("└" + "─" * 72 + "┘\n", Colors.CYAN))
+
     return report
+
 
 
 def run_batch_cli_audit(
@@ -390,7 +404,8 @@ def main():
     parser.add_argument("--jd", help="Optional path to target job description text file", default=None)
     parser.add_argument("--output", "-o", help="Optional path to save JSON analysis report", default=None)
     parser.add_argument("--badge", "-b", help="Optional path to save dynamic SVG status badge", default=None)
-    parser.add_argument("--simulate", "-s", help="Run multi-ATS parser simulation matrix (Workday, Greenhouse, Taleo, iCIMS)", action="store_true")
+    parser.add_argument("--simulate", "-s", help="Run multi-ATS parser simulation matrix (Workday, Greenhouse, Taleo, iCIMS, Lever, SuccessFactors)", action="store_true")
+    parser.add_argument("--audit-security", help="Audit resume for binary zero-width steganography and homoglyph attacks", action="store_true")
     parser.add_argument("--quiet", "-q", help="Suppress terminal printouts", action="store_true")
 
     args = parser.parse_args()
@@ -410,8 +425,10 @@ def main():
                 output_json_path=args.output,
                 badge_svg_path=args.badge,
                 simulate=args.simulate,
+                audit_security=args.audit_security,
                 quiet=args.quiet
             )
+
         else:
             parser.print_help()
             sys.exit(1)

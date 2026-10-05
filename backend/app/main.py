@@ -60,8 +60,14 @@ from app.simulators import (
     simulate_workday_parsing,
     simulate_greenhouse_parsing,
     simulate_taleo_parsing,
-    simulate_icims_parsing
+    simulate_icims_parsing,
+    simulate_lever_parsing,
+    simulate_successfactors_parsing
 )
+from app.adversarial_steganography import sanitize_adversarial_text
+from app.eeoc_statistical_auditor import generate_nyc_ll144_audit_report
+from app.spatial_budgeter import audit_canvas_spatial_budget
+
 from app.interview_prep import generate_interview_prep
 from app.resume_builder import parse_resume_to_structured_json, format_structured_resume_to_plain_text
 from app.semantic_match import calculate_semantic_alignment
@@ -282,6 +288,19 @@ class LeadershipProfileRequest(BaseModel):
 
 class AtsSimulatorRequest(BaseModel):
     resume_text: str = Field(..., min_length=5, description="Resume text to simulate across ATS parsing engines")
+
+class AdversarialAuditRequest(BaseModel):
+    resume_text: str = Field(..., min_length=1, description="Resume text to audit for steganography and homoglyph attacks")
+
+class EeocAuditRequest(BaseModel):
+    cohort_data: Dict[str, Dict[str, Any]] = Field(..., description="Cohort selection and scoring counts")
+    scoring_threshold: Optional[float] = Field(70.0, description="Minimum score threshold for candidate selection")
+
+class SpatialBudgetRequest(BaseModel):
+    boxes: List[Dict[str, Any]] = Field(..., description="List of bounding boxes on page canvas")
+    page_format: Optional[str] = Field("letter", description="Canvas format ('letter' or 'a4')")
+    min_margin_pt: Optional[float] = Field(36.0, description="Minimum margin in points")
+
 
 
 
@@ -1432,6 +1451,74 @@ def simulate_taleo_endpoint(request: Request, payload: AtsSimulatorRequest):
     except Exception as err:
         logger.error(f"Error simulating Taleo parsing: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to simulate Taleo: {str(err)}")
+
+@app.post("/api/simulate/lever")
+@limiter.limit("60/minute")
+def simulate_lever_endpoint(request: Request, payload: AtsSimulatorRequest):
+    """
+    Simulates Lever ATS plain-text linearization and candidate fast-tagging.
+    """
+    try:
+        return simulate_lever_parsing(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error simulating Lever parsing: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate Lever: {str(err)}")
+
+@app.post("/api/simulate/successfactors")
+@limiter.limit("60/minute")
+def simulate_successfactors_endpoint(request: Request, payload: AtsSimulatorRequest):
+    """
+    Simulates SAP SuccessFactors XML candidate profile mapping and delimiter conformance.
+    """
+    try:
+        return simulate_successfactors_parsing(payload.resume_text)
+    except Exception as err:
+        logger.error(f"Error simulating SAP SuccessFactors parsing: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to simulate SAP SuccessFactors: {str(err)}")
+
+@app.post("/api/security/adversarial-audit")
+@limiter.limit("60/minute")
+def audit_adversarial_security_endpoint(request: Request, payload: AdversarialAuditRequest):
+    """
+    Audits resume text for binary zero-width steganography and homoglyph attacks.
+    """
+    try:
+        sanitized_text, audit_report = sanitize_adversarial_text(payload.resume_text)
+        return {
+            "sanitized_text": sanitized_text,
+            "report": audit_report
+        }
+    except Exception as err:
+        logger.error(f"Error auditing adversarial security: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit adversarial security: {str(err)}")
+
+@app.post("/api/compliance/eeoc-audit")
+@limiter.limit("60/minute")
+def audit_eeoc_compliance_endpoint(request: Request, payload: EeocAuditRequest):
+    """
+    Audits candidate cohort selection rates under EEOC 4/5ths Rule and NYC LL 144.
+    """
+    try:
+        threshold = payload.scoring_threshold if payload.scoring_threshold is not None else 70.0
+        return generate_nyc_ll144_audit_report(payload.cohort_data, scoring_threshold=threshold)
+    except Exception as err:
+        logger.error(f"Error performing EEOC compliance audit: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit EEOC compliance: {str(err)}")
+
+@app.post("/api/layout/spatial-budget")
+@limiter.limit("60/minute")
+def audit_spatial_budget_endpoint(request: Request, payload: SpatialBudgetRequest):
+    """
+    Audits 2D Euclidean bounding box spatial density, margins, and gutter collisions.
+    """
+    try:
+        fmt = payload.page_format if payload.page_format else "letter"
+        margin = payload.min_margin_pt if payload.min_margin_pt is not None else 36.0
+        return audit_canvas_spatial_budget(payload.boxes, page_format=fmt, min_margin_pt=margin)
+    except Exception as err:
+        logger.error(f"Error auditing spatial budget: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to audit spatial budget: {str(err)}")
+
 
 
 

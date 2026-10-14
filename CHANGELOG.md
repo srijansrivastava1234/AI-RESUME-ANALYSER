@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - **Euclidean 2D Bounding Box Spatial Density & Gutter Collision Budgeter**: Implemented `app.spatial_budgeter` auditing print margin breaches, visual reading density (45-70%), and column gutter collapses.
 - **Flagship REST Endpoints**: Added `/api/simulate/lever`, `/api/simulate/successfactors`, `/api/security/adversarial-audit`, `/api/compliance/eeoc-audit`, and `/api/layout/spatial-budget`.
 - **CLI Multi-ATS Matrix & Adversarial Security Dashboard**: Enhanced `app.cli` with 6-engine ATS matrix simulation (`--simulate`) and steganography auditing (`--audit-security`).
+- **End-to-End v3.8.0 Flagship Integration Suite**: Implemented `test_v380_flagship_suite.py` validating full-stack API contract execution across all new diagnostic services and multi-vendor simulators.
 
 ---
 

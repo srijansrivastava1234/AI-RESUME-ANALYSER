@@ -172,34 +172,41 @@ def audit_layout_linearization(raw_text: str) -> dict:
 
 
 
-def clean_extracted_text(text: str) -> str:
+def clean_extracted_text(text: str, preserve_layout: bool = False) -> str:
     """
     Cleans and normalizes extracted text to optimize LLM token usage:
     - Removes null bytes and non-printable control characters.
     - Replaces 3 or more consecutive newlines with 2 newlines.
-    - Replaces multiple whitespace/tabs with a single space.
+    - Replaces multiple whitespace/tabs with a single space (unless preserve_layout=True).
     - Strips leading/trailing whitespaces.
     
     :param text: Raw extracted string from document
-    :return: Normalized, token-efficient text string
+    :param preserve_layout: If True, preserves intra-line multi-space gutters (>= 4 spaces) for layout audits
+    :return: Normalized text string
     """
     # Remove null bytes and unwanted control characters (except newline and tab)
     text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', text)
     # Remove zero-width characters that disrupt tokenization
     text = re.sub(r'[\u200B\u200C\u200D\uFEFF]', '', text)
     text = re.sub(r'\n{3,}', '\n\n', text)
-    text = re.sub(r'[ \t]{2,}', ' ', text)
+    if preserve_layout:
+        # Strip trailing space per line, but keep intra-line column gutters
+        lines = [line.rstrip() for line in text.splitlines()]
+        text = "\n".join(lines)
+    else:
+        text = re.sub(r'[ \t]{2,}', ' ', text)
     return text.strip()
 
 
 
-def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> tuple[str, int]:
+def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000, preserve_layout: bool = False) -> tuple[str, int]:
     """
     Extracts text content and page metadata from a PDF file provided as bytes.
     Limits total character ingestion to max_chars to avoid excessive token overhead.
 
     :param file_bytes: Raw binary payload of the PDF document
     :param max_chars: Maximum character limit for ingestion (default: 50,000)
+    :param preserve_layout: Whether to preserve multi-space column gutters for layout audits
     :return: Tuple of (cleaned_extracted_text, total_page_count)
     :raises ValueError: When no extractable text is found (e.g., scanned/image-only PDF)
     """
@@ -223,7 +230,7 @@ def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> tuple[st
             extracted_text.append(text)
             char_count += len(text)
             
-        full_text = clean_extracted_text("\n".join(extracted_text))
+        full_text = clean_extracted_text("\n".join(extracted_text), preserve_layout=preserve_layout)
         
         if not full_text:
             raise ValueError("No text could be extracted from the PDF. The file might be scanned or image-only.")
@@ -234,7 +241,7 @@ def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000) -> tuple[st
         logger.error(f"Error extracting PDF: {str(e)}")
         raise e
 
-def extract_text_from_docx(file_bytes: bytes, max_chars: int = 50000) -> str:
+def extract_text_from_docx(file_bytes: bytes, max_chars: int = 50000, preserve_layout: bool = False) -> str:
     """
     Extracts text content from a DOCX file provided as bytes.
     """
@@ -269,7 +276,7 @@ def extract_text_from_docx(file_bytes: bytes, max_chars: int = 50000) -> str:
                 extracted_text.append(text)
                 char_count += len(text) + 1
                 
-        full_text = clean_extracted_text("\n".join(extracted_text))
+        full_text = clean_extracted_text("\n".join(extracted_text), preserve_layout=preserve_layout)
         
         if not full_text:
             raise ValueError("No text could be extracted from the DOCX file.")
@@ -279,7 +286,7 @@ def extract_text_from_docx(file_bytes: bytes, max_chars: int = 50000) -> str:
         logger.error(f"Error extracting DOCX: {str(e)}")
         raise e
 
-def extract_text_from_txt(file_bytes: bytes, max_chars: int = 50000) -> str:
+def extract_text_from_txt(file_bytes: bytes, max_chars: int = 50000, preserve_layout: bool = False) -> str:
     """
     Extracts text content from a TXT file provided as bytes.
     """
@@ -290,7 +297,7 @@ def extract_text_from_txt(file_bytes: bytes, max_chars: int = 50000) -> str:
         except UnicodeDecodeError:
             text = file_bytes.decode('latin-1')
             
-        full_text = clean_extracted_text(text[:max_chars])
+        full_text = clean_extracted_text(text[:max_chars], preserve_layout=preserve_layout)
         
         if not full_text:
             raise ValueError("No text could be extracted from the TXT file.")

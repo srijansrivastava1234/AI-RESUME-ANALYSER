@@ -2,19 +2,19 @@
            TOP 10 FLAGSHIP TECHNICAL CONTRIBUTIONS (AI RESUME ANALYSER)
 ================================================================================
 Curated flagship architectural and algorithmic innovations engineered for the
-enterprise-grade AI Resume Analyser platform. Each contribution is formulated
-using the Google/IBM X-Y-Z action-result framework with quantifiable metrics,
-mathematical specifications, and ATS system mechanics.
+AI Resume Analyser platform. Each contribution is formulated using the Google/IBM
+X-Y-Z action-result framework with quantifiable metrics, mathematical specifications,
+and verified codebase implementations.
 
 --------------------------------------------------------------------------------
 1. FULL RESUME BULLET POINTS (XYZ / ACTION-RESULT FORMAT)
 --------------------------------------------------------------------------------
 
-1. Asynchronous Full-Stack Architecture & REST API (FastAPI & React 19)
-   • Architected and deployed a low-latency full-stack resume analysis platform using
-     FastAPI (Python 3.12+) and React 19 / Vite, establishing asynchronous non-blocking
-     request handling and live health-check polling to process multi-format resumes
-     (PDF, DOCX, TXT) with sub-1.5s end-to-end response latency.
+1. Modular Service Architecture & High-Throughput REST API (FastAPI & React 19)
+   • Architected and deployed a decoupled REST API platform using FastAPI (Python 3.12+)
+     and React 19 / Vite, decomposing 40+ endpoints into modular domain routers (analysis,
+     bullets, audits, simulators, compliance, tools) with centralized IP rate-limiting,
+     asynchronous health monitoring, and sub-1.5s end-to-end response latency.
 
 2. Deterministic 4-Pillar ATS Compliance Scoring & Letter Grade Engine
    • Formulated and deployed a mathematically auditable 4-pillar compliance engine
@@ -28,11 +28,11 @@ mathematical specifications, and ATS system mechanics.
      asymptotic term frequency saturation to penalize keyword stuffing, and enforcing
      length normalization against a 450-token baseline.
 
-4. Recursive XY-Cut Layout Linearization & Scanline Interleaving Detector
-   • Engineered a deterministic layout linearization engine simulating horizontal and
-     vertical whitespace projection valleys, detecting column gutter collapses (<12pt),
-     ASCII table intersections, and legacy scanline interleaving hazards where multi-column
-     sidebars concatenate across job titles in older Workday and Taleo parsers.
+4. Multi-Column Gutter Linearization & Reading-Order Audit Pipeline
+   • Engineered a layout linearization engine detecting multi-column reading-order traps,
+     ASCII table intersections, and sidebar interleaving hazards; decoupled layout-preserving
+     whitespace extraction from token-optimized LLM streams to eliminate false-negative
+     audits on multi-column resumes.
 
 5. ISO 19005-2 PDF/A Text Layer, CMap Integrity & Ligature Normalizer
    • Architected a PDF text layer diagnostic engine detecting Unicode Private Use Area (PUA)
@@ -45,10 +45,10 @@ mathematical specifications, and ATS system mechanics.
      compatible months, calculating non-duplicative total Years of Experience (YoE) across
      concurrent/overlapping tenures, and flagging unannounced employment gaps (>90 days).
 
-7. EEOC & NYC Local Law 144 Blind Review PII Redactor
+7. Blind Review PII Redaction & EEOC Four-Fifths Selection Rate Auditor
    • Engineered deterministic PII anonymization redacting emails, phone numbers, candidate
-     names, physical locations, and graduation year age discrimination proxies to eliminate
-     algorithmic bias under NYC LL 144 and EU AI Act Article 10 compliance frameworks.
+     names, physical locations, and graduation year age discrimination proxies for blind
+     candidate evaluation, paired with automated EEOC Four-Fifths statistical selection parity auditing.
 
 8. Ontological Hard vs Soft Skills Taxonomy Classifier & Dilution Defense
    • Built an ontological skill classifier separating hard technical proficiencies from
@@ -61,8 +61,8 @@ mathematical specifications, and ATS system mechanics.
      lossless text layers, and embedded metadata headers.
 
 10. Multi-Vendor ATS Emulation Sandbox & Adversarial Exploit / White-Font Guard
-    • Architected a multi-vendor ATS emulation sandbox (Workday, Taleo, Greenhouse) coupled
-      with a deterministic exploit auditor, intercepting white-on-white text stuffing (#ffffff),
+    • Architected a multi-vendor ATS emulation sandbox (Workday, Taleo, Greenhouse, iCIMS, Lever)
+      coupled with a deterministic exploit auditor, intercepting white-on-white text stuffing (#ffffff),
       microscopic typography (<0.5pt), off-screen DOM positioning, and zero-width Unicode
       codepoints (\u200B-\uFEFF) to eliminate candidate blacklisting risks.
 
@@ -70,9 +70,10 @@ mathematical specifications, and ATS system mechanics.
 2. ARCHITECTURAL MATRIX & MATHEMATICAL SPECIFICATIONS
 --------------------------------------------------------------------------------
 
-Pillar 1: Performance SLA
-- Target Latency: < 1.5s end-to-end for full audit
-- Concurrency: Async event loop with non-blocking I/O
+Pillar 1: Performance SLA & Modular Routing
+- Routing Architecture: Sliced FastAPI APIRouters (app/routers/{analysis,bullets,audits,simulators,compliance,tools}.py)
+- Target Latency: < 1.5s end-to-end for full audit; < 50ms for deterministic heuristic routes
+- Concurrency: Async event loop with non-blocking I/O and shared slowapi rate limiting
 - Throughput: 50+ concurrent requests/sec on standard container runtime
 
 Pillar 2: Mathematical Compliance Formula
@@ -89,8 +90,8 @@ Pillar 3: BM25+ Retrieval Formulation
 - Parameter Defaults: k1 = 1.2, b = 0.75, delta = 1.0, avgdl = 450 tokens
 
 Pillar 4: Layout Linearization
-- Min Gutter Width: 12.0 pt
-- Column Detection: Horizontal histogram projections with valley thresholding
+- Min Gutter Width: 4+ whitespace characters / >= 12.0 pt
+- Column Detection: Dual-stream extraction preserving horizontal gutter valleys
 - Scanline Interleaving: Heuristic line-height and bounding-box overlap tracking
 
 Pillar 5: Font & Text Layer Integrity
@@ -103,8 +104,8 @@ Pillar 6: Timeline Normalization
 - Overlap De-duplication: Interval tree union calculation for accurate net YoE
 - Gap Threshold: delta_t > 90 calendar days flagged for proactive explanation
 
-Pillar 7: Regulatory Compliance
-- Standards: NYC Local Law 144, EU AI Act Art. 10, EEOC Title VII
+Pillar 7: Regulatory Compliance & Fairness Auditing
+- Standards: EEOC Uniform Guidelines on Employee Selection Procedures (UGESP), Four-Fifths Rule
 - Redaction Vectors: Names, emails, phone numbers, postal addresses, graduation years
 
 Pillar 8: Skill Taxonomy

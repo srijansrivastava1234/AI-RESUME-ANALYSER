@@ -160,3 +160,23 @@ def test_audit_layout_linearization_empty():
     assert audit_layout_linearization("")["linearization_score"] == 0
     assert audit_layout_linearization("   \n\t  ")["risk_tier"] == "Empty Document"
 
+
+def test_clean_extracted_text_preserve_layout_gutter_integrity():
+    multi_col_raw = (
+        "SKILLS                      WORK EXPERIENCE\n"
+        "Python, React, Docker       Senior Engineer at TechCorp\n"
+        "PostgreSQL, Redis           Led distributed system migration\n"
+        "AWS, Terraform, CI/CD       Reduced latency by 45%\n"
+        "Kafka, RabbitMQ             Managed 5 direct report engineers\n"
+    )
+    # Default cleaner collapses intra-line spaces (blinding layout analysis)
+    collapsed = clean_extracted_text(multi_col_raw, preserve_layout=False)
+    audit_blinded = audit_layout_linearization(collapsed)
+    assert audit_blinded["gutter_anomaly_lines"] == 0
+
+    # Layout-preserving cleaner keeps gutters intact for accurate layout audits
+    layout_preserved = clean_extracted_text(multi_col_raw, preserve_layout=True)
+    audit_accurate = audit_layout_linearization(layout_preserved)
+    assert audit_accurate["gutter_anomaly_lines"] >= 4
+    assert audit_accurate["linearization_score"] < 75
+

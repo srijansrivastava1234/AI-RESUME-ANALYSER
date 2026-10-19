@@ -14,11 +14,14 @@ import Sidebar from './components/Sidebar';
 import ScoreCard from './components/ScoreCard';
 import CoreParameters from './components/CoreParameters';
 import TabsPanel from './components/TabsPanel';
-import HelpModal from './components/HelpModal';
-import ComparePanel from './components/ComparePanel';
-import BulletImpactLab from './components/BulletImpactLab';
-import PdfVisualStudio from './components/PdfVisualStudio';
-import OutreachModal from './components/OutreachModal';
+
+// Lazy-loaded secondary panels & modals for optimized bundle splitting
+const HelpModal = React.lazy(() => import('./components/HelpModal'));
+const ComparePanel = React.lazy(() => import('./components/ComparePanel'));
+const BulletImpactLab = React.lazy(() => import('./components/BulletImpactLab'));
+const PdfVisualStudio = React.lazy(() => import('./components/PdfVisualStudio'));
+const OutreachModal = React.lazy(() => import('./components/OutreachModal'));
+
 
 // Dynamically resolve backend URL. If VITE_API_URL env variable is provided, use it.
 // Otherwise, fall back to using the current page hostname with port 8000.
@@ -433,17 +436,21 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
 
       {appMode === 'compare' ? (
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 1rem 2rem 1rem' }}>
-          <ComparePanel
-            backendUrl={BACKEND_URL}
-            getScoreColor={getScoreColor}
-            getScoreBg={getScoreBg}
-          />
+          <React.Suspense fallback={<div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>Loading Comparison Studio...</div>}>
+            <ComparePanel
+              backendUrl={BACKEND_URL}
+              getScoreColor={getScoreColor}
+              getScoreBg={getScoreBg}
+            />
+          </React.Suspense>
         </div>
       ) : appMode === 'xyz' ? (
         <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '0 1rem 2rem 1rem' }}>
-          <BulletImpactLab
-            backendUrl={BACKEND_URL}
-          />
+          <React.Suspense fallback={<div className="glass-panel" style={{ padding: '2rem', textAlign: 'center' }}>Loading Bullet Impact Lab...</div>}>
+            <BulletImpactLab
+              backendUrl={BACKEND_URL}
+            />
+          </React.Suspense>
         </div>
       ) : (
       /* Grid */
@@ -694,27 +701,33 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
       </div>
       )}
 
-      <HelpModal
-        showHelpModal={showHelpModal}
-        setShowHelpModal={setShowHelpModal}
-      />
+      <React.Suspense fallback={null}>
+        {showHelpModal && (
+          <HelpModal
+            showHelpModal={showHelpModal}
+            setShowHelpModal={setShowHelpModal}
+          />
+        )}
 
-      {file && (
-        <PdfVisualStudio
-          file={file}
-          backendUrl={BACKEND_URL}
-          isOpen={showPdfStudio}
-          onClose={() => setShowPdfStudio(false)}
-        />
-      )}
+        {file && showPdfStudio && (
+          <PdfVisualStudio
+            file={file}
+            backendUrl={BACKEND_URL}
+            isOpen={showPdfStudio}
+            onClose={() => setShowPdfStudio(false)}
+          />
+        )}
 
-      <OutreachModal
-        isOpen={showOutreachModal}
-        onClose={() => setShowOutreachModal(false)}
-        extractedText={extractedText}
-        jobDesc={jobDesc}
-        backendUrl={BACKEND_URL}
-      />
+        {showOutreachModal && (
+          <OutreachModal
+            isOpen={showOutreachModal}
+            onClose={() => setShowOutreachModal(false)}
+            extractedText={extractedText}
+            jobDesc={jobDesc}
+            backendUrl={BACKEND_URL}
+          />
+        )}
+      </React.Suspense>
     </div>
   );
 }

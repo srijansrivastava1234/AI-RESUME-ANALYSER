@@ -24,10 +24,12 @@ import {
   Edit3
 } from 'lucide-react';
 import HygieneCard from './HygieneCard';
-import AtsSimulatorTab from './AtsSimulatorTab';
-import DeepDiagnosticsPanel from './DeepDiagnosticsPanel';
-import InterviewPrepPanel from './InterviewPrepPanel';
-import ResumeEditorStudio from './ResumeEditorStudio';
+
+// Lazy-loaded heavy tab modules for on-demand bundle delivery
+const AtsSimulatorTab = React.lazy(() => import('./AtsSimulatorTab'));
+const DeepDiagnosticsPanel = React.lazy(() => import('./DeepDiagnosticsPanel'));
+const InterviewPrepPanel = React.lazy(() => import('./InterviewPrepPanel'));
+const ResumeEditorStudio = React.lazy(() => import('./ResumeEditorStudio'));
 import { calculateKeywordDensity } from '../utils/performance';
 
 export default function TabsPanel({
@@ -2230,40 +2232,48 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
         </div>
       )}
 
-      {/* Tab: Multi-ATS Engine Simulator */}
-      {activeTab === 'ats_sim' && (
-        <AtsSimulatorTab
-          extractedText={extractedText}
-          backendUrl={backendUrl}
-        />
-      )}
+      {/* Lazy-Loaded Tabs with Suspense Fallback */}
+      <React.Suspense fallback={
+        <div className="glass-panel" style={{ padding: '3rem', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+          <div className="spinner"></div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Loading workspace module...</p>
+        </div>
+      }>
+        {/* Tab: Multi-ATS Engine Simulator */}
+        {activeTab === 'ats_sim' && (
+          <AtsSimulatorTab
+            extractedText={extractedText}
+            backendUrl={backendUrl}
+          />
+        )}
 
-      {/* Tab: Deep Diagnostic & Security Analytics Hub */}
-      {activeTab === 'deep_diagnostics' && (
-        <DeepDiagnosticsPanel
-          extractedText={extractedText}
-          backendUrl={backendUrl}
-        />
-      )}
+        {/* Tab: Deep Diagnostic & Security Analytics Hub */}
+        {activeTab === 'deep_diagnostics' && (
+          <DeepDiagnosticsPanel
+            extractedText={extractedText}
+            backendUrl={backendUrl}
+          />
+        )}
 
-      {/* Tab: Recruiter Grill-Me Interview Simulation */}
-      {activeTab === 'interview_prep' && (
-        <InterviewPrepPanel
-          extractedText={extractedText}
-          jobDesc={jobDesc}
-          backendUrl={backendUrl}
-        />
-      )}
+        {/* Tab: Recruiter Grill-Me Interview Simulation */}
+        {activeTab === 'interview_prep' && (
+          <InterviewPrepPanel
+            extractedText={extractedText}
+            jobDesc={jobDesc}
+            backendUrl={backendUrl}
+          />
+        )}
 
-      {/* Tab: Live Resume Editor & Verified PDF Export Studio */}
-      {activeTab === 'resume_editor' && (
-        <ResumeEditorStudio
-          extractedText={extractedText}
-          report={report}
-          backendUrl={backendUrl}
-          onApplyEditedText={setEditedText}
-        />
-      )}
+        {/* Tab: Live Resume Editor & Verified PDF Export Studio */}
+        {activeTab === 'resume_editor' && (
+          <ResumeEditorStudio
+            extractedText={extractedText}
+            report={report}
+            backendUrl={backendUrl}
+            onApplyEditedText={setEditedText}
+          />
+        )}
+      </React.Suspense>
     </div>
   );
 }

@@ -8,7 +8,7 @@ from app.header_normalizer import audit_section_headers
 from app.token_density import audit_token_density
 from app.seniority_profiler import audit_seniority_distribution
 from app.redaction import anonymize_resume_for_blind_audit
-from app.layout_linearizer import simulate_recursive_xy_cut
+from app.layout_linearizer import simulate_recursive_xy_cut, reconstruct_linear_stream
 from app.chronology import audit_career_chronology
 from app.font_integrity import audit_font_cmap_integrity
 from app.bm25_scorer import compute_bm25_plus
@@ -175,6 +175,25 @@ def audit_layout_endpoint(request: Request, payload: LayoutAuditRequest):
     except Exception as err:
         logger.error(f"Error in audit layout endpoint: {err}")
         raise HTTPException(status_code=500, detail=f"Failed to audit layout linearization: {str(err)}")
+
+
+@router.post("/api/linearize-stream")
+@limiter.limit("30/minute")
+def linearize_stream_endpoint(request: Request, payload: LayoutAuditRequest):
+    """
+    De-interleaves multi-column or sidebar resume layouts into a reconstructed single-column text stream.
+    """
+    try:
+        linearized = reconstruct_linear_stream(payload.text)
+        return {
+            "original_length": len(payload.text),
+            "linearized_length": len(linearized),
+            "linearized_text": linearized
+        }
+    except Exception as err:
+        logger.error(f"Error in linearize stream endpoint: {err}")
+        raise HTTPException(status_code=500, detail=f"Failed to linearize text stream: {str(err)}")
+
 
 
 @router.post("/api/audit-chronology")

@@ -112,3 +112,58 @@ def test_only_blank_lines():
     assert res["linearization_score"] == 0
     assert res["total_analyzed_lines"] == 0
 
+
+def test_reconstruct_linear_stream_empty():
+    from app.layout_linearizer import reconstruct_linear_stream
+    assert reconstruct_linear_stream("") == ""
+    assert reconstruct_linear_stream("   \n\t  ") == ""
+
+
+def test_reconstruct_linear_stream_single_column():
+    from app.layout_linearizer import reconstruct_linear_stream
+    doc = (
+        "John Doe\n"
+        "Software Engineer\n"
+        "Built distributed systems handling 50k RPS."
+    )
+    assert reconstruct_linear_stream(doc) == doc
+
+
+def test_reconstruct_linear_stream_multi_column():
+    from app.layout_linearizer import reconstruct_linear_stream
+    raw_doc = (
+        "Sarah Jenkins - Staff Engineer\n"
+        "sarah@example.com\n"
+        "Skills: Python, Go, Docker          Work Experience\n"
+        "Database: PostgreSQL, Redis        Senior Architect at CloudCorp (2021-Present)\n"
+        "Cloud: AWS, Kubernetes, Terraform   Led 12-engineer team scaling high throughput APIs\n"
+        "Certifications: AWS Solutions Arch  Architected event-driven microservices\n"
+    )
+    linearized = reconstruct_linear_stream(raw_doc)
+    assert "Sarah Jenkins" in linearized
+    skills_pos = linearized.find("Skills: Python, Go, Docker")
+    exp_pos = linearized.find("Work Experience")
+    assert skills_pos != -1
+    assert exp_pos != -1
+    assert skills_pos < exp_pos
+
+
+def test_linearize_stream_api_endpoint():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    client = TestClient(app)
+
+    raw_doc = (
+        "Sarah Jenkins - Staff Engineer\n"
+        "Skills: Python, Go, Docker          Work Experience\n"
+        "Database: PostgreSQL, Redis        Senior Architect at CloudCorp\n"
+        "Cloud: AWS, Kubernetes, Terraform   Led 12-engineer team\n"
+    )
+    response = client.post("/api/linearize-stream", json={"text": raw_doc})
+    assert response.status_code == 200
+    data = response.json()
+    assert "linearized_text" in data
+    assert data["original_length"] > 0
+    assert "Sarah Jenkins" in data["linearized_text"]
+
+

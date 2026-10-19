@@ -149,3 +149,72 @@ def simulate_recursive_xy_cut(raw_text: str) -> Dict[str, Any]:
         "simulated_scrambled_snippets": scrambled_previews,
         "recommendations": recommendations
     }
+
+
+def reconstruct_linear_stream(raw_text: str) -> str:
+    """
+    Algorithmic de-interleaver that de-scrambles two-column or sidebar resume layouts into
+    a single-column linear text stream.
+
+    When multi-column gutters (>=4 consecutive spaces/tabs) are detected:
+    - Buffers the left-column blocks (typically contact, skills, education sidebars).
+    - Buffers the right-column blocks (typically chronological professional experience).
+    - Recombines them sequentially: Top header -> Left column -> Right column.
+
+    If no significant multi-column gutters are present (<15% lines), returns the original text untouched.
+    """
+    if not raw_text or not raw_text.strip():
+        return ""
+
+    lines = raw_text.splitlines()
+    gutter_pattern = re.compile(r'^(.*?\S)(?:\t+|\s{4,})(\S.*)$')
+
+    left_stream: List[str] = []
+    right_stream: List[str] = []
+    header_stream: List[str] = []
+
+    non_empty_lines = [l for l in lines if l.strip()]
+    if not non_empty_lines:
+        return ""
+
+    multi_col_count = sum(1 for line in non_empty_lines if gutter_pattern.match(line))
+
+    # If document is mostly single-column, return original text
+    if (multi_col_count / len(non_empty_lines)) < 0.15:
+        return raw_text.strip()
+
+    in_multi_col = False
+    for line in lines:
+        if not line.strip():
+            if not in_multi_col:
+                header_stream.append("")
+            continue
+
+        match = gutter_pattern.match(line)
+        if match:
+            in_multi_col = True
+            left_col = match.group(1).strip()
+            right_col = match.group(2).strip()
+            if left_col:
+                left_stream.append(left_col)
+            if right_col:
+                right_stream.append(right_col)
+        else:
+            if not in_multi_col:
+                header_stream.append(line.strip())
+            else:
+                right_stream.append(line.strip())
+
+    result_parts = []
+    header_text = "\n".join(header_stream).strip()
+    if header_text:
+        result_parts.append(header_text)
+    left_text = "\n".join(left_stream).strip()
+    if left_text:
+        result_parts.append(left_text)
+    right_text = "\n".join(right_stream).strip()
+    if right_text:
+        result_parts.append(right_text)
+
+    return "\n\n".join(result_parts)
+

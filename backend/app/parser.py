@@ -233,6 +233,18 @@ def extract_text_from_pdf(file_bytes: bytes, max_chars: int = 50000, preserve_la
         full_text = clean_extracted_text("\n".join(extracted_text), preserve_layout=preserve_layout)
         
         if not full_text:
+            image_count = 0
+            try:
+                for page in reader.pages:
+                    image_count += len(page.images)
+            except Exception:
+                pass
+            if image_count > 0:
+                raise ValueError(
+                    f"No text layer found ({image_count} raster image(s) detected across {total_pages} page(s)). "
+                    "The PDF appears to be a scanned copy or flattened graphic export (e.g., Canva/Photoshop). "
+                    "ATS parsers require a selectable, programmatic text layer conforming to ISO 19005-2."
+                )
             raise ValueError("No text could be extracted from the PDF. The file might be scanned or image-only.")
             
         return full_text, total_pages

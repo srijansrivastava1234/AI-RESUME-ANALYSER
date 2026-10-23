@@ -113,6 +113,8 @@ async def analyze_resume_endpoint(
             "report": analysis_report
         }
         
+    except HTTPException:
+        raise
     except ValueError as val_err:
         logger.warning(f"[{request_id}] Validation issue: {str(val_err)}")
         raise HTTPException(status_code=400, detail=str(val_err))
@@ -163,6 +165,15 @@ async def compare_resumes_endpoint(
 
         resume_texts = []
         for file in files:
+            file.file.seek(0, 2)
+            f_size = file.file.tell()
+            file.file.seek(0)
+            if f_size > MAX_FILE_SIZE_BYTES:
+                raise HTTPException(
+                    status_code=413,
+                    detail=f"File '{file.filename}' exceeds maximum allowed size of {MAX_FILE_SIZE_BYTES // (1024*1024)}MB."
+                )
+
             filename_lower = file.filename.lower()
             file_bytes = await file.read()
             if filename_lower.endswith(".pdf"):
@@ -181,6 +192,8 @@ async def compare_resumes_endpoint(
 
         return comparison_report
 
+    except HTTPException:
+        raise
     except ValueError as val_err:
         logger.warning(f"[{request_id}] Comparison validation: {str(val_err)}")
         raise HTTPException(status_code=400, detail=str(val_err))
@@ -212,6 +225,15 @@ async def check_hygiene_endpoint(
         )
 
     try:
+        file.file.seek(0, 2)
+        f_size = file.file.tell()
+        file.file.seek(0)
+        if f_size > MAX_FILE_SIZE_BYTES:
+            raise HTTPException(
+                status_code=413,
+                detail=f"File exceeds maximum allowed size of {MAX_FILE_SIZE_BYTES // (1024*1024)}MB."
+            )
+
         file_bytes = await file.read()
         if filename_lower.endswith(".pdf"):
             text, _ = extract_text_from_pdf(file_bytes)
@@ -225,6 +247,8 @@ async def check_hygiene_endpoint(
             "filename": file.filename,
             "hygiene": hygiene_report
         }
+    except HTTPException:
+        raise
     except ValueError as val_err:
         raise HTTPException(status_code=400, detail=str(val_err))
     except Exception as err:

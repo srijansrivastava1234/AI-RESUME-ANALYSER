@@ -6,7 +6,8 @@ import logging
 import time
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from dotenv import load_dotenv
@@ -86,11 +87,19 @@ async def add_process_time_and_security_headers(request: Request, call_next):
 
     return response
 
-# Enable CORS for frontend dashboard connection
+# Configure CORS: If wildcard origins are used, credentials must be disabled per W3C spec
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "").strip()
+if allowed_origins_env and allowed_origins_env != "*":
+    allow_origins = [orig.strip() for orig in allowed_origins_env.split(",") if orig.strip()]
+    allow_credentials = True
+else:
+    allow_origins = ["*"]
+    allow_credentials = False
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=allow_origins,
+    allow_credentials=allow_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -103,9 +112,31 @@ app.include_router(simulators_router)
 app.include_router(compliance_router)
 app.include_router(tools_router)
 
+# Mount static frontend build if present (for production Docker or unified deployments)
+frontend_dist_paths = [
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist")),
+    "/app/frontend/dist",
+    os.path.abspath("frontend/dist"),
+]
+
+frontend_dist_dir = next((p for p in frontend_dist_paths if os.path.isdir(p)), None)
+
+if frontend_dist_dir:
+    assets_dir = os.path.join(frontend_dist_dir, "assets")
+    if os.path.isdir(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="frontend-assets")
+    app.mount("/dashboard", StaticFiles(directory=frontend_dist_dir, html=True), name="frontend-dashboard")
+
 
 @app.get("/")
-def read_root():
+def read_root(request: Request):
+    # If a browser requests the root directly in production and frontend build exists, serve it
+    accept_header = request.headers.get("accept", "")
+    if "text/html" in accept_header and frontend_dist_dir:
+        index_file = os.path.join(frontend_dist_dir, "index.html")
+        if os.path.isfile(index_file):
+            return FileResponse(index_file)
+
     return {
         "status": "Online",
         "version": APP_VERSION,

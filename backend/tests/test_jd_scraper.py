@@ -226,3 +226,15 @@ def test_api_scrape_jd_endpoint_success():
             assert "TypeScript" in res["extracted_skills"]
             assert "React" in res["extracted_skills"]
 
+
+def test_scrape_job_description_blocks_redirect_to_private_ip():
+    import asyncio
+    mock_redirect_response = AsyncMock()
+    mock_redirect_response.status_code = 302
+    mock_redirect_response.headers = {"Location": "http://127.0.0.1:8000/internal-secrets"}
+
+    with patch("httpx.AsyncClient.get", return_value=mock_redirect_response):
+        with pytest.raises(ValueError, match="prohibited|blocked|restricted"):
+            asyncio.run(scrape_job_description("https://example.com/redirect-to-internal"))
+
+

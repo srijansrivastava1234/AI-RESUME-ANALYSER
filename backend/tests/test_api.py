@@ -1,4 +1,5 @@
 import io
+from unittest.mock import patch
 import pytest
 from fastapi.testclient import TestClient
 from app.main import app
@@ -411,6 +412,29 @@ def test_redact_pii_endpoint_success():
 def test_redact_pii_endpoint_empty():
     res = client.post("/api/redact-pii", json={"text": ""})
     assert res.status_code == 422  # min_length=1 validation error
+
+
+def test_hygiene_endpoint_oversized_file():
+    with patch("fastapi.UploadFile.read", return_value=b"dummy"):
+        # Mock tell() on file to simulate a 15MB file
+        with patch("tempfile.SpooledTemporaryFile.tell", return_value=15 * 1024 * 1024):
+            files = {"file": ("large_resume.pdf", io.BytesIO(b"fake pdf content"), "application/pdf")}
+            res = client.post("/api/hygiene", files=files)
+            assert res.status_code == 413
+            assert "maximum allowed size" in res.json()["detail"]
+
+
+def test_compare_endpoint_oversized_file():
+    with patch("fastapi.UploadFile.read", return_value=b"dummy"):
+        with patch("tempfile.SpooledTemporaryFile.tell", return_value=15 * 1024 * 1024):
+            files = [
+                ("files", ("resume1.pdf", io.BytesIO(b"content 1"), "application/pdf")),
+                ("files", ("resume2.pdf", io.BytesIO(b"content 2"), "application/pdf"))
+            ]
+            res = client.post("/api/compare", files=files)
+            assert res.status_code == 413
+            assert "exceeds maximum allowed size" in res.json()["detail"]
+
 
 
 

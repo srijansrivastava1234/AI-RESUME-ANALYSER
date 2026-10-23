@@ -8,19 +8,28 @@ The **AI Resume Analyser** project prioritizes candidate privacy, zero persisten
 
 | Version | Supported | Security Patches |
 |---|---|---|
-| `1.1.x` | ✅ Yes | Actively Supported |
-| `1.0.x` | ✅ Yes | Critical Patches Only |
-| `< 1.0.0` | ❌ No | Deprecated |
+| `3.7.x` | ✅ Yes | Current Flagship Release |
+| `3.x`   | ✅ Yes | Actively Supported |
+| `2.x`   | ⚠️ Limited | Security Patches Only |
+| `< 2.0.0` | ❌ No | Deprecated |
 
 ---
 
 ## 🛡️ Threat Model & Ingestion Guardrails
 
-### 1. Adversarial White-Font & Zero-Width Injection
-- **Threat Vector**: Attackers hide high-frequency keywords or prompt injections (`"Ignore all previous instructions..."`) in zero-point fonts or white text (`#ffffff`).
-- **Mitigation**: Pre-scoring filter scans the DOM/PDF text stream for CSS opacity zero, white-on-white text, and zero-width characters (`\u200B`, `\u200C`, `\u200D`, `\uFEFF`), immediately stripping deceptive payloads and penalizing the compliance score.
+### 1. Adversarial White-Font, Steganography & Prompt Injection
+- **Threat Vector**: Attackers hide high-frequency keywords, zero-width Unicode characters (`\u200B`, `\u200C`, `\u200D`, `\uFEFF`), or prompt injections (`"Ignore all previous instructions..."`) to manipulate downstream LLM scoring.
+- **Mitigation**: Integrated text-stream normalization and `audit_prompt_injection_safety` scan incoming resumes prior to LLM compilation, stripping invisible characters and flagging adversarial jailbreak attempts.
 
-### 2. PII Sanitization & Data Retention Policy
+### 2. SSRF Protection on External Ingestion
+- **Threat Vector**: Malicious job posting URLs or redirect chains targeting cloud metadata services (`169.254.169.254`) or loopback/private network ranges.
+- **Mitigation**: Pre-request DNS resolution checks and per-hop redirect re-validation block all non-routable, private, multicast, and loopback IP spaces with a strict redirect cap.
+
+### 3. Memory & DoS Ingestion Limits
+- **Threat Vector**: Extremely large multipart payloads causing worker out-of-memory crashes.
+- **Mitigation**: Strict stream-seek size verification (10MB maximum payload budget) enforced prior to reading payloads into memory across all ingestion endpoints.
+
+### 4. PII Sanitization & Data Retention Policy
 - **Threat Vector**: Accidental storage or leakage of candidate contact details, addresses, and demographic data.
 - **Mitigation**: All incoming resumes are sanitized in-memory using strict regex patterns (`sanitize_pii`). No applicant resume data is persisted to long-term databases or external unvetted APIs.
 

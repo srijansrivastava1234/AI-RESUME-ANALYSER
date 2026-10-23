@@ -19,6 +19,7 @@ from app.bullet_length import analyze_bullet_lengths
 from app.summary_classifier import classify_summary_style
 from app.salary_detector import detect_salary_disclosures
 from app.portfolio_validator import audit_portfolio_links
+from app.prompt_injection_detector import audit_prompt_injection_safety
 
 logger = logging.getLogger("ResumeAnalyzer")
 
@@ -268,18 +269,26 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
         "bullet_lengths": analyze_bullet_lengths(resume_text),
         "summary_style": classify_summary_style(resume_text),
         "salary_disclosures": detect_salary_disclosures(resume_text),
-        "portfolio_links": audit_portfolio_links(resume_text)
+        "portfolio_links": audit_portfolio_links(resume_text),
+        "prompt_injection_safety": audit_prompt_injection_safety(resume_text)
     }
 
 def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> dict:
     """
     Sends the resume and job description to the Gemini model and parses the JSON response.
     Falls back to mock analyzer if API key is missing or calls fail.
+    Protects inference pipeline by auditing for prompt injection and adversarial payloads.
     """
+    security_audit = audit_prompt_injection_safety(resume_text)
+    if not security_audit.get("is_safe", True) and security_audit.get("threat_level") in ("CRITICAL", "HIGH"):
+        logger.warning(f"Adversarial prompt injection pattern detected in resume text (threat: {security_audit.get('threat_level')}).")
+
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         logger.info("Using mock analysis engine (no GEMINI_API_KEY).")
-        return generate_mock_analysis(resume_text, job_description)
+        mock_data = generate_mock_analysis(resume_text, job_description)
+        mock_data["prompt_injection_safety"] = security_audit
+        return mock_data
 
     try:
         # Prompt build
@@ -319,9 +328,12 @@ def analyze_resume(resume_text: str, job_description: Optional[str] = None) -> d
         analysis_data["summary_style"] = classify_summary_style(resume_text)
         analysis_data["salary_disclosures"] = detect_salary_disclosures(resume_text)
         analysis_data["portfolio_links"] = audit_portfolio_links(resume_text)
+        analysis_data["prompt_injection_safety"] = security_audit
         return analysis_data
         
     except Exception as e:
         logger.error(f"Gemini API invocation error: {str(e)}. Falling back to mock data.")
-        return generate_mock_analysis(resume_text, job_description)
+        fallback = generate_mock_analysis(resume_text, job_description)
+        fallback["prompt_injection_safety"] = security_audit
+        return fallback
 

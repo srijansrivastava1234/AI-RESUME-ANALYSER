@@ -14,3 +14,12 @@ htmlcov
 *.log
 scratch
 brain
+.env
+.env.*
+*.env
+backend/.env
+backend/.env.*
+frontend/.env
+frontend/.env.*
+sample_resume.pdf
+srijansrivastava1234/

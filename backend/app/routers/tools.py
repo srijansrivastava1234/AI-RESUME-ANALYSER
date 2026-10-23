@@ -155,9 +155,13 @@ async def extract_pdf_layout_tokens_endpoint(
     if not file.filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Layout token extraction is only supported for PDF files.")
 
+    file.file.seek(0, 2)
+    f_size = file.file.tell()
+    file.file.seek(0)
+    if f_size > MAX_FILE_SIZE_BYTES:
+        raise HTTPException(status_code=413, detail=f"File exceeds maximum allowed size of {MAX_FILE_SIZE_BYTES // (1024*1024)}MB.")
+
     contents = await file.read()
-    if len(contents) > MAX_FILE_SIZE_BYTES:
-        raise HTTPException(status_code=400, detail=f"File exceeds maximum allowed size of {MAX_FILE_SIZE_BYTES / (1024*1024):.0f}MB.")
 
     result = extract_pdf_layout_tokens(contents)
     if not result.get("success", False):

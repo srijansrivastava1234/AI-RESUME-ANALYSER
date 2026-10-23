@@ -252,9 +252,11 @@ def parse_job_html(html_content: str, url: str) -> Dict[str, Any]:
 
 async def scrape_job_description(target_url: str) -> Dict[str, Any]:
     """
-    Fetches and sanitizes job descriptions from external URLs asynchronously.
+    Fetches and sanitizes job descriptions from external URLs asynchronously,
+    strictly validating URL security across any redirects to prevent SSRF.
     """
-    validate_url_security(target_url)
+    current_url = target_url.strip()
+    validate_url_security(current_url)
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
@@ -263,36 +265,64 @@ async def scrape_job_description(target_url: str) -> Dict[str, Any]:
         "Cache-Control": "no-cache"
     }
 
-    async with httpx.AsyncClient(timeout=12.0, follow_redirects=True, headers=headers) as client:
+    max_redirects = 3
+    redirect_count = 0
+
+    async with httpx.AsyncClient(timeout=12.0, follow_redirects=False, headers=headers) as client:
         try:
-            response = await client.get(target_url.strip())
-            if response.status_code != 200:
-                return {
-                    "success": False,
-                    "error": f"Target job page returned HTTP {response.status_code} ({response.reason_phrase}).",
-                    "url": target_url
-                }
+            while True:
+                response = await client.get(current_url)
 
-            html_content = response.text
-            if not html_content or len(html_content.strip()) < 50:
-                return {
-                    "success": False,
-                    "error": "The job posting page returned an empty or unreadable HTML document.",
-                    "url": target_url
-                }
+                # Check for HTTP redirect response codes
+                if response.status_code in (301, 302, 303, 307, 308):
+                    redirect_count += 1
+                    if redirect_count > max_redirects:
+                        return {
+                            "success": False,
+                            "error": "Too many redirects encountered while resolving job page.",
+                            "url": target_url
+                        }
+                    location = response.headers.get("Location")
+                    if not location:
+                        return {
+                            "success": False,
+                            "error": f"Target job page returned redirect {response.status_code} without a Location header.",
+                            "url": target_url
+                        }
+                    from urllib.parse import urljoin
+                    next_url = urljoin(current_url, location)
+                    # Re-validate redirect URL against SSRF rules to prevent redirect-based SSRF bypass
+                    validate_url_security(next_url)
+                    current_url = next_url
+                    continue
 
-            result = parse_job_html(html_content, target_url)
-            return result
+                if response.status_code != 200:
+                    return {
+                        "success": False,
+                        "error": f"Target job page returned HTTP {response.status_code} ({response.reason_phrase}).",
+                        "url": current_url
+                    }
+
+                html_content = response.text
+                if not html_content or len(html_content.strip()) < 50:
+                    return {
+                        "success": False,
+                        "error": "The job posting page returned an empty or unreadable HTML document.",
+                        "url": current_url
+                    }
+
+                result = parse_job_html(html_content, current_url)
+                return result
 
         except httpx.TimeoutException:
             return {
                 "success": False,
                 "error": "Request to target job page timed out after 12 seconds. Please check the URL or paste the job description manually.",
-                "url": target_url
+                "url": current_url
             }
         except httpx.RequestError as req_err:
             return {
                 "success": False,
                 "error": f"Failed to connect to job page: {str(req_err)}",
-                "url": target_url
+                "url": current_url
             }

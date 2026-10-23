@@ -31,15 +31,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY backend/requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend code
-COPY backend/ ./backend
+# Create non-root application user for secure execution
+RUN useradd -m -u 1000 -s /bin/bash appuser
 
-# Copy built frontend assets from Stage 1 into backend static directory
-COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+# Copy backend code
+COPY --chown=appuser:appuser backend/ ./backend
+
+# Copy built frontend assets from Stage 1 into frontend dist directory
+COPY --from=frontend-builder --chown=appuser:appuser /app/frontend/dist /app/frontend/dist
 
 EXPOSE 8000
 
 WORKDIR /app/backend
+
+USER appuser
 
 # Healthcheck
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \

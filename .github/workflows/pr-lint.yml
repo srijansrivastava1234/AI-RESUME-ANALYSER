@@ -35,7 +35,6 @@ jobs:
             chore
             revert
           requireScope: false
-          disallowScopes: []
-          subjectPattern: ^(?![A-Z]).+$
+          subjectPattern: '^(?![A-Z]).+$'
           subjectPatternError: |
             The subject "{subject}" must not start with an uppercase character.

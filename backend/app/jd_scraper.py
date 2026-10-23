@@ -51,7 +51,7 @@ def validate_url_security(target_url: str) -> None:
         raise ValueError("URL must contain a valid hostname.")
 
     # Check for localhost literal
-    if hostname.lower() in ("localhost", "127.0.0.1", "::1", "0.0.0.0"):
+    if hostname.lower() in ("localhost", "127.0.0.1", "::1", "0.0.0.0"):  # nosec B104
         raise ValueError("Access to loopback or local host addresses is prohibited.")
 
     # Resolve IP addresses and verify they are strictly public

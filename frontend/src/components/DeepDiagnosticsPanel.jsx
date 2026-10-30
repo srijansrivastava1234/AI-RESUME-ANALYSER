@@ -11,8 +11,7 @@ import {
   Loader2,
   RefreshCw,
   TrendingUp,
-  Target,
-  Sparkles
+  Target
 } from 'lucide-react';
 
 export default function DeepDiagnosticsPanel({ extractedText, backendUrl = 'http://localhost:8000' }) {
@@ -90,7 +89,7 @@ export default function DeepDiagnosticsPanel({ extractedText, backendUrl = 'http
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5 mb-6">
         <div>
           <h3 className="text-xl font-bold text-slate-100 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-indigo-400" />
+            <ShieldAlert className="w-5 h-5 text-blue-400" />
             Deep Diagnostic & Security Analytics Hub
           </h3>
           <p className="text-sm text-slate-400 mt-1">

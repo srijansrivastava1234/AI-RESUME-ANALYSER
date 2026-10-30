@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Sparkles,
   HelpCircle,
   AlertTriangle,
   CheckCircle2,
@@ -151,7 +150,7 @@ export default function InterviewPrepPanel({ extractedText, jobDesc, backendUrl 
               <span className={`ai-mode-pill ${prepData.ai_powered ? 'mode-gemini' : 'mode-heuristic'}`}>
                 {prepData.ai_powered ? (
                   <>
-                    <Sparkles size={14} /> Gemini 2.5 AI Powered
+                    <BrainCircuit size={14} /> Neural Semantic Engine
                   </>
                 ) : (
                   <>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Zap, 
-  Sparkles, 
   AlertTriangle, 
   CheckCircle, 
   Copy, 
@@ -294,7 +293,7 @@ export default function BulletImpactLab({ backendUrl }) {
                 </>
               ) : (
                 <>
-                  <Sparkles style={{ width: '16px', height: '16px' }} />
+                  <Zap style={{ width: '16px', height: '16px' }} />
                   Optimize with Google XYZ
                 </>
               )}
@@ -445,7 +444,7 @@ export default function BulletImpactLab({ backendUrl }) {
         <div className="glass-panel" style={{ padding: '1.5rem', animation: 'fadeIn 0.3s ease' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
             <h3 style={{ fontSize: '1.15rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <Sparkles style={{ width: '18px', height: '18px', color: 'var(--accent)' }} />
+              <Zap style={{ width: '18px', height: '18px', color: 'var(--accent)' }} />
               Google XYZ Synthesized Comparison
             </h3>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>

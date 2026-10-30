@@ -74,3 +74,4 @@ A comprehensive technical deep-dive into the core architectural design decisions
 | **10** | Exploit Guard | CSS & Zero-Width Parser | 0% Adversarial Pass | ATS Security Sandbox |
 | **11** | Universal Roles | Gemini Schema + 16 Industry Models | 100% Role Coverage | Multi-Domain Competency |
 | **12** | Dynamic JD NLP | Statistical N-Gram + 8 Domain Taxonomy | 100% Term Recall | Domain-Adaptive Benchmark |
+

@@ -12,7 +12,6 @@ import {
   FileCode2,
   HelpCircle,
   Loader2,
-  Sparkles,
   RefreshCw
 } from 'lucide-react';
 
@@ -96,7 +95,7 @@ export default function AtsSimulatorTab({ extractedText, backendUrl }) {
       <div className="glass-panel ats-composite-banner">
         <div className="composite-info">
           <div className="composite-badge">
-            <Sparkles size={14} className="text-cyan-400" />
+            <Cpu size={14} className="text-cyan-400" />
             <span>Multi-ATS Engine Emulation Sandbox</span>
           </div>
           <h3>Enterprise ATS Parsing Diagnostic</h3>

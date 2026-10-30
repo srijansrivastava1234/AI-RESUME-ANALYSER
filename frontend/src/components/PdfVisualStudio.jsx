@@ -10,7 +10,6 @@ import {
   Maximize2,
   ChevronLeft,
   ChevronRight,
-  Sparkles,
   CheckCircle2,
   AlertCircle,
   X,
@@ -297,7 +296,7 @@ export default function PdfVisualStudio({
         <div className="pdf-studio-header">
           <div className="pdf-studio-title-block">
             <div className="pdf-studio-badge">
-              <Sparkles size={14} className="text-cyan-400" />
+              <Crosshair size={14} className="text-cyan-400" />
               <span>Document Intelligence Studio</span>
             </div>
             <h2>{file?.name || 'Resume Preview'}</h2>

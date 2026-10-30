@@ -32,3 +32,4 @@ Development milestones, delivered features, and future architectural initiatives
 - [ ] **Multi-Language OCR Ingestion**: Tesseract / Google Vision OCR pipeline for scanned image-only PDF resumes.
 - [ ] **Real-Time Collaborative Editing**: Operational Transformation (OT) / WebSockets for live resume editing and recruiter coaching.
 - [ ] **ATS Direct-Apply Webhook**: One-click resume submission via Greenhouse and Lever API integrations.
+

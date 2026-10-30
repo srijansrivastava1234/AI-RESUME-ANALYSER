@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   FileText,
-  Sparkles,
   Download,
   Copy,
   Check,
@@ -352,7 +351,7 @@ export default function ResumeEditorStudio({
               onClick={injectMissingKeywords}
               title={`Inject ${missingKeywordsCount} missing keywords into Technical Skills`}
             >
-              <Sparkles size={14} />
+              <Plus size={14} />
               <span>Inject {missingKeywordsCount} Missing JD Keywords</span>
             </button>
           )}

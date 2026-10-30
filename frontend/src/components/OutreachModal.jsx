@@ -3,7 +3,7 @@ import {
   Mail,
   Briefcase,
   Clock,
-  Sparkles,
+  Award,
   Copy,
   Check,
   Download,
@@ -28,7 +28,7 @@ const TONES = [
   { id: 'confident', label: 'Confident & Bold', icon: Flame, color: '#f59e0b' },
   { id: 'direct', label: 'Direct & Metric-First', icon: Zap, color: '#38bdf8' },
   { id: 'technical', label: 'Deep Technical', icon: BrainCircuit, color: '#34d399' },
-  { id: 'executive', label: 'Executive Leadership', icon: Sparkles, color: '#a855f7' }
+  { id: 'executive', label: 'Executive Leadership', icon: Award, color: '#3b82f6' }
 ];
 
 export default function OutreachModal({
@@ -281,7 +281,7 @@ export default function OutreachModal({
                       <span className={`ai-mode-pill ${outreachData.ai_powered ? 'mode-gemini' : 'mode-heuristic'}`}>
                         {outreachData.ai_powered ? (
                           <>
-                            <Sparkles size={12} /> Gemini 2.5 AI Powered
+                            <BrainCircuit size={12} /> Neural Synthesis Engine
                           </>
                         ) : (
                           <>

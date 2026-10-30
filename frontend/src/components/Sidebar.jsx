@@ -4,7 +4,6 @@ import {
   Link as LinkIcon, 
   FileText, 
   Globe, 
-  Sparkles, 
   AlertCircle, 
   CheckCircle2, 
   Loader2,
@@ -160,7 +159,7 @@ export default function Sidebar({
                   </>
                 ) : (
                   <>
-                    <Sparkles size={13} />
+                    <LinkIcon size={13} />
                     <span>Import</span>
                   </>
                 )}

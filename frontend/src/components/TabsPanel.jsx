@@ -10,7 +10,6 @@ import {
   Copy, 
   Check, 
   ShieldCheck, 
-  Sparkles, 
   Award, 
   Terminal,
   Layers,
@@ -445,7 +444,7 @@ export default function TabsPanel({
           onClick={() => setActiveTab('deep_diagnostics')}
           style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
         >
-          <Sparkles style={{ width: '14px', height: '14px', color: activeTab === 'deep_diagnostics' ? 'white' : '#818cf8' }} />
+          <Layers style={{ width: '14px', height: '14px', color: activeTab === 'deep_diagnostics' ? 'white' : 'var(--primary)' }} />
           Deep Diagnostics
         </button>
         <button 
@@ -944,7 +943,7 @@ export default function TabsPanel({
           {/* Technical Acronym & Domain Synonym Expansions */}
           <div className="keyword-box" style={{ gridColumn: 'span 2', marginTop: '1.25rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem' }}>
             <h4 style={{ color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: '0.4rem', margin: 0, fontSize: '0.95rem' }}>
-              <Sparkles style={{ width: '17px', height: '17px' }} />
+              <Cpu style={{ width: '17px', height: '17px' }} />
               <span>Technical Acronym & Canonical Synonym Mapping</span>
             </h4>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.4rem 0 0.8rem 0' }}>
@@ -1356,7 +1355,7 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
                 <div style={{
                   width: '68px',
                   height: '68px',
-                  borderRadius: '16px',
+                  borderRadius: '12px',
                   background: letterGradeColor(complianceData.letter_grade),
                   display: 'flex',
                   alignItems: 'center',
@@ -1364,7 +1363,8 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
                   fontSize: '2.2rem',
                   fontWeight: 800,
                   color: '#fff',
-                  boxShadow: `0 0 24px ${letterGradeGlow(complianceData.letter_grade)}`
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)'
                 }}>
                   {complianceData.letter_grade}
                 </div>

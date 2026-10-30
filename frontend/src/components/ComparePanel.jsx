@@ -8,7 +8,6 @@ import {
   AlertCircle, 
   BarChart2, 
   ArrowRight,
-  Sparkles,
   FileText
 } from 'lucide-react';
 
@@ -262,7 +261,7 @@ export default function ComparePanel({ backendUrl, getScoreColor, getScoreBg }) 
                   </>
                 ) : (
                   <>
-                    <Sparkles style={{ width: '18px', height: '18px' }} />
+                    <BarChart2 style={{ width: '18px', height: '18px' }} />
                     <span>Compare & Rank Resumes ({files.length})</span>
                   </>
                 )}

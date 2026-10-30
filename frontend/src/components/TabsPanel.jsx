@@ -467,7 +467,7 @@ export default function TabsPanel({
 
       {/* Tab: Overview */}
       {activeTab === 'overview' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           
           {/* Readability & Content Stats */}
           {wordCount > 0 && (
@@ -607,7 +607,7 @@ export default function TabsPanel({
 
       {/* Tab: Sandbox Editor */}
       {activeTab === 'sandbox' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div>
             <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Resume Sandbox & Editor</h4>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
@@ -775,7 +775,7 @@ export default function TabsPanel({
 
       {/* Tab: Recommendations */}
       {activeTab === 'recommendations' && (
-        <div className="recommendations-list">
+        <div className="tab-pane-content recommendations-list">
           <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Improvement Action Plan</h4>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>
             Check off recommendations as you implement them to track your improvements:
@@ -843,7 +843,7 @@ export default function TabsPanel({
 
       {/* Tab: Keywords */}
       {activeTab === 'keywords' && (
-        <div className="keywords-panel">
+        <div className="tab-pane-content keywords-panel">
           <div className="keyword-box">
             <h4 style={{ color: 'var(--success)' }}>
               <CheckCircle style={{ width: '18px', height: '18px' }} />
@@ -1101,7 +1101,7 @@ export default function TabsPanel({
 
       {/* Tab: Sections */}
       {activeTab === 'sections' && (
-        <div className="sections-layout">
+        <div className="tab-pane-content sections-layout">
           <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Resume Section Integrity Check</h4>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Individual ratings for the core building blocks of your resume:</p>
           
@@ -1152,7 +1152,7 @@ export default function TabsPanel({
 
       {/* Tab: Templates */}
       {activeTab === 'templates' && (
-        <div className="templates-layout" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div className="tab-pane-content templates-layout" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>ATS-Compliant Resume Guidelines</h4>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
             To bypass automatic filters, your resume layout should remain clean and use strong action verbs. Use the templates and resources below:
@@ -1254,11 +1254,11 @@ export default function TabsPanel({
         };
 
         const letterGradeColor = (grade) => {
-          if (grade === 'A+') return 'linear-gradient(135deg, #10b981, #059669)';
-          if (grade === 'A') return 'linear-gradient(135deg, #6366f1, #4f46e5)';
-          if (grade === 'B') return 'linear-gradient(135deg, #3b82f6, #2563eb)';
-          if (grade === 'C') return 'linear-gradient(135deg, #f59e0b, #d97706)';
-          return 'linear-gradient(135deg, #ef4444, #dc2626)';
+          if (grade === 'A+') return '#10b981';
+          if (grade === 'A') return '#2563eb';
+          if (grade === 'B') return '#0284c7';
+          if (grade === 'C') return '#f59e0b';
+          return '#ef4444';
         };
 
         const letterGradeGlow = (grade) => {
@@ -1338,7 +1338,7 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
         };
 
         return (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {/* Executive Letter Grade Hero */}
             <div style={{
               display: 'flex',
@@ -1347,9 +1347,9 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
               flexWrap: 'wrap',
               gap: '1.25rem',
               padding: '1.5rem',
-              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.06) 100%)',
+              background: 'rgba(255, 255, 255, 0.03)',
               border: '1px solid var(--border-color)',
-              borderRadius: '16px'
+              borderRadius: '12px'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
                 <div style={{
@@ -1541,9 +1541,9 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
 
             {/* Regulatory Safe Harbor Certificate Card */}
             <div style={{
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.04) 100%)',
-              border: '1px solid rgba(16, 185, 129, 0.25)',
-              borderRadius: '14px',
+              background: 'rgba(16, 185, 129, 0.04)',
+              border: '1px solid rgba(16, 185, 129, 0.2)',
+              borderRadius: '10px',
               padding: '1.25rem'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
@@ -1635,9 +1635,9 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
             {/* NYC LL 144 / EEOC Blind Audit & PII Redaction Panel */}
             {blindAuditData && (
               <div style={{
-                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(16, 185, 129, 0.05) 100%)',
-                border: '1px solid rgba(99, 102, 241, 0.25)',
-                borderRadius: '14px',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '10px',
                 padding: '1.25rem'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -1895,12 +1895,12 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
 
       {/* Tab: Layout, Chronology & Typography Engineering */}
       {activeTab === 'layout_chronology' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {/* Header Banner */}
           <div style={{
-            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.06) 100%)',
-            border: '1px solid rgba(99, 102, 241, 0.25)',
-            borderRadius: '14px',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '10px',
             padding: '1.5rem',
             position: 'relative'
           }}>
@@ -2241,37 +2241,45 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
       }>
         {/* Tab: Multi-ATS Engine Simulator */}
         {activeTab === 'ats_sim' && (
-          <AtsSimulatorTab
-            extractedText={extractedText}
-            backendUrl={backendUrl}
-          />
+          <div className="tab-pane-content">
+            <AtsSimulatorTab
+              extractedText={extractedText}
+              backendUrl={backendUrl}
+            />
+          </div>
         )}
 
         {/* Tab: Deep Diagnostic & Security Analytics Hub */}
         {activeTab === 'deep_diagnostics' && (
-          <DeepDiagnosticsPanel
-            extractedText={extractedText}
-            backendUrl={backendUrl}
-          />
+          <div className="tab-pane-content">
+            <DeepDiagnosticsPanel
+              extractedText={extractedText}
+              backendUrl={backendUrl}
+            />
+          </div>
         )}
 
         {/* Tab: Recruiter Grill-Me Interview Simulation */}
         {activeTab === 'interview_prep' && (
-          <InterviewPrepPanel
-            extractedText={extractedText}
-            jobDesc={jobDesc}
-            backendUrl={backendUrl}
-          />
+          <div className="tab-pane-content">
+            <InterviewPrepPanel
+              extractedText={extractedText}
+              jobDesc={jobDesc}
+              backendUrl={backendUrl}
+            />
+          </div>
         )}
 
         {/* Tab: Live Resume Editor & Verified PDF Export Studio */}
         {activeTab === 'resume_editor' && (
-          <ResumeEditorStudio
-            extractedText={extractedText}
-            report={report}
-            backendUrl={backendUrl}
-            onApplyEditedText={setEditedText}
-          />
+          <div className="tab-pane-content">
+            <ResumeEditorStudio
+              extractedText={extractedText}
+              report={report}
+              backendUrl={backendUrl}
+              onApplyEditedText={setEditedText}
+            />
+          </div>
         )}
       </React.Suspense>
     </div>

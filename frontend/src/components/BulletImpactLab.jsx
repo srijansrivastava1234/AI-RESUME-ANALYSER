@@ -273,17 +273,17 @@ export default function BulletImpactLab({ backendUrl }) {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '0.5rem',
-                background: 'linear-gradient(135deg, var(--primary), #8b5cf6)',
+                background: 'var(--primary)',
                 color: 'white',
-                border: 'none',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
                 borderRadius: '8px',
                 padding: '0.75rem 1rem',
                 fontWeight: 600,
                 fontSize: '0.85rem',
                 cursor: optimizeLoading ? 'not-allowed' : 'pointer',
                 opacity: optimizeLoading || !bullet.trim() ? 0.6 : 1,
-                boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)',
-                transition: 'all 0.2s ease'
+                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                transition: 'all 0.15s ease'
               }}
             >
               {optimizeLoading ? (

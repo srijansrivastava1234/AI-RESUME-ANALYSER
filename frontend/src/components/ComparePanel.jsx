@@ -277,8 +277,9 @@ export default function ComparePanel({ backendUrl, getScoreColor, getScoreBg }) 
           {/* Summary Card */}
           <div className="glass-panel" style={{
             padding: '1.25rem 1.5rem',
-            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.08))',
-            border: '1px solid rgba(99, 102, 241, 0.3)',
+            background: 'rgba(255, 255, 255, 0.03)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '10px',
             display: 'flex',
             alignItems: 'center',
             gap: '1rem'

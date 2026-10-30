@@ -1,8 +1,7 @@
 """
 Recruiter 6-Second First-Third (Upper 30% Viewport) Precision Auditor.
 
-Grounded in recruiter eye-tracking research (Ladders 2018 eye-tracking study)
-and the ATS Validator Architecture:
+Grounded in recruiter eye-tracking research (Ladders eye-tracking study):
 - The human recruiter spends an average of 6.0 to 7.4 seconds during the initial scan.
 - Recruiter attention is concentrated heavily within the First Third (upper 30%) of page 1.
 - Evaluates whether high-impact metrics, active verbs, and target competencies

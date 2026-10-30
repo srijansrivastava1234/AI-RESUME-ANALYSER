@@ -2,7 +2,7 @@ import re
 from typing import Dict, Any, List, Optional
 from app.xyz_scorer import score_resume_bullet, DUTY_STATEMENT_PATTERNS
 
-# Seniority targets calibrated per ATS Validator Architect standards
+# Seniority targets calibrated across engineering tiers
 SENIORITY_PROFILES: Dict[str, Dict[str, Any]] = {
     "junior": {
         "title": "Junior / Entry-Level (0–2 years)",

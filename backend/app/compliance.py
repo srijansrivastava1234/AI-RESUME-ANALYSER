@@ -1,7 +1,7 @@
 """
 Deterministic 4-Pillar ATS Compliance & Regulatory Safe Harbor Audit Engine.
 
-Grounding in the ATS Validator Architecture standard:
+Standard scoring pillars:
 - Pillar 1: Keywords & Hard Skills (40% Weight)
 - Pillar 2: Google/IBM X-Y-Z Quantified Impact (30% Weight)
 - Pillar 3: Structural Parseability & Layout Linearization (15% Weight)

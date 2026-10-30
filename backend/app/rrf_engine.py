@@ -1,8 +1,7 @@
 """
 Reciprocal Rank Fusion (RRF) Multi-Metric Candidate Scoring Engine.
 
-Grounded in Information Retrieval (IR) standards (Cormack, Clarke, & Buettcher 2009)
-and the ATS Validator Architecture:
+Grounded in Information Retrieval (IR) standards (Cormack, Clarke, & Buettcher 2009):
 - Combines disparate ranking dimensions (Lexical Keyword Recall, Google/IBM XYZ Impact,
   Structural Parseability, Readability Grade) into a mathematically robust composite rank.
 - Formula: RRF_score(d) = SUM_{m in M} [ 1 / (k + r_m(d)) ]

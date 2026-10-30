@@ -1,10 +1,7 @@
 """
 Technical Acronym & Domain Synonym Expansion Graph.
 
-Grounded in the ATS Validator Architecture:
-- Solves candidate knockout where Job Descriptions use full names (e.g. "Kubernetes")
-  and resumes use acronyms (e.g. "K8s"), or vice versa.
-- Provides bidirectional canonical normalization across modern software engineering stacks:
+Provides bidirectional canonical normalization across modern engineering stacks:
   Languages, Cloud/DevOps, Databases, AI/ML, and Architectural Patterns.
 """
 

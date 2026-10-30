@@ -27,7 +27,7 @@ from app.routers.tools import router as tools_router
 # Load environmental variables from .env if present
 load_dotenv()
 
-APP_VERSION = "3.7.0"
+APP_VERSION = "3.9.0"
 
 # Initialize structured JSON logging
 setup_logging(log_level=os.getenv("LOG_LEVEL", "INFO"))

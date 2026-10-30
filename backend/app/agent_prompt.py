@@ -2,7 +2,7 @@
 Agent-Native BYOK (Bring-Your-Own-Key) Prompt Synthesis Engine.
 
 Generates structured, zero-hallucination refactoring prompts for external LLMs
-(Claude 3.5 Sonnet, GPT-4o, Cursor) adhering to ATS Validator Architecture:
+(Claude, GPT-4, Cursor) adhering to standard ATS criteria:
 - Strict Anti-Fabrication Rule (Zero Hallucination of metrics or skills)
 - Google/IBM X-Y-Z formulation ('Accomplished [X], measured by [Y], by doing [Z]')
 - Seniority-calibrated ratio enforcement

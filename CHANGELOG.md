@@ -4,6 +4,17 @@ All notable changes to the **AI Resume Analyser** project are documented in this
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.9.0] - 2026-10-30
+
+### Added
+- **Universal Multi-Industry Role Archetype & Competency Engine**: Expanded `app.role_readiness` with 16 multi-industry archetypes covering Healthcare/Nursing, Accounting/Finance, Marketing, Sales, HR, Operations, Legal, and Design, paired with pattern-based role title normalization (`resolve_role_archetype`).
+- **On-the-Fly Dynamic Archetype Synthesis via LLM**: Implemented `generate_dynamic_role_archetype` using Gemini 1.5 Flash structured schemas (with heuristic clustering fallback) to synthesize custom 4-category competency models on demand for arbitrary, unlisted professions.
+- **Dynamic Job-Description-Centric N-Gram Lexical Extractor**: Formulated `extract_dynamic_job_keywords` in `app.keywords` to extract domain terms and 2-word phrases directly from arbitrary JDs, eliminating hardcoded software keyword dependencies.
+- **Multi-Domain Ontological Taxonomy Classifier**: Expanded `app.domain_taxonomy` with specialized taxonomies for `HEALTHCARE`, `FINANCE_ACCOUNTING`, `SALES_MARKETING`, `OPERATIONS_HR`, and `LEGAL`, delivering domain-calibrated keyword and Google X-Y-Z scoring weights.
+- **Universal Hard vs. Soft Skills Taxonomy Shield**: Added hundreds of domain-specific proficiencies to `HARD_SKILL_TAXONOMY` in `app.skill_classifier` (clinical care, financial standards, marketing tools, legal procedures) to prevent false-positive buzzword dilution penalties for non-technical candidates.
+- **Domain-Calibrated Google X-Y-Z Action-Result Bullet Optimizer**: Engineered domain-aware quantification rules in `app.rewriter` to tailor achievement metrics to specific professions (patient throughput for Healthcare, pipeline revenue for Sales, closing cycle time for Accounting).
+- **Universal Multi-Industry Test Suite**: Implemented `backend/tests/test_universal_job_support.py` validating 100% test contract execution across nursing, accounting, marketing, dynamic pilot role synthesis, and non-tech JD keyword matching.
+
 ## [3.8.0] - 2026-10-05
 
 ### Added

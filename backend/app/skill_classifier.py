@@ -49,7 +49,44 @@ HARD_SKILL_TAXONOMY: Dict[str, str] = {
     # Architecture, Protocols & Tooling
     "rest": "Architecture", "restful api": "Architecture", "graphql": "Architecture",
     "grpc": "Architecture", "microservices": "Architecture", "system design": "Architecture",
-    "oauth": "Security", "jwt": "Security", "git": "Tooling", "jira": "Tooling"
+    "oauth": "Security", "jwt": "Security", "git": "Tooling", "jira": "Tooling",
+
+    # Healthcare & Clinical
+    "patient care": "Healthcare", "triage": "Healthcare", "iv therapy": "Healthcare",
+    "iv administration": "Healthcare", "vital signs": "Healthcare", "wound care": "Healthcare",
+    "phlebotomy": "Healthcare", "bls": "Healthcare", "acls": "Healthcare", "epic": "Healthcare",
+    "cerner": "Healthcare", "hipaa": "Healthcare", "medication administration": "Healthcare",
+    "emr": "Healthcare", "ehr": "Healthcare", "telemetry": "Healthcare", "icu": "Healthcare",
+    "infection control": "Healthcare", "catheterization": "Healthcare",
+
+    # Finance & Accounting
+    "gaap": "Finance", "ifrs": "Finance", "taxation": "Finance", "general ledger": "Finance",
+    "financial modeling": "Finance", "auditing": "Finance", "internal audit": "Finance",
+    "quickbooks": "Finance", "sap": "Finance", "excel": "Finance", "reconciliation": "Finance",
+    "sox": "Finance", "cpa": "Finance", "financial reporting": "Finance", "budgeting": "Finance",
+    "variance analysis": "Finance", "accounts payable": "Finance", "accounts receivable": "Finance",
+    "payroll": "Finance",
+
+    # Sales & Marketing
+    "seo": "Marketing", "sem": "Marketing", "google analytics": "Marketing",
+    "hubspot": "Marketing", "salesforce": "Sales", "crm": "Sales", "lead generation": "Sales",
+    "b2b sales": "Sales", "conversion rate": "Marketing", "pipeline management": "Sales",
+    "content marketing": "Marketing", "meta ads": "Marketing", "email marketing": "Marketing",
+    "cold outreach": "Sales", "prospecting": "Sales", "roas": "Marketing",
+
+    # Operations & Human Resources
+    "supply chain": "Operations", "logistics": "Operations", "procurement": "Operations",
+    "inventory management": "Operations", "six sigma": "Operations", "lean": "Operations",
+    "pmp": "Project Management", "scrum": "Project Management", "kanban": "Project Management",
+    "vendor management": "Operations", "erp": "Operations", "recruiting": "HR",
+    "talent acquisition": "HR", "onboarding": "HR", "employee relations": "HR",
+    "performance management": "HR", "workday": "HR", "adp": "HR", "hris": "HR",
+
+    # Legal & Design
+    "contract drafting": "Legal", "litigation": "Legal", "due diligence": "Legal",
+    "intellectual property": "Legal", "regulatory filings": "Legal", "figma": "Design",
+    "sketch": "Design", "adobe xd": "Design", "wireframing": "Design", "prototyping": "Design",
+    "user research": "Design", "usability testing": "Design", "design systems": "Design"
 }
 
 # Canonical subjective buzzwords often improperly listed as skills

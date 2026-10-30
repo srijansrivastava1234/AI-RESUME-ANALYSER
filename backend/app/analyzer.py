@@ -135,15 +135,28 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
     # Simple rule-based mock logic
     resume_lower = resume_text.lower()
     
+    from app.keywords import extract_skills_by_category, extract_dynamic_job_keywords
+    
+    cat_skills = extract_skills_by_category(resume_text)
     detected = []
-    for skill in ["python", "react", "javascript", "html", "css", "sql", "git", "docker", "aws", "node"]:
-        if skill in resume_lower:
-            detected.append(skill.capitalize())
+    for s_list in cat_skills.values():
+        detected.extend(s_list)
+        
+    if not detected:
+        for skill in ["python", "react", "javascript", "html", "css", "sql", "git", "docker", "aws", "node"]:
+            if skill in resume_lower:
+                detected.append(skill.capitalize())
             
-    all_possible_missing = ["TypeScript", "CI/CD", "FastAPI", "Kubernetes", "PostgreSQL", "Redis", "GraphQL", "NoSQL", "System Design", "Agile"]
-    missing = [s for s in all_possible_missing if s.lower() not in resume_lower][:4]
-    if not missing:
-        missing = ["Unit Testing", "Microservices"]
+    if job_description and len(job_description.strip()) > 10:
+        jd_terms = extract_dynamic_job_keywords(job_description, top_n=8)
+        missing = [t.title() for t in jd_terms if t.lower() not in resume_lower][:4]
+        if not missing:
+            missing = ["Advanced Domain Expertise", "Process Optimization"]
+    else:
+        all_possible_missing = ["TypeScript", "CI/CD", "FastAPI", "Kubernetes", "PostgreSQL", "Redis", "GraphQL", "NoSQL", "System Design", "Agile"]
+        missing = [s for s in all_possible_missing if s.lower() not in resume_lower][:4]
+        if not missing:
+            missing = ["Unit Testing", "Microservices"]
 
     # Dynamic layout scanning for standard sections
     has_experience = any(h in resume_lower for h in ["experience", "employment", "history", "work"])
@@ -164,17 +177,18 @@ def generate_mock_analysis(resume_text: str, job_description: Optional[str] = No
     else:
         layout_feedback = "Excellent visual layout structure. All standard sections (Work Experience, Education, Skills, and Projects) were successfully parsed."
 
-    ats_score = int((layout_score + 90 + 70 + (65 + len(detected) * 5)) / 4)
+    ats_score = int((layout_score + 90 + 70 + (65 + min(6, len(detected)) * 5)) / 4)
     ats_score = max(30, min(98, ats_score))
 
     job_compat = None
     if job_description and len(job_description.strip()) > 10:
-        # Check matching words between job desc and resume
         job_lower = job_description.lower()
-        gaps = []
-        for term in ["kubernetes", "docker", "postgres", "aws", "typescript", "testing", "agile"]:
-            if term in job_lower and term not in resume_lower:
-                gaps.append(term.capitalize())
+        jd_terms = extract_dynamic_job_keywords(job_description, top_n=8)
+        gaps = [t.title() for t in jd_terms if t.lower() not in resume_lower]
+        if not gaps:
+            for term in ["kubernetes", "docker", "postgres", "aws", "typescript", "testing", "agile"]:
+                if term in job_lower and term not in resume_lower:
+                    gaps.append(term.capitalize())
         
         match_score = max(40, 100 - len(gaps) * 12)
         job_compat = {

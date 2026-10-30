@@ -21,8 +21,81 @@ SKILL_TAXONOMY: Dict[str, List[str]] = {
     "Architecture & Methodologies": [
         "microservices", "rest api", "restful", "graphql", "system design",
         "agile", "scrum", "tdd", "unit testing", "oop", "distributed systems"
+    ],
+    "Healthcare & Clinical": [
+        "patient care", "triage", "iv therapy", "vital signs", "wound care",
+        "phlebotomy", "bls", "acls", "epic", "cerner", "hipaa", "medication administration",
+        "emr", "ehr", "infection control", "telemetry", "icu", "cpr", "catheterization"
+    ],
+    "Finance & Accounting": [
+        "gaap", "ifrs", "taxation", "general ledger", "financial modeling",
+        "internal audit", "quickbooks", "sap", "excel", "reconciliation",
+        "sox", "cpa", "financial reporting", "budgeting", "variance analysis",
+        "accounts payable", "accounts receivable", "payroll"
+    ],
+    "Sales & Marketing": [
+        "seo", "sem", "google analytics", "hubspot", "salesforce", "crm",
+        "lead generation", "b2b sales", "conversion rate", "pipeline management",
+        "content marketing", "meta ads", "email marketing", "cold outreach",
+        "negotiation", "prospecting", "roas"
+    ],
+    "Operations & Project Management": [
+        "supply chain", "logistics", "procurement", "inventory management",
+        "six sigma", "lean", "pmp", "agile", "scrum", "vendor management",
+        "erp", "quality assurance", "process optimization", "budget management", "kanban"
+    ],
+    "Human Resources": [
+        "recruiting", "talent acquisition", "onboarding", "employee relations",
+        "performance management", "workday", "adp", "benefits administration",
+        "labor laws", "hris", "workplace safety", "compliance"
+    ],
+    "Legal & Compliance": [
+        "contract drafting", "litigation", "due diligence", "intellectual property",
+        "regulatory filings", "risk management", "legal research", "corporate governance", "m&a"
+    ],
+    "Design & Creative": [
+        "figma", "sketch", "adobe xd", "photoshop", "illustrator",
+        "wireframing", "prototyping", "user research", "usability testing",
+        "design systems", "ui design", "ux design"
     ]
 }
+
+# Standard english stopwords to avoid false positive dynamic keywords
+GENERIC_STOPWORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "are", "have", "has", "had",
+    "will", "would", "should", "could", "been", "their", "they", "our", "you", "your",
+    "must", "able", "plus", "years", "role", "work", "team", "looking", "about",
+    "requirements", "qualifications", "responsibilities", "experience", "candidate",
+    "position", "opportunity", "company", "skills", "ability", "strong", "knowledge",
+    "understanding", "hands-on", "proven", "excellent", "working", "environment",
+    "preferred", "required", "including", "across", "within", "ideal", "join", "help"
+}
+
+def extract_dynamic_job_keywords(job_text: str, top_n: int = 15) -> List[str]:
+    """
+    Extracts high-signal domain keywords directly from any Job Description.
+    Allows non-tech and niche job descriptions (e.g. Culinary, Aviation, Healthcare, Law)
+    to establish relevant keyword benchmarks dynamically.
+    """
+    if not job_text or not job_text.strip():
+        return []
+
+    text_clean = re.sub(r'[^a-zA-Z0-9\s\-\/\.]', ' ', job_text.lower())
+    tokens = [t.strip("-./") for t in text_clean.split() if len(t.strip("-./")) >= 3]
+    filtered_tokens = [t for t in tokens if t not in GENERIC_STOPWORDS and not t.isdigit()]
+
+    # Extract 2-word domain phrases
+    phrases = []
+    for i in range(len(filtered_tokens) - 1):
+        p = f"{filtered_tokens[i]} {filtered_tokens[i+1]}"
+        if len(p) >= 7 and not any(w in GENERIC_STOPWORDS for w in p.split()):
+            phrases.append(p)
+
+    from collections import Counter
+    counts = Counter(filtered_tokens + phrases)
+    
+    # Return top domain keywords
+    return [term for term, _ in counts.most_common(top_n)]
 
 from functools import lru_cache
 
@@ -77,6 +150,16 @@ def calculate_keyword_match_score(resume_text: str, job_text: str, enable_synony
     for skills in extract_skills_by_category(job_text).values():
         job_skills.update([s.lower() for s in skills])
         
+    # If static taxonomy yielded sparse or zero matches (e.g. non-tech or specialized role),
+    # dynamically extract domain keywords from the job description.
+    if len(job_skills) < 3:
+        dynamic_terms = extract_dynamic_job_keywords(job_text, top_n=10)
+        job_skills.update(dynamic_terms)
+        resume_lower = resume_text.lower()
+        for term in dynamic_terms:
+            if re.search(r'(?:\b|(?<=[^a-zA-Z0-9]))' + re.escape(term) + r'(?:\b|(?=[^a-zA-Z0-9]))', resume_lower):
+                resume_skills.add(term)
+
     if not job_skills:
         return {
             "match_percentage": 100,

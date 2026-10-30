@@ -36,6 +36,65 @@ DOMAIN_TAXONOMIES: Dict[str, Dict[str, Any]] = {
         "target_hard_soft_ratio": 0.75,
         "keywords_weight": 0.40,
         "xyz_weight": 0.35,
+    },
+    "HEALTHCARE": {
+        "core_skills": {
+            "patient care", "triage", "iv administration", "vital signs", "wound care",
+            "phlebotomy", "bls", "acls", "epic", "cerner", "hipaa", "medication administration",
+            "emr", "ehr", "icu", "telemetry", "infection control"
+        },
+        "target_hard_soft_ratio": 0.70,
+        "keywords_weight": 0.40,
+        "xyz_weight": 0.35,
+    },
+    "FINANCE_ACCOUNTING": {
+        "core_skills": {
+            "gaap", "ifrs", "taxation", "general ledger", "financial modeling", "auditing",
+            "quickbooks", "sap", "excel", "reconciliation", "sox", "cpa", "financial reporting",
+            "budgeting", "variance analysis", "accounts payable", "accounts receivable"
+        },
+        "target_hard_soft_ratio": 0.75,
+        "keywords_weight": 0.40,
+        "xyz_weight": 0.35,
+    },
+    "SALES_MARKETING": {
+        "core_skills": {
+            "seo", "sem", "google analytics", "hubspot", "salesforce", "crm", "lead generation",
+            "b2b sales", "conversion rate", "pipeline management", "content marketing", "meta ads",
+            "roas", "email marketing", "cold outreach", "prospecting"
+        },
+        "target_hard_soft_ratio": 0.70,
+        "keywords_weight": 0.40,
+        "xyz_weight": 0.35,
+    },
+    "OPERATIONS_HR": {
+        "core_skills": {
+            "recruiting", "talent acquisition", "onboarding", "employee relations", "workday",
+            "adp", "supply chain", "logistics", "procurement", "inventory management",
+            "six sigma", "lean", "erp", "hris"
+        },
+        "target_hard_soft_ratio": 0.70,
+        "keywords_weight": 0.40,
+        "xyz_weight": 0.35,
+    },
+    "LEGAL": {
+        "core_skills": {
+            "contract drafting", "litigation", "due diligence", "intellectual property",
+            "compliance", "regulatory filings", "legal research", "corporate governance",
+            "m&a", "risk management"
+        },
+        "target_hard_soft_ratio": 0.75,
+        "keywords_weight": 0.40,
+        "xyz_weight": 0.35,
+    },
+    "DESIGN_CREATIVE": {
+        "core_skills": {
+            "figma", "sketch", "adobe xd", "wireframing", "prototyping", "user research",
+            "usability testing", "design systems", "ui design", "ux design", "photoshop", "illustrator"
+        },
+        "target_hard_soft_ratio": 0.70,
+        "keywords_weight": 0.40,
+        "xyz_weight": 0.35,
     }
 }
 

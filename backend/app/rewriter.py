@@ -35,7 +35,19 @@ def optimize_bullet_heuristic(bullet: str, target_role: Optional[str] = None) ->
             
     # Add quantification placeholder if not present
     if not any(char.isdigit() or char == "%" for char in clean):
-        optimized_text += ", improving system efficiency by 25% and reducing operational turnaround time."
+        role_lower = (target_role or "").lower()
+        if any(w in role_lower for w in ["nurse", "clinical", "health", "hospital"]):
+            optimized_text += ", improving patient care efficiency by 25% and maintaining 100% protocol compliance."
+        elif any(w in role_lower for w in ["sales", "account executive", "bdr", "closing"]):
+            optimized_text += ", increasing pipeline revenue by 28% and exceeding quarterly quota."
+        elif any(w in role_lower for w in ["marketing", "seo", "growth"]):
+            optimized_text += ", driving a 35% increase in qualified organic traffic and lead conversions."
+        elif any(w in role_lower for w in ["accountant", "accounting", "finance", "audit"]):
+            optimized_text += ", reducing closing cycle time by 30% and eliminating audit discrepancies."
+        elif any(w in role_lower for w in ["hr", "recruiting", "people"]):
+            optimized_text += ", decreasing time-to-hire by 24% while improving candidate quality."
+        else:
+            optimized_text += ", improving system efficiency by 25% and reducing operational turnaround time."
         
     return {
         "original": bullet,

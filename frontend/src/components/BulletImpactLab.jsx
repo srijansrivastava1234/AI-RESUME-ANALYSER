@@ -282,7 +282,7 @@ export default function BulletImpactLab({ backendUrl }) {
                 fontSize: '0.85rem',
                 cursor: optimizeLoading ? 'not-allowed' : 'pointer',
                 opacity: optimizeLoading || !bullet.trim() ? 0.6 : 1,
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15)',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.25)',
                 transition: 'all 0.15s ease'
               }}
             >
@@ -336,7 +336,7 @@ export default function BulletImpactLab({ backendUrl }) {
                 style={{
                   width: `${score}%`,
                   height: '100%',
-                  background: `linear-gradient(90deg, ${getScoreColor(score)}, #3b82f6)`,
+                  background: getScoreColor(score),
                   transition: 'width 0.4s ease'
                 }}
               />
@@ -396,7 +396,7 @@ export default function BulletImpactLab({ backendUrl }) {
                 <div>
                   <span style={{ color: 'var(--text-secondary)', marginRight: '0.4rem' }}>Stack:</span>
                   {scoreData.detected_tools.map((t, i) => (
-                    <span key={i} style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#d8b4fe', padding: '0.15rem 0.5rem', borderRadius: '6px', marginRight: '0.3rem', fontWeight: 600 }}>
+                    <span key={i} style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', padding: '0.15rem 0.5rem', borderRadius: '6px', marginRight: '0.3rem', fontWeight: 600 }}>
                       {t}
                     </span>
                   ))}

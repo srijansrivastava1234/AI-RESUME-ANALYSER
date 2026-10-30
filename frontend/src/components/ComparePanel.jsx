@@ -277,9 +277,8 @@ export default function ComparePanel({ backendUrl, getScoreColor, getScoreBg }) 
           {/* Summary Card */}
           <div className="glass-panel" style={{
             padding: '1.25rem 1.5rem',
-            background: 'rgba(255, 255, 255, 0.03)',
+            background: '#111726',
             border: '1px solid var(--border-color)',
-            borderRadius: '10px',
             display: 'flex',
             alignItems: 'center',
             gap: '1rem'
@@ -361,7 +360,7 @@ export default function ComparePanel({ backendUrl, getScoreColor, getScoreBg }) 
                         <span style={{
                           fontSize: '1.5rem',
                           fontWeight: 800,
-                          color: getScoreColor ? getScoreColor(item.ats_score) : '#6366f1'
+                          color: getScoreColor ? getScoreColor(item.ats_score) : '#2563eb'
                         }}>
                           {item.ats_score}<span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>/100</span>
                         </span>

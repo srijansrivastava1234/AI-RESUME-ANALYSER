@@ -19,7 +19,7 @@ const ENGINES = [
   { id: 'workday', name: 'Workday', icon: Building2, color: '#38bdf8', desc: 'Enterprise ERP & strict vertical scanline parser' },
   { id: 'greenhouse', name: 'Greenhouse / Lever', icon: Cpu, color: '#34d399', desc: 'Modern tech ATS with semantic keyword clustering' },
   { id: 'taleo', name: 'Taleo / Oracle', icon: Server, color: '#f59e0b', desc: 'Legacy enterprise parser with strict exact substring indexing' },
-  { id: 'matrix', name: 'Comparative Matrix', icon: Layers, color: '#a855f7', desc: 'Unified cross-platform risk analysis' }
+  { id: 'matrix', name: 'Comparative Matrix', icon: Layers, color: '#0284c7', desc: 'Unified cross-platform risk analysis' }
 ];
 
 export default function AtsSimulatorTab({ extractedText, backendUrl }) {

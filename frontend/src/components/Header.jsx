@@ -139,7 +139,7 @@ export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, a
             { id: 'dark', color: '#2563eb', name: 'Dark Slate' },
             { id: 'light', color: '#e2e8f0', name: 'Light Mode', isLight: true },
             { id: 'emerald', color: '#10b981', name: 'Emerald Green' },
-            { id: 'violet', color: '#8b5cf6', name: 'Royal Purple' },
+            { id: 'violet', color: '#475569', name: 'Steel Slate' },
             { id: 'amber', color: '#f59e0b', name: 'Amber Gold' }
           ].map(t => (
             <button

@@ -162,7 +162,7 @@ export default function DeepDiagnosticsPanel({ extractedText, backendUrl = 'http
                 </div>
                 <div className="bg-slate-800/70 p-4 rounded-lg border border-slate-700/60">
                   <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Baseline Attached Rate</span>
-                  <div className="text-2xl font-bold text-purple-400 mt-1">{Math.round(metricData.baseline_attachment_rate * 100)}%</div>
+                  <div className="text-2xl font-bold text-blue-400 mt-1">{Math.round(metricData.baseline_attachment_rate * 100)}%</div>
                 </div>
               </div>
 
@@ -225,7 +225,7 @@ export default function DeepDiagnosticsPanel({ extractedText, backendUrl = 'http
                 </div>
                 <div className="bg-slate-800/70 p-4 rounded-lg border border-slate-700/60">
                   <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Coleman-Liau</span>
-                  <div className="text-2xl font-bold text-purple-400 mt-1">{cogData.coleman_liau_index}</div>
+                  <div className="text-2xl font-bold text-cyan-400 mt-1">{cogData.coleman_liau_index}</div>
                 </div>
                 <div className="bg-slate-800/70 p-4 rounded-lg border border-slate-700/60">
                   <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Skimmability</span>

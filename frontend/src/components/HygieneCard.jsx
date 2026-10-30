@@ -127,9 +127,9 @@ export default function HygieneCard({ hygiene }) {
                   fontSize: '0.75rem',
                   padding: '0.3rem 0.6rem',
                   borderRadius: '6px',
-                  background: 'rgba(99, 102, 241, 0.1)',
+                  background: 'rgba(37, 99, 235, 0.1)',
                   color: 'var(--primary)',
-                  border: '1px solid rgba(99, 102, 241, 0.3)'
+                  border: '1px solid rgba(37, 99, 235, 0.3)'
                 }}>
                   <Link style={{ width: '13px', height: '13px' }} />
                   <span>GitHub: {contacts.github}</span>
@@ -201,7 +201,7 @@ export default function HygieneCard({ hygiene }) {
                   fontSize: '0.72rem',
                   fontWeight: 600,
                   color: 'var(--primary)',
-                  background: 'rgba(99, 102, 241, 0.1)',
+                  background: 'rgba(37, 99, 235, 0.1)',
                   padding: '2px 8px',
                   borderRadius: '10px'
                 }}>
@@ -337,7 +337,7 @@ export default function HygieneCard({ hygiene }) {
                 fontSize: '0.72rem',
                 fontWeight: 600,
                 color: 'var(--primary)',
-                background: 'rgba(99, 102, 241, 0.1)',
+                background: 'rgba(37, 99, 235, 0.1)',
                 padding: '2px 8px',
                 borderRadius: '10px'
               }}>
@@ -417,8 +417,8 @@ export default function HygieneCard({ hygiene }) {
           {/* Section Flow & Structural Order */}
           {hygiene.section_flow && (
             <div style={{
-              background: 'rgba(99, 102, 241, 0.04)',
-              border: '1px solid rgba(99, 102, 241, 0.2)',
+              background: 'rgba(37, 99, 235, 0.04)',
+              border: '1px solid rgba(37, 99, 235, 0.2)',
               borderRadius: '8px',
               padding: '0.75rem 1rem',
               display: 'flex',
@@ -427,7 +427,7 @@ export default function HygieneCard({ hygiene }) {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Eye style={{ width: '16px', height: '16px', color: '#818cf8' }} />
+                  <Eye style={{ width: '16px', height: '16px', color: 'var(--primary)' }} />
                   <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                     Canonical Section Order & Sequence Flow
                   </span>
@@ -436,7 +436,7 @@ export default function HygieneCard({ hygiene }) {
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   color: hygiene.section_flow.flow_score >= 80 ? 'var(--success)' : 'var(--warning)',
-                  background: 'rgba(99, 102, 241, 0.1)',
+                  background: 'rgba(37, 99, 235, 0.1)',
                   padding: '2px 8px',
                   borderRadius: '10px'
                 }}>
@@ -452,8 +452,8 @@ export default function HygieneCard({ hygiene }) {
           {/* Action Verb Dynamism & Variety */}
           {hygiene.action_verbs && (
             <div style={{
-              background: 'rgba(168, 85, 247, 0.04)',
-              border: '1px solid rgba(168, 85, 247, 0.2)',
+              background: 'rgba(56, 189, 248, 0.04)',
+              border: '1px solid rgba(56, 189, 248, 0.2)',
               borderRadius: '8px',
               padding: '0.75rem 1rem',
               display: 'flex',
@@ -462,7 +462,7 @@ export default function HygieneCard({ hygiene }) {
             }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <Target style={{ width: '16px', height: '16px', color: '#c084fc' }} />
+                  <Target style={{ width: '16px', height: '16px', color: '#38bdf8' }} />
                   <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
                     Action Verb Dynamism & Fatigue Scorer
                   </span>
@@ -471,7 +471,7 @@ export default function HygieneCard({ hygiene }) {
                   fontSize: '0.75rem',
                   fontWeight: 700,
                   color: hygiene.action_verbs.action_verb_score >= 80 ? 'var(--success)' : 'var(--warning)',
-                  background: 'rgba(168, 85, 247, 0.1)',
+                  background: 'rgba(56, 189, 248, 0.1)',
                   padding: '2px 8px',
                   borderRadius: '10px'
                 }}>
@@ -481,7 +481,7 @@ export default function HygieneCard({ hygiene }) {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem', fontSize: '0.72rem' }}>
                 <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.35rem 0.5rem', borderRadius: '4px' }}>
                   <span style={{ color: 'var(--text-secondary)' }}>Executive: </span>
-                  <strong style={{ color: '#a855f7' }}>{hygiene.action_verbs.tier_breakdown?.executive || 0}</strong>
+                  <strong style={{ color: '#60a5fa' }}>{hygiene.action_verbs.tier_breakdown?.executive || 0}</strong>
                 </div>
                 <div style={{ background: 'rgba(0,0,0,0.2)', padding: '0.35rem 0.5rem', borderRadius: '4px' }}>
                   <span style={{ color: 'var(--text-secondary)' }}>Engineering: </span>

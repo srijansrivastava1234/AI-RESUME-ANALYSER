@@ -500,7 +500,7 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
           )}
 
           {!loading && report && (
-            <div className="animate-entrance" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', flexWrap: 'wrap' }} className="no-print">
                 <button 
                   onClick={copyMarkdownReport} 

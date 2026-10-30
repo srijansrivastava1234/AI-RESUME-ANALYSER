@@ -18,11 +18,11 @@ import {
 } from 'lucide-react';
 
 const CATEGORY_MAP = {
-  all: { label: 'All Questions', color: '#6366f1' },
+  all: { label: 'All Questions', color: '#2563eb' },
   behavioral_star: { label: 'Behavioral & STAR', color: '#38bdf8' },
   technical_deep_dive: { label: 'Technical Deep-Dive', color: '#34d399' },
   resume_gap_probe: { label: 'Resume Vulnerabilities & Gaps', color: '#f59e0b' },
-  system_design_or_scenario: { label: 'System Design / Scenario', color: '#a855f7' }
+  system_design_or_scenario: { label: 'System Design / Scenario', color: '#0284c7' }
 };
 
 export default function InterviewPrepPanel({ extractedText, jobDesc, backendUrl }) {
@@ -239,9 +239,9 @@ export default function InterviewPrepPanel({ extractedText, jobDesc, backendUrl 
                         <span
                           className="q-category-tag"
                           style={{
-                            backgroundColor: `${CATEGORY_MAP[q.category]?.color || '#6366f1'}20`,
-                            color: CATEGORY_MAP[q.category]?.color || '#818cf8',
-                            borderColor: `${CATEGORY_MAP[q.category]?.color || '#6366f1'}40`
+                            backgroundColor: `${CATEGORY_MAP[q.category]?.color || '#2563eb'}20`,
+                            color: CATEGORY_MAP[q.category]?.color || '#93c5fd',
+                            borderColor: `${CATEGORY_MAP[q.category]?.color || '#2563eb'}40`
                           }}
                         >
                           {CATEGORY_MAP[q.category]?.label || q.category}

@@ -415,7 +415,7 @@ export default function PdfVisualStudio({
             {/* Token Inspector Details */}
             <div className="pdf-sidebar-card">
               <div className="pdf-sidebar-header">
-                <Crosshair size={16} className="text-purple-400" />
+                <Crosshair size={16} className="text-cyan-400" />
                 <h3>Selected Block Inspector</h3>
               </div>
 

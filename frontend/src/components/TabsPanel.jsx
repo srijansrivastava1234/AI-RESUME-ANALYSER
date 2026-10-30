@@ -467,7 +467,7 @@ export default function TabsPanel({
 
       {/* Tab: Overview */}
       {activeTab === 'overview' && (
-        <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           
           {/* Readability & Content Stats */}
           {wordCount > 0 && (
@@ -607,7 +607,7 @@ export default function TabsPanel({
 
       {/* Tab: Sandbox Editor */}
       {activeTab === 'sandbox' && (
-        <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div>
             <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>Resume Sandbox & Editor</h4>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
@@ -758,7 +758,7 @@ export default function TabsPanel({
               </div>
 
               {/* Tips card */}
-              <div style={{ background: 'rgba(99, 102, 241, 0.03)', padding: '1.25rem', borderRadius: '12px', border: '1px solid rgba(99, 102, 241, 0.15)' }}>
+              <div style={{ background: '#111726', padding: '1.25rem', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
                 <h5 style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '0.35rem' }}>
                   Optimization Tips
                 </h5>
@@ -775,7 +775,7 @@ export default function TabsPanel({
 
       {/* Tab: Recommendations */}
       {activeTab === 'recommendations' && (
-        <div className="tab-pane-content recommendations-list">
+        <div className="recommendations-list">
           <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Improvement Action Plan</h4>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>
             Check off recommendations as you implement them to track your improvements:
@@ -789,7 +789,7 @@ export default function TabsPanel({
                 <span style={{ color: 'var(--success)' }}>{completedCount} of {totalRecs} edits ({percentComplete}%)</span>
               </div>
               <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                <div style={{ width: `${percentComplete}%`, height: '100%', background: 'linear-gradient(90deg, var(--primary), var(--success))', transition: 'width 0.3s ease' }}></div>
+                <div style={{ width: `${percentComplete}%`, height: '100%', background: 'var(--primary)', transition: 'width 0.4s ease' }}></div>
               </div>
             </div>
           )}
@@ -843,7 +843,7 @@ export default function TabsPanel({
 
       {/* Tab: Keywords */}
       {activeTab === 'keywords' && (
-        <div className="tab-pane-content keywords-panel">
+        <div className="keywords-panel">
           <div className="keyword-box">
             <h4 style={{ color: 'var(--success)' }}>
               <CheckCircle style={{ width: '18px', height: '18px' }} />
@@ -931,7 +931,7 @@ export default function TabsPanel({
                         <span style={{ color: 'var(--accent)' }}>{item.count} {item.count === 1 ? 'time' : 'times'}</span>
                       </div>
                       <div style={{ height: '6px', background: 'rgba(255,255,255,0.06)', borderRadius: '3px', overflow: 'hidden' }}>
-                        <div style={{ width: `${percent}%`, height: '100%', background: 'linear-gradient(90deg, var(--accent), var(--primary))', borderRadius: '3px' }}></div>
+                        <div style={{ width: `${percent}%`, height: '100%', background: 'var(--primary)', borderRadius: '3px' }}></div>
                       </div>
                     </div>
                   );
@@ -963,8 +963,8 @@ export default function TabsPanel({
                 <span
                   key={sIdx}
                   style={{
-                    background: 'rgba(99, 102, 241, 0.08)',
-                    border: '1px solid rgba(99, 102, 241, 0.25)',
+                    background: 'rgba(37, 99, 235, 0.08)',
+                    border: '1px solid rgba(37, 99, 235, 0.25)',
                     color: 'var(--text-primary)',
                     fontSize: '0.75rem',
                     padding: '4px 9px',
@@ -1022,7 +1022,7 @@ export default function TabsPanel({
                       <div style={{
                         width: `${Math.min(100, term.saturation)}%`,
                         height: '100%',
-                        background: term.is_stuffed ? 'var(--danger)' : 'linear-gradient(90deg, var(--primary), var(--accent))'
+                        background: term.is_stuffed ? 'var(--danger)' : 'var(--primary)'
                       }} />
                     </div>
                   </div>
@@ -1101,7 +1101,7 @@ export default function TabsPanel({
 
       {/* Tab: Sections */}
       {activeTab === 'sections' && (
-        <div className="tab-pane-content sections-layout">
+        <div className="sections-layout">
           <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Resume Section Integrity Check</h4>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '1rem' }}>Individual ratings for the core building blocks of your resume:</p>
           
@@ -1152,7 +1152,7 @@ export default function TabsPanel({
 
       {/* Tab: Templates */}
       {activeTab === 'templates' && (
-        <div className="tab-pane-content templates-layout" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div className="templates-layout" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <h4 style={{ fontSize: '1.1rem', marginBottom: '0.25rem' }}>ATS-Compliant Resume Guidelines</h4>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
             To bypass automatic filters, your resume layout should remain clean and use strong action verbs. Use the templates and resources below:
@@ -1262,11 +1262,11 @@ export default function TabsPanel({
         };
 
         const letterGradeGlow = (grade) => {
-          if (grade === 'A+') return 'rgba(16, 185, 129, 0.4)';
-          if (grade === 'A') return 'rgba(99, 102, 241, 0.4)';
-          if (grade === 'B') return 'rgba(59, 130, 246, 0.4)';
-          if (grade === 'C') return 'rgba(245, 158, 11, 0.4)';
-          return 'rgba(239, 68, 68, 0.4)';
+          if (grade === 'A+') return 'rgba(16, 185, 129, 0.2)';
+          if (grade === 'A') return 'rgba(37, 99, 235, 0.2)';
+          if (grade === 'B') return 'rgba(2, 132, 199, 0.2)';
+          if (grade === 'C') return 'rgba(245, 158, 11, 0.2)';
+          return 'rgba(239, 68, 68, 0.2)';
         };
 
         const getModelPromptText = () => {
@@ -1338,7 +1338,7 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
         };
 
         return (
-          <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {/* Executive Letter Grade Hero */}
             <div style={{
               display: 'flex',
@@ -1347,7 +1347,7 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
               flexWrap: 'wrap',
               gap: '1.25rem',
               padding: '1.5rem',
-              background: 'rgba(255, 255, 255, 0.03)',
+              background: '#111726',
               border: '1px solid var(--border-color)',
               borderRadius: '12px'
             }}>
@@ -1511,7 +1511,7 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
                   <span style={{ background: 'rgba(16, 185, 129, 0.1)', color: 'var(--success)', padding: '0.2rem 0.4rem', borderRadius: '4px' }}>
                     Zero PUA Traps
                   </span>
-                  <span style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--primary)', padding: '0.2rem 0.4rem', borderRadius: '4px' }}>
+                  <span style={{ background: 'rgba(37, 99, 235, 0.1)', color: 'var(--primary)', padding: '0.2rem 0.4rem', borderRadius: '4px' }}>
                     Linear Flow
                   </span>
                 </div>
@@ -1541,9 +1541,9 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
 
             {/* Regulatory Safe Harbor Certificate Card */}
             <div style={{
-              background: 'rgba(16, 185, 129, 0.04)',
-              border: '1px solid rgba(16, 185, 129, 0.2)',
-              borderRadius: '10px',
+              background: '#111726',
+              border: '1px solid rgba(16, 185, 129, 0.25)',
+              borderRadius: '12px',
               padding: '1.25rem'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
@@ -1587,7 +1587,7 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
                   fontSize: '0.75rem',
                   padding: '0.2rem 0.6rem',
                   borderRadius: '10px',
-                  background: 'rgba(99, 102, 241, 0.15)',
+                  background: 'rgba(37, 99, 235, 0.1)',
                   color: 'var(--primary)',
                   fontWeight: 700
                 }}>
@@ -1635,9 +1635,9 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
             {/* NYC LL 144 / EEOC Blind Audit & PII Redaction Panel */}
             {blindAuditData && (
               <div style={{
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: '#111726',
                 border: '1px solid var(--border-color)',
-                borderRadius: '10px',
+                borderRadius: '12px',
                 padding: '1.25rem'
               }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -1895,12 +1895,12 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
 
       {/* Tab: Layout, Chronology & Typography Engineering */}
       {activeTab === 'layout_chronology' && (
-        <div className="tab-pane-content" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           {/* Header Banner */}
           <div style={{
-            background: 'rgba(255, 255, 255, 0.03)',
+            background: '#111726',
             border: '1px solid var(--border-color)',
-            borderRadius: '10px',
+            borderRadius: '12px',
             padding: '1.5rem',
             position: 'relative'
           }}>
@@ -1914,9 +1914,9 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
                 fontWeight: 700,
                 padding: '2px 8px',
                 borderRadius: '12px',
-                background: 'rgba(99, 102, 241, 0.2)',
+                background: 'rgba(37, 99, 235, 0.15)',
                 color: 'var(--primary)',
-                border: '1px solid rgba(99, 102, 241, 0.3)'
+                border: '1px solid rgba(37, 99, 235, 0.3)'
               }}>
                 Release v2.1.0
               </span>
@@ -2174,8 +2174,8 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
 
               {fontIntegrityData.recovered_words?.length > 0 ? (
                 <div style={{
-                  background: 'rgba(168, 85, 247, 0.08)',
-                  border: '1px solid rgba(168, 85, 247, 0.25)',
+                  background: 'rgba(56, 189, 248, 0.06)',
+                  border: '1px solid rgba(56, 189, 248, 0.2)',
                   borderRadius: '8px',
                   padding: '0.85rem',
                   marginBottom: '1rem',
@@ -2241,45 +2241,37 @@ Anti-Fabrication Safeguard: Strictly zero invented metrics or tools.`;
       }>
         {/* Tab: Multi-ATS Engine Simulator */}
         {activeTab === 'ats_sim' && (
-          <div className="tab-pane-content">
-            <AtsSimulatorTab
-              extractedText={extractedText}
-              backendUrl={backendUrl}
-            />
-          </div>
+          <AtsSimulatorTab
+            extractedText={extractedText}
+            backendUrl={backendUrl}
+          />
         )}
 
         {/* Tab: Deep Diagnostic & Security Analytics Hub */}
         {activeTab === 'deep_diagnostics' && (
-          <div className="tab-pane-content">
-            <DeepDiagnosticsPanel
-              extractedText={extractedText}
-              backendUrl={backendUrl}
-            />
-          </div>
+          <DeepDiagnosticsPanel
+            extractedText={extractedText}
+            backendUrl={backendUrl}
+          />
         )}
 
         {/* Tab: Recruiter Grill-Me Interview Simulation */}
         {activeTab === 'interview_prep' && (
-          <div className="tab-pane-content">
-            <InterviewPrepPanel
-              extractedText={extractedText}
-              jobDesc={jobDesc}
-              backendUrl={backendUrl}
-            />
-          </div>
+          <InterviewPrepPanel
+            extractedText={extractedText}
+            jobDesc={jobDesc}
+            backendUrl={backendUrl}
+          />
         )}
 
         {/* Tab: Live Resume Editor & Verified PDF Export Studio */}
         {activeTab === 'resume_editor' && (
-          <div className="tab-pane-content">
-            <ResumeEditorStudio
-              extractedText={extractedText}
-              report={report}
-              backendUrl={backendUrl}
-              onApplyEditedText={setEditedText}
-            />
-          </div>
+          <ResumeEditorStudio
+            extractedText={extractedText}
+            report={report}
+            backendUrl={backendUrl}
+            onApplyEditedText={setEditedText}
+          />
         )}
       </React.Suspense>
     </div>

@@ -7,7 +7,9 @@ import {
   Check,
   Download,
   Eye,
-  Send
+  Send,
+  CheckCircle2,
+  Zap
 } from 'lucide-react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -481,20 +483,102 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
         <div className="dashboard-main">
           {loading && (
             <div className="glass-panel loading-container">
-              <div className="spinner"></div>
-              <div style={{ textAlign: 'center' }}>
-                <h4 style={{ fontSize: '1.2rem', marginBottom: '0.25rem' }}>Evaluating Resume Structure</h4>
-                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Extracting text, evaluating formatting, and matching requirements using Gemini AI...</p>
+              <div className="loading-radar-ring">
+                <div className="spinner"></div>
+              </div>
+              <div style={{ textAlign: 'center', maxWidth: '440px' }}>
+                <h4 style={{ fontSize: '1.25rem', marginBottom: '0.35rem', fontWeight: 700 }}>Evaluating Resume Structure</h4>
+                <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', lineHeight: 1.5, marginBottom: '1.25rem' }}>
+                  Extracting text, evaluating formatting, and matching requirements using Gemini AI...
+                </p>
+                
+                <div className="loading-steps-list">
+                  <div className="loading-step-item active">
+                    <span className="step-dot"></span>
+                    <span>Extracting PDF text tokens & layout hierarchy</span>
+                  </div>
+                  <div className="loading-step-item">
+                    <span className="step-dot"></span>
+                    <span>Benchmarking ATS parsing compliance (Workday/Taleo)</span>
+                  </div>
+                  <div className="loading-step-item">
+                    <span className="step-dot"></span>
+                    <span>Computing semantic keyword & skill gap vectors</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
           {!loading && !report && (
             <div className="glass-panel welcome-placeholder">
-              <FileText className="placeholder-icon" style={{ width: '64px', height: '64px' }} />
+              <div className="welcome-hero-badge">
+                <span className="welcome-badge-dot"></span>
+                <span>Next-Gen Enterprise ATS Auditor</span>
+              </div>
+
               <div className="placeholder-text">
                 <h3>Ready to Audit Your Resume?</h3>
-                <p>Upload your resume in PDF, DOCX, or TXT format, enter an optional target job description, and hit 'Analyze' to run a deep scanner on your resume's ATS compliance score.</p>
+                <p>
+                  Upload your resume in PDF, DOCX, or TXT format, enter an optional target job description, and hit 'Analyze' to run a deep scanner on your resume's ATS compliance score.
+                </p>
+              </div>
+
+              {/* Feature Preview Grid */}
+              <div className="welcome-feature-grid">
+                <div className="welcome-feature-card">
+                  <div className="welcome-feature-icon" style={{ background: 'rgba(37, 99, 235, 0.12)', color: '#38bdf8' }}>
+                    <CheckCircle2 size={20} />
+                  </div>
+                  <h4>Multi-Engine Simulation</h4>
+                  <p>Benchmark parsing compatibility across Workday, Taleo, and Greenhouse ATS algorithms.</p>
+                  <span className="feature-pill">3 Engines</span>
+                </div>
+
+                <div className="welcome-feature-card">
+                  <div className="welcome-feature-icon" style={{ background: 'rgba(16, 185, 129, 0.12)', color: '#34d399' }}>
+                    <Target size={20} />
+                  </div>
+                  <h4>Keyword Gap Matrix</h4>
+                  <p>Instantly uncover missing hard skills, certifications, and high-frequency role keywords.</p>
+                  <span className="feature-pill" style={{ color: '#34d399', borderColor: 'rgba(16, 185, 129, 0.25)' }}>Skill Matrix</span>
+                </div>
+
+                <div className="welcome-feature-card">
+                  <div className="welcome-feature-icon" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#fbbf24' }}>
+                    <Zap size={20} />
+                  </div>
+                  <h4>XYZ Impact Lab</h4>
+                  <p>Turn passive job duties into quantifiable achievements using the Google XYZ formula.</p>
+                  <span className="feature-pill" style={{ color: '#fbbf24', borderColor: 'rgba(245, 158, 11, 0.25)' }}>Metric Diffs</span>
+                </div>
+              </div>
+
+              {/* Workflow Timeline */}
+              <div className="welcome-workflow-strip">
+                <div className="workflow-step">
+                  <span className="workflow-num">01</span>
+                  <div>
+                    <p className="workflow-title">Drop Resume</p>
+                    <span className="workflow-desc">PDF, DOCX, TXT</span>
+                  </div>
+                </div>
+                <div className="workflow-arrow">→</div>
+                <div className="workflow-step">
+                  <span className="workflow-num">02</span>
+                  <div>
+                    <p className="workflow-title">Target Job Spec</p>
+                    <span className="workflow-desc">Paste or 1-click URL</span>
+                  </div>
+                </div>
+                <div className="workflow-arrow">→</div>
+                <div className="workflow-step">
+                  <span className="workflow-num">03</span>
+                  <div>
+                    <p className="workflow-title">Instant ATS Audit</p>
+                    <span className="workflow-desc">Deep Diagnostics</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -641,40 +725,72 @@ Bachelor of Science in Computer Science | University of California, Berkeley | 2
                 </button>
               </div>
               
-              {/* Job description score header */}
-              {report.job_compatibility && (
-                <div className="compatibility-box">
-                  <div className="compatibility-header">
-                    <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.15rem' }}>
-                      <Target style={{ color: 'var(--accent)' }} />
-                      <span>Job Description Compatibility</span>
-                    </h3>
-                    <div className="compat-score-wrap">
-                      <span className="compat-score-num">{report.job_compatibility.score}%</span>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Match</span>
-                    </div>
-                  </div>
-                  <p className="compat-desc">{report.job_compatibility.match_analysis}</p>
-                  
-                  {report.job_compatibility.skill_gaps && report.job_compatibility.skill_gaps.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
-                      <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Key Skill Gaps:</span>
-                      {report.job_compatibility.skill_gaps.map((gap, index) => (
-                        <span key={index} className="tag missing" style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem' }}>{gap}</span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Main Scores Row */}
-              <div className="dashboard-grid">
+              {/* Executive Metric Scores Hero Grid (Symmetrical 3-Card Header) */}
+              <div className="dashboard-metrics-grid">
                 <ScoreCard
                   atsScore={report.ats_score}
                   getScoreColor={getScoreColor}
                   getScoreBg={getScoreBg}
                   setShowHelpModal={setShowHelpModal}
                 />
+
+                {report.job_compatibility ? (
+                  <div className="glass-panel compatibility-card">
+                    <div className="compatibility-header">
+                      <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.05rem', fontWeight: 600, margin: 0 }}>
+                        <Target style={{ color: 'var(--accent)', width: '18px', height: '18px' }} />
+                        <span>Role Compatibility</span>
+                      </h4>
+                      <div className="compat-score-pill" style={{ background: getScoreBg(report.job_compatibility.score) }}>
+                        <span className="compat-score-num" style={{ color: getScoreColor(report.job_compatibility.score) }}>
+                          {report.job_compatibility.score}%
+                        </span>
+                        <span className="compat-score-tag">Match</span>
+                      </div>
+                    </div>
+                    <p className="compat-desc">{report.job_compatibility.match_analysis}</p>
+                    
+                    {report.job_compatibility.skill_gaps && report.job_compatibility.skill_gaps.length > 0 ? (
+                      <div className="compat-gaps-section">
+                        <span className="compat-gaps-title">
+                          Missing Role Keywords ({report.job_compatibility.skill_gaps.length}):
+                        </span>
+                        <div className="compat-gaps-list">
+                          {report.job_compatibility.skill_gaps.map((gap, index) => (
+                            <span key={index} className="tag missing" style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem' }}>{gap}</span>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="compat-gaps-section">
+                        <span className="compat-gaps-title" style={{ color: 'var(--success)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <CheckCircle2 style={{ width: '14px', height: '14px' }} />
+                          All Core Skills Present
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="glass-panel compatibility-card compatibility-placeholder">
+                    <div className="compatibility-header">
+                      <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.05rem', fontWeight: 600, margin: 0 }}>
+                        <Target style={{ color: 'var(--text-muted)', width: '18px', height: '18px' }} />
+                        <span>Role Compatibility</span>
+                      </h4>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', background: 'rgba(255, 255, 255, 0.05)', padding: '2px 8px', borderRadius: '10px' }}>
+                        Optional
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', flex: 1, padding: '1rem 0', gap: '0.5rem' }}>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
+                        No job description attached.
+                      </p>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: 0, lineHeight: 1.4, maxWidth: '280px' }}>
+                        Paste a target job description in the left sidebar to unlock role matching and keyword gap analysis.
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 <CoreParameters
                   metrics={report.metrics}

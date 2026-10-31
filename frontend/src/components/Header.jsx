@@ -1,20 +1,20 @@
 import React from 'react';
-import { FileCheck2, HelpCircle } from 'lucide-react';
+import { FileCheck2, HelpCircle, FileText, Users, Zap } from 'lucide-react';
 
 export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, appMode = 'audit', setAppMode }) {
   return (
     <header className="app-header">
-      <div className="logo-section" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+      <div className="header-left logo-section" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div style={{
-          width: '32px',
-          height: '32px',
-          borderRadius: '8px',
-          background: 'var(--primary)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
+          width: '34px',
+          height: '34px',
+          borderRadius: '9px',
+          background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+          border: '1px solid rgba(255, 255, 255, 0.25)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'
+          boxShadow: '0 2px 8px rgba(37, 99, 235, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
         }}>
           <FileCheck2 style={{ width: '18px', height: '18px', color: '#ffffff' }} />
         </div>
@@ -52,66 +52,43 @@ export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, a
       </div>
 
       {setAppMode && (
-        <div style={{
-          display: 'flex',
-          background: 'rgba(0, 0, 0, 0.3)',
-          borderRadius: '8px',
-          padding: '3px',
-          border: '1px solid var(--border-color)',
-          gap: '3px'
-        }} className="no-print">
-          <button
-            onClick={() => setAppMode('audit')}
-            style={{
-              background: appMode === 'audit' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-              color: appMode === 'audit' ? '#ffffff' : 'var(--text-secondary)',
-              border: appMode === 'audit' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid transparent',
-              borderRadius: '6px',
-              padding: '0.35rem 0.85rem',
-              fontSize: '0.78rem',
-              fontWeight: appMode === 'audit' ? 600 : 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            Single Audit
-          </button>
-          <button
-            onClick={() => setAppMode('compare')}
-            style={{
-              background: appMode === 'compare' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-              color: appMode === 'compare' ? '#ffffff' : 'var(--text-secondary)',
-              border: appMode === 'compare' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid transparent',
-              borderRadius: '6px',
-              padding: '0.35rem 0.85rem',
-              fontSize: '0.78rem',
-              fontWeight: appMode === 'compare' ? 600 : 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            Batch Compare
-          </button>
-          <button
-            onClick={() => setAppMode('xyz')}
-            style={{
-              background: appMode === 'xyz' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-              color: appMode === 'xyz' ? '#ffffff' : 'var(--text-secondary)',
-              border: appMode === 'xyz' ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid transparent',
-              borderRadius: '6px',
-              padding: '0.35rem 0.85rem',
-              fontSize: '0.78rem',
-              fontWeight: appMode === 'xyz' ? 600 : 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            XYZ Impact Lab
-          </button>
+        <div className="header-center no-print">
+          <nav className="app-mode-nav" role="tablist" aria-label="Workspace Modes">
+            <button
+              role="tab"
+              aria-selected={appMode === 'audit'}
+              onClick={() => setAppMode('audit')}
+              className={`mode-nav-btn ${appMode === 'audit' ? 'active' : ''}`}
+              title="Audit and optimize a single resume"
+            >
+              <FileText className="mode-icon" />
+              <span>Resume Audit</span>
+            </button>
+            <button
+              role="tab"
+              aria-selected={appMode === 'compare'}
+              onClick={() => setAppMode('compare')}
+              className={`mode-nav-btn ${appMode === 'compare' ? 'active' : ''}`}
+              title="Compare multiple candidates or resume versions side-by-side"
+            >
+              <Users className="mode-icon" />
+              <span>Compare Resumes</span>
+            </button>
+            <button
+              role="tab"
+              aria-selected={appMode === 'xyz'}
+              onClick={() => setAppMode('xyz')}
+              className={`mode-nav-btn ${appMode === 'xyz' ? 'active' : ''}`}
+              title="Optimize bullet points using Google's XYZ impact formula"
+            >
+              <Zap className="mode-icon" />
+              <span>Bullet Optimizer</span>
+            </button>
+          </nav>
         </div>
       )}
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }} className="no-print">
+      <div className="header-right no-print" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <button
           onClick={() => setShowHelpModal(true)}
           style={{

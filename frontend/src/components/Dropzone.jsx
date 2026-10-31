@@ -62,9 +62,26 @@ export default function Dropzone({
           onDrop={handleDrop}
           onClick={() => document.getElementById('file-upload').click()}
         >
-          <UploadCloud className="upload-icon" style={{ width: '40px', height: '40px', margin: '0 auto 0.75rem' }} />
+          <div style={{
+            width: '52px',
+            height: '52px',
+            borderRadius: '12px',
+            background: 'rgba(37, 99, 235, 0.08)',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 0.85rem'
+          }}>
+            <UploadCloud className="upload-icon" style={{ width: '26px', height: '26px', color: '#38bdf8', margin: 0 }} />
+          </div>
           <p style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.25rem' }}>Drag & drop your resume</p>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>PDF, DOCX, TXT formats only (max. {MAX_SIZE_MB}MB)</p>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem', marginTop: '0.75rem' }}>
+            <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.08)', fontWeight: 600 }}>PDF</span>
+            <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.08)', fontWeight: 600 }}>DOCX</span>
+            <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: '4px', background: 'rgba(255,255,255,0.04)', color: 'var(--text-secondary)', border: '1px solid rgba(255,255,255,0.08)', fontWeight: 600 }}>TXT</span>
+          </div>
           <input 
             id="file-upload" 
             type="file" 

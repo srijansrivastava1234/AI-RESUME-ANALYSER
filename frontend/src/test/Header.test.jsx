@@ -49,10 +49,10 @@ describe('Header Component', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('Batch Compare'));
+    fireEvent.click(screen.getByText('Compare Resumes'));
     expect(setAppMode).toHaveBeenCalledWith('compare');
 
-    fireEvent.click(screen.getByText('XYZ Impact Lab'));
+    fireEvent.click(screen.getByText('Bullet Optimizer'));
     expect(setAppMode).toHaveBeenCalledWith('xyz');
   });
 

@@ -14,13 +14,24 @@ TYPOGRAPHIC_REPLACEMENTS = {
     "\u201d": '"',  # Right double quotation mark
     "\u2014": " - ",  # Em dash
     "\u2013": " - ",  # En dash
+    "\u2015": " - ",  # Horizontal bar
+    "\u2010": "-",    # Unicode hyphen
+    "\u2011": "-",    # Non-breaking hyphen
+    "\u2012": "-",    # Figure dash
+    "\u2212": "-",    # Minus sign
+    "\u2026": "...",  # Horizontal ellipsis
     "\u2022": "*",    # Bullet symbol
     "\u00a0": " ",    # Non-breaking space
+    "\u00ad": "",     # Soft hyphen
+    "\u2044": "/",    # Fraction slash
     "\ufb01": "fi",   # Ligature fi
     "\ufb02": "fl",   # Ligature fl
     "\ufb00": "ff",   # Ligature ff
     "\ufb03": "ffi",  # Ligature ffi
     "\ufb04": "ffl",  # Ligature ffl
+    "\u00a9": "(c)",  # Copyright
+    "\u00ae": "(r)",  # Registered trademark
+    "\u2122": "(tm)", # Trademark
 }
 
 
@@ -141,3 +152,99 @@ def format_ats_plaintext(resume_data: Dict[str, Any]) -> str:
     # Strip bold markdown
     plain = re.sub(r"\*\*([^*]+)\*\*", r"\1", plain)
     return plain
+
+
+def format_ats_jsonld(resume_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Serializes structured resume data into standard Schema.org Person JSON-LD format
+    for semantic indexing and ATS ingestion.
+    """
+    if not resume_data:
+        return {}
+
+    name = sanitize_text_for_export(resume_data.get("name", "Candidate"))
+    title = sanitize_text_for_export(resume_data.get("title", ""))
+
+    schema: Dict[str, Any] = {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": name,
+    }
+
+    if title:
+        schema["jobTitle"] = title
+
+    if resume_data.get("email"):
+        schema["email"] = sanitize_text_for_export(resume_data["email"])
+
+    if resume_data.get("phone"):
+        schema["telephone"] = sanitize_text_for_export(resume_data["phone"])
+
+    if resume_data.get("location"):
+        schema["address"] = {
+            "@type": "PostalAddress",
+            "addressLocality": sanitize_text_for_export(resume_data["location"]),
+        }
+
+    same_as: List[str] = []
+    if resume_data.get("linkedin"):
+        same_as.append(sanitize_text_for_export(resume_data["linkedin"]))
+    if resume_data.get("github"):
+        same_as.append(sanitize_text_for_export(resume_data["github"]))
+    if same_as:
+        schema["sameAs"] = same_as
+
+    if resume_data.get("summary"):
+        schema["description"] = sanitize_text_for_export(resume_data["summary"])
+
+    # Skills representation
+    if resume_data.get("skills"):
+        skills = resume_data["skills"]
+        skills_flat: List[str] = []
+        if isinstance(skills, list):
+            skills_flat = [sanitize_text_for_export(s) for s in skills if s]
+        elif isinstance(skills, dict):
+            for items in skills.values():
+                if isinstance(items, list):
+                    skills_flat.extend([sanitize_text_for_export(i) for i in items if i])
+                elif items:
+                    skills_flat.append(sanitize_text_for_export(str(items)))
+        if skills_flat:
+            schema["knowsAbout"] = skills_flat
+
+    # Work experience representation
+    if resume_data.get("experience"):
+        work_entries: List[Dict[str, Any]] = []
+        for exp in resume_data["experience"]:
+            work_entry: Dict[str, Any] = {
+                "@type": "OrganizationRole",
+                "roleName": sanitize_text_for_export(exp.get("role", "Engineer")),
+                "name": sanitize_text_for_export(exp.get("company", "Company")),
+            }
+            if exp.get("dates"):
+                work_entry["startDate"] = sanitize_text_for_export(exp["dates"])
+            if exp.get("bullets"):
+                work_entry["description"] = "\n".join(
+                    f"- {sanitize_text_for_export(b)}" for b in exp["bullets"] if b
+                )
+            work_entries.append(work_entry)
+        schema["hasOccupation"] = work_entries
+
+    # Education representation
+    if resume_data.get("education"):
+        edu_entries: List[Dict[str, Any]] = []
+        for edu in resume_data["education"]:
+            edu_entry: Dict[str, Any] = {
+                "@type": "EducationalOccupationalCredential",
+                "credentialCategory": sanitize_text_for_export(edu.get("degree", "Degree")),
+                "recognizedBy": {
+                    "@type": "EducationalOrganization",
+                    "name": sanitize_text_for_export(edu.get("institution", "Institution")),
+                },
+            }
+            if edu.get("year"):
+                edu_entry["validIn"] = sanitize_text_for_export(str(edu["year"]))
+            edu_entries.append(edu_entry)
+        schema["hasCredential"] = edu_entries
+
+    return schema

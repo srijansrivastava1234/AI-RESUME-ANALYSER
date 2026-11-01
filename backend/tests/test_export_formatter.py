@@ -7,6 +7,7 @@ from app.export_formatter import (
     sanitize_text_for_export,
     format_ats_markdown,
     format_ats_plaintext,
+    format_ats_jsonld,
     TYPOGRAPHIC_REPLACEMENTS
 )
 
@@ -132,3 +133,69 @@ def test_export_json_resume_schema():
     assert schema["work"][0]["name"] == "CloudTech"
     assert schema["education"][0]["institution"] == "University of Washington"
     assert schema["skills"][0]["name"] == "Cloud"
+
+
+def test_sanitize_extended_typography():
+    sample = "FastAPI\u2122 & Python\u00ae \u2014 \u201010% latency\u2026 \u00a92026 1\u20442 ratio"
+    clean = sanitize_text_for_export(sample)
+    assert "(tm)" in clean
+    assert "(r)" in clean
+    assert " - " in clean
+    assert "-10%" in clean
+    assert "..." in clean
+    assert "(c)2026" in clean
+    assert "1/2" in clean
+
+
+def test_format_ats_jsonld_empty():
+    assert format_ats_jsonld({}) == {}
+
+
+def test_format_ats_jsonld_structured():
+    data = {
+        "name": "Jane Developer",
+        "title": "Principal Architect",
+        "email": "jane@example.com",
+        "phone": "+1-555-0199",
+        "location": "San Francisco, CA",
+        "linkedin": "https://linkedin.com/in/janedev",
+        "github": "https://github.com/janedev",
+        "summary": "Specialist in large-scale event-driven cloud systems.",
+        "skills": {
+            "Languages": ["Python", "Rust"],
+            "Databases": ["PostgreSQL"]
+        },
+        "experience": [
+            {
+                "role": "Staff Engineer",
+                "company": "ScaleCorp",
+                "dates": "2022 - Present",
+                "bullets": ["Led migration to distributed Kafka pipelines."]
+            }
+        ],
+        "education": [
+            {
+                "degree": "M.S. Software Engineering",
+                "institution": "Stanford University",
+                "year": 2020
+            }
+        ]
+    }
+
+    schema = format_ats_jsonld(data)
+    assert schema["@context"] == "https://schema.org"
+    assert schema["@type"] == "Person"
+    assert schema["name"] == "Jane Developer"
+    assert schema["jobTitle"] == "Principal Architect"
+    assert schema["email"] == "jane@example.com"
+    assert schema["telephone"] == "+1-555-0199"
+    assert schema["address"]["addressLocality"] == "San Francisco, CA"
+    assert "https://linkedin.com/in/janedev" in schema["sameAs"]
+    assert "https://github.com/janedev" in schema["sameAs"]
+    assert "Python" in schema["knowsAbout"]
+    assert "Rust" in schema["knowsAbout"]
+    assert schema["hasOccupation"][0]["roleName"] == "Staff Engineer"
+    assert schema["hasOccupation"][0]["name"] == "ScaleCorp"
+    assert schema["hasCredential"][0]["credentialCategory"] == "M.S. Software Engineering"
+    assert schema["hasCredential"][0]["recognizedBy"]["name"] == "Stanford University"
+    assert schema["hasCredential"][0]["validIn"] == "2020"

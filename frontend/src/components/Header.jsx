@@ -2,6 +2,34 @@ import React from 'react';
 import { FileCheck2, HelpCircle, FileText, Users, Zap } from 'lucide-react';
 
 export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, appMode = 'audit', setAppMode }) {
+  const MODES = [
+    { id: 'audit', label: 'Resume Audit', icon: FileText, title: 'Audit and optimize a single resume' },
+    { id: 'compare', label: 'Compare Resumes', icon: Users, title: 'Compare multiple candidates or resume versions side-by-side' },
+    { id: 'xyz', label: 'Bullet Optimizer', icon: Zap, title: "Optimize bullet points using Google's XYZ impact formula" }
+  ];
+
+  const handleNavKeyDown = (e) => {
+    if (!setAppMode) return;
+    const currentIndex = MODES.findIndex(m => m.id === appMode);
+    if (currentIndex === -1) return;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const nextIndex = (currentIndex + 1) % MODES.length;
+      setAppMode(MODES[nextIndex].id);
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prevIndex = (currentIndex - 1 + MODES.length) % MODES.length;
+      setAppMode(MODES[prevIndex].id);
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      setAppMode(MODES[0].id);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      setAppMode(MODES[MODES.length - 1].id);
+    }
+  };
+
   return (
     <header className="app-header">
       <div className="header-left logo-section" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -53,37 +81,30 @@ export default function Header({ theme, setTheme, apiOnline, setShowHelpModal, a
 
       {setAppMode && (
         <div className="header-center no-print">
-          <nav className="app-mode-nav" role="tablist" aria-label="Workspace Modes">
-            <button
-              role="tab"
-              aria-selected={appMode === 'audit'}
-              onClick={() => setAppMode('audit')}
-              className={`mode-nav-btn ${appMode === 'audit' ? 'active' : ''}`}
-              title="Audit and optimize a single resume"
-            >
-              <FileText className="mode-icon" />
-              <span>Resume Audit</span>
-            </button>
-            <button
-              role="tab"
-              aria-selected={appMode === 'compare'}
-              onClick={() => setAppMode('compare')}
-              className={`mode-nav-btn ${appMode === 'compare' ? 'active' : ''}`}
-              title="Compare multiple candidates or resume versions side-by-side"
-            >
-              <Users className="mode-icon" />
-              <span>Compare Resumes</span>
-            </button>
-            <button
-              role="tab"
-              aria-selected={appMode === 'xyz'}
-              onClick={() => setAppMode('xyz')}
-              className={`mode-nav-btn ${appMode === 'xyz' ? 'active' : ''}`}
-              title="Optimize bullet points using Google's XYZ impact formula"
-            >
-              <Zap className="mode-icon" />
-              <span>Bullet Optimizer</span>
-            </button>
+          <nav 
+            className="app-mode-nav" 
+            role="tablist" 
+            aria-label="Workspace Modes"
+            onKeyDown={handleNavKeyDown}
+          >
+            {MODES.map(mode => {
+              const Icon = mode.icon;
+              const isActive = appMode === mode.id;
+              return (
+                <button
+                  key={mode.id}
+                  role="tab"
+                  tabIndex={isActive ? 0 : -1}
+                  aria-selected={isActive}
+                  onClick={() => setAppMode(mode.id)}
+                  className={`mode-nav-btn ${isActive ? 'active' : ''}`}
+                  title={mode.title}
+                >
+                  <Icon className="mode-icon" />
+                  <span>{mode.label}</span>
+                </button>
+              );
+            })}
           </nav>
         </div>
       )}

@@ -56,6 +56,27 @@ describe('Header Component', () => {
     expect(setAppMode).toHaveBeenCalledWith('xyz');
   });
 
+  it('supports roving tabindex and arrow key navigation between modes', () => {
+    const setAppMode = vi.fn();
+    render(
+      <Header
+        theme="dark"
+        setTheme={() => {}}
+        apiOnline={true}
+        setShowHelpModal={() => {}}
+        appMode="audit"
+        setAppMode={setAppMode}
+      />
+    );
+
+    const nav = screen.getByRole('tablist', { name: 'Workspace Modes' });
+    fireEvent.keyDown(nav, { key: 'ArrowRight' });
+    expect(setAppMode).toHaveBeenCalledWith('compare');
+
+    fireEvent.keyDown(nav, { key: 'End' });
+    expect(setAppMode).toHaveBeenCalledWith('xyz');
+  });
+
   it('triggers theme change when theme dots are clicked', () => {
     const setTheme = vi.fn();
     render(
